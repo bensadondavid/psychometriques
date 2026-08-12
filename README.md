@@ -58,7 +58,9 @@ La base ne contient actuellement aucun modèle métier psychométrique.
 - Cloudflare R2 pour les illustrations ; seule la clé de l’objet est conservée
   en base.
 - SVG privilégié pour la géométrie et WebP pour les autres illustrations.
-- Grow envisagé comme prestataire de paiement en shekels.
+- Grow envisagé comme prestataire de paiement en shekels. Son intégration est
+  isolée dans `lib/payments/grow`, tandis que `lib/subscriptions` conserve les
+  statuts et règles d’accès propres à la plateforme.
 - Pas de Docker pour le MVP : Vercel, Neon et R2 fournissent déjà les
   environnements nécessaires. Une branche Neon dédiée sera utilisée pour les
   tests d’intégration.
@@ -393,6 +395,10 @@ Tests unitaires à écrire pendant cette étape :
 ### 16. Ajouter l’abonnement et les droits d’accès
 
 - [ ] Valider l’API et le fonctionnement exact de Grow.
+- [ ] Implémenter le client, les types et la validation des notifications Grow
+  dans `lib/payments/grow`.
+- [ ] Conserver dans `lib/subscriptions` la logique indépendante du prestataire :
+  statuts, expiration et droits `FREE` ou `PREMIUM`.
 - [ ] Ajouter `Subscription` avec fournisseur, statut, expiration et référence.
 - [ ] Définir les statuts internes indépendamment des libellés Grow.
 - [ ] Créer le parcours de paiement en shekels.
