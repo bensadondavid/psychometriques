@@ -56,7 +56,7 @@ function getPasskeyRegistrationError(error: {
   }
 }
 
-export default function ParametersPage() {
+export default function AccountParametersPage() {
   const router = useRouter()
   const session = authClient.useSession()
   const passkeys = authClient.useListPasskeys()

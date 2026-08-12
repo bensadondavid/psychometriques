@@ -86,7 +86,7 @@ export const auth = betterAuth({
   },
 
   advanced:{
-    cookiePrefix: 'words'
+    cookiePrefix: 'psychometriques'
   },
 
   socialProviders:{

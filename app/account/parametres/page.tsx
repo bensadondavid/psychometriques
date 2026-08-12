@@ -1,8 +1,5 @@
-import ParametersPage from '@/components/pages/ParametersPage';
+import AccountParametersPage from '@/components/account/settings/AccountParametersPage'
 
-export default async function Parameters() {
-
-  return (
-    <ParametersPage />
-  )
+export default function ParametersPage() {
+  return <AccountParametersPage />
 }
