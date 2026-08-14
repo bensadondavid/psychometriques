@@ -89,7 +89,7 @@ La base ne contient actuellement aucun modèle métier psychométrique.
 Avant de modifier la base, fixer définitivement les valeurs et relations du
 catalogue.
 
-- [ ] Définir les matières initiales : verbal, quantitatif et géométrie.
+- [ ] Définir les matières initiales : verbal et quantitatif.
 - [ ] Définir les premières catégories de chaque matière.
 - [ ] Fixer les difficultés, par exemple `EASY`, `MEDIUM`, `HARD`.
 - [ ] Fixer les statuts éditoriaux : `DRAFT`, `VALIDATED`, `PUBLISHED`.
@@ -146,9 +146,9 @@ Tests à écrire pendant cette étape :
 
 ### 4. Typer les rôles et centraliser les autorisations
 
-- [ ] Remplacer `role String` par un enum Prisma `UserRole`.
-- [ ] Définir les rôles initiaux, par exemple `USER` et `ADMIN`.
-- [ ] Générer, relire et appliquer la migration du rôle.
+- [x] Remplacer `role String` par un enum Prisma `Role`.
+- [x] Définir les rôles initiaux, par exemple `CLIENT` et `ADMIN`.
+- [x] Générer, relire et appliquer la migration du rôle.
 - [ ] Créer `requireUser()` pour les opérations nécessitant une session valide.
 - [ ] Créer `requireAdmin()` pour les opérations administratives.
 - [ ] Faire relire l’utilisateur et son rôle depuis une source serveur fiable.

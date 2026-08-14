@@ -7,13 +7,18 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  ADMIN
+  CLIENT
+}
+
 model User {
   id            String    @id
   name          String
   email         String
   emailVerified Boolean   @default(false)
   image         String?
-  role          String    @default("CLIENT")
+  role          Role      @default(CLIENT)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
@@ -90,3 +95,7 @@ model Passkey {
   @@index([credentialID])
   @@map("passkey")
 }
+
+// Logique Métier 
+
+
