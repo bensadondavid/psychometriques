@@ -2,29 +2,9 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "../database/prisma";
 import { passkey } from "@better-auth/passkey"
-import { resend } from "../mail/resend";
-
-const HTML_CHARACTERS = /[&<>'"]/g
-const HTML_ENTITIES: Record<string, string> = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  "'": '&#39;',
-  '"': '&quot;',
-}
-
-function escapeHtml(value: string) {
-  return value.replace(HTML_CHARACTERS, (character) => HTML_ENTITIES[character])
-}
-
-function getEmailSender() {
-  const sender = process.env.RESEND_MAIL
-
-  if (sender) return sender
-  if (process.env.NODE_ENV !== 'production') return 'onboarding@resend.dev'
-
-  throw new Error('RESEND_MAIL doit être configuré en production.')
-}
+import { sendAccountDeletionEmail } from "../mail/emails/account-deletion-email";
+import { sendPasswordResetEmail } from "../mail/emails/password-reset-email";
+import { sendVerificationEmail } from "../mail/emails/verification-email";
 
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL!,
@@ -46,43 +26,39 @@ export const auth = betterAuth({
     maxPasswordLength: 120,
     revokeSessionsOnPasswordReset: true,
     sendResetPassword: async({user, url})=>{
-      const safeName = escapeHtml(user.name ?? '')
-      const safeUrl = escapeHtml(url)
-      const { error } = await resend.emails.send({
-        from: getEmailSender(),
-        to: user.email,
-        subject: 'Réinitialisation de mot de passe', 
-        html: `
-        <p>Salut ${safeName}, </p>
-        <p>Clique ici pour réinitialiser ton mot de passe : </p>
-        <a href="${safeUrl}">Réinitialiser mon mot de passe </a>
-        `,
-        text: `Salut ${user.name ?? ''},\n\nRéinitialise ton mot de passe : ${url}`,
+      await sendPasswordResetEmail({
+        name: user.name,
+        email: user.email,
+        url,
       })
-
-      if (error) throw new Error(`Échec de l’envoi de l’email : ${error.message}`)
     }
   },
 
   emailVerification:{
     sendOnSignUp: true,
+    sendOnSignIn: true,
     autoSignInAfterVerification: true, 
     sendVerificationEmail: async({user, url})=>{
-      const safeName = escapeHtml(user.name ?? '')
-      const safeUrl = escapeHtml(url)
-      const { error } = await resend.emails.send({
-        from: getEmailSender(),
-        to: user.email,
-        subject: "Vérifie ton email",
-        html: `
-          <p>Salut ${safeName},</p>
-          <p>Clique ici pour vérifier ton email :</p>
-          <a href="${safeUrl}">Vérifier mon email</a>`,
-        text: `Salut ${user.name ?? ''},\n\nVérifie ton email : ${url}`,
+      await sendVerificationEmail({
+        name: user.name,
+        email: user.email,
+        url,
       })
+    }
+  },
 
-      if (error) throw new Error(`Échec de l’envoi de l’email : ${error.message}`)
-      }
+  user: {
+    deleteUser: {
+      enabled: true,
+      deleteTokenExpiresIn: 60 * 60,
+      sendDeleteAccountVerification: async ({ user, url }) => {
+        await sendAccountDeletionEmail({
+          name: user.name,
+          email: user.email,
+          url,
+        })
+      },
+    },
   },
 
   advanced:{

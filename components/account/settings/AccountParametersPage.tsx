@@ -1,15 +1,17 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import {
+  Globe2,
   KeyRound,
   Laptop,
   LogOut,
   Mail,
   Pencil,
   ShieldCheck,
+  Smartphone,
   Trash2,
   UserRound,
 } from 'lucide-react'
@@ -32,6 +34,46 @@ import { authClient } from '@/lib/auth/auth-client'
 type PasskeyToDelete = {
   id: string
   name?: string
+}
+
+type AccountSession = {
+  id: string
+  token: string
+  createdAt: Date | string
+  updatedAt: Date | string
+  expiresAt: Date | string
+  ipAddress?: string | null
+  userAgent?: string | null
+}
+
+function getSessionDevice(userAgent?: string | null) {
+  if (!userAgent) return { label: 'Appareil inconnu', isMobile: false }
+
+  const browser = userAgent.includes('Edg/')
+    ? 'Edge'
+    : userAgent.includes('Firefox/')
+      ? 'Firefox'
+      : userAgent.includes('Chrome/')
+        ? 'Chrome'
+        : userAgent.includes('Safari/')
+          ? 'Safari'
+          : 'Navigateur'
+  const platform = /iPhone|iPad/.test(userAgent)
+    ? 'iOS'
+    : userAgent.includes('Android')
+      ? 'Android'
+      : userAgent.includes('Windows')
+        ? 'Windows'
+        : userAgent.includes('Mac OS')
+          ? 'macOS'
+          : userAgent.includes('Linux')
+            ? 'Linux'
+            : 'appareil inconnu'
+
+  return {
+    label: `${browser} sur ${platform}`,
+    isMobile: /Mobile|Android|iPhone|iPad/.test(userAgent),
+  }
 }
 
 function getPasskeyRegistrationError(error: {
@@ -60,16 +102,25 @@ export default function AccountParametersPage() {
   const router = useRouter()
   const session = authClient.useSession()
   const passkeys = authClient.useListPasskeys()
+  const [activeSessions, setActiveSessions] = useState<AccountSession[]>([])
+  const [loadingSessions, setLoadingSessions] = useState(true)
   const [addingPasskey, setAddingPasskey] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
+  const [resendingVerification, setResendingVerification] = useState(false)
+  const [revokingToken, setRevokingToken] = useState<string | null>(null)
+  const [revokingOtherSessions, setRevokingOtherSessions] = useState(false)
   const [updatingName, setUpdatingName] = useState(false)
   const [nameDialogOpen, setNameDialogOpen] = useState(false)
   const [displayName, setDisplayName] = useState('')
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [passkeyToDelete, setPasskeyToDelete] =
     useState<PasskeyToDelete | null>(null)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [deleteConfirmation, setDeleteConfirmation] = useState('')
+  const [requestingDeletion, setRequestingDeletion] = useState(false)
 
   const user = session.data?.user
+  const currentSessionToken = session.data?.session.token
   const initials =
     user?.name
       ?.split(' ')
@@ -77,6 +128,31 @@ export default function AccountParametersPage() {
       .join('')
       .slice(0, 2)
       .toUpperCase() ?? 'U'
+
+  useEffect(() => {
+    if (!user) return
+
+    let ignore = false
+
+    const loadSessions = async () => {
+      setLoadingSessions(true)
+      const { data, error } = await authClient.listSessions()
+
+      if (ignore) return
+      if (error) {
+        toast.error(error.message ?? 'Impossible de charger les sessions.')
+      } else {
+        setActiveSessions(data ?? [])
+      }
+      setLoadingSessions(false)
+    }
+
+    void loadSessions()
+
+    return () => {
+      ignore = true
+    }
+  }, [user])
 
   const openNameDialog = () => {
     setDisplayName(user?.name ?? '')
@@ -156,6 +232,97 @@ export default function AccountParametersPage() {
     }
   }
 
+  const resendVerificationEmail = async () => {
+    if (!user || user.emailVerified) return
+
+    try {
+      setResendingVerification(true)
+      const { error } = await authClient.sendVerificationEmail({
+        email: user.email,
+        callbackURL: '/account/home',
+      })
+
+      if (error) {
+        toast.error(error.message ?? 'Impossible d’envoyer l’email.')
+        return
+      }
+
+      toast.success('Email de vérification envoyé')
+    } catch {
+      toast.error('Impossible d’envoyer l’email.')
+    } finally {
+      setResendingVerification(false)
+    }
+  }
+
+  const revokeSession = async (token: string) => {
+    try {
+      setRevokingToken(token)
+      const { error } = await authClient.revokeSession({ token })
+
+      if (error) {
+        toast.error(error.message ?? 'Impossible de fermer cette session.')
+        return
+      }
+
+      setActiveSessions((sessions) =>
+        sessions.filter((activeSession) => activeSession.token !== token)
+      )
+      toast.success('Session déconnectée')
+    } catch {
+      toast.error('Impossible de fermer cette session.')
+    } finally {
+      setRevokingToken(null)
+    }
+  }
+
+  const revokeOtherSessions = async () => {
+    try {
+      setRevokingOtherSessions(true)
+      const { error } = await authClient.revokeOtherSessions()
+
+      if (error) {
+        toast.error(error.message ?? 'Impossible de fermer les autres sessions.')
+        return
+      }
+
+      setActiveSessions((sessions) =>
+        sessions.filter(
+          (activeSession) => activeSession.token === currentSessionToken
+        )
+      )
+      toast.success('Toutes les autres sessions ont été déconnectées')
+    } catch {
+      toast.error('Impossible de fermer les autres sessions.')
+    } finally {
+      setRevokingOtherSessions(false)
+    }
+  }
+
+  const requestAccountDeletion = async () => {
+    if (deleteConfirmation !== 'SUPPRIMER') return
+
+    try {
+      setRequestingDeletion(true)
+      const { error } = await authClient.deleteUser({
+        callbackURL: '/login?accountDeleted=true',
+      })
+
+      if (error) {
+        toast.error(error.message ?? 'Impossible de demander la suppression.')
+        return
+      }
+
+      setDeleteDialogOpen(false)
+      setDeleteConfirmation('')
+      toast.success('Email de confirmation envoyé')
+    } catch {
+      toast.error('Impossible de demander la suppression du compte.')
+    } finally {
+      setRequestingDeletion(false)
+    }
+  }
+
   const logOut = async () => {
     try {
       setLoggingOut(true)
@@ -221,7 +388,18 @@ export default function AccountParametersPage() {
                     <ShieldCheck className="size-4" />
                     Email vérifié
                   </span>
-                ) : null}
+                ) : (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={resendVerificationEmail}
+                    disabled={resendingVerification || session.isPending}
+                  >
+                    <Mail className="size-4" />
+                    {resendingVerification ? 'Envoi...' : 'Vérifier mon email'}
+                  </Button>
+                )}
                 <Button
                   type="button"
                   variant="outline"
@@ -313,26 +491,128 @@ export default function AccountParametersPage() {
             </div>
           </section>
 
-          <section className="rounded-xl border bg-card p-5 sm:p-6">
-            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <section className="overflow-hidden rounded-xl border bg-card">
+            <div className="flex flex-col gap-4 border-b px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
               <div className="flex items-start gap-3">
-                <LogOut className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
+                <Globe2 className="mt-0.5 size-5 shrink-0 text-primary" />
                 <div>
-                  <h2 className="font-semibold">Session</h2>
+                  <h2 className="font-semibold">Sessions actives</h2>
                   <p className="text-sm text-muted-foreground">
-                    Fermez votre session sur cet appareil.
+                    Consultez les appareils connectés à votre compte.
                   </p>
                 </div>
               </div>
               <Button
                 type="button"
                 variant="outline"
-                onClick={logOut}
-                disabled={loggingOut}
+                onClick={revokeOtherSessions}
+                disabled={
+                  revokingOtherSessions ||
+                  activeSessions.filter(
+                    (activeSession) =>
+                      activeSession.token !== currentSessionToken
+                  ).length === 0
+                }
                 className="self-start sm:self-auto"
               >
                 <LogOut className="size-4" />
-                {loggingOut ? 'Déconnexion...' : 'Se déconnecter'}
+                {revokingOtherSessions
+                  ? 'Déconnexion...'
+                  : 'Déconnecter les autres'}
+              </Button>
+            </div>
+
+            <div className="divide-y">
+              {loadingSessions ? (
+                <p className="px-5 py-8 text-center text-sm text-muted-foreground sm:px-6">
+                  Chargement des sessions...
+                </p>
+              ) : activeSessions.length > 0 ? (
+                activeSessions.map((activeSession) => {
+                  const device = getSessionDevice(activeSession.userAgent)
+                  const isCurrent = activeSession.token === currentSessionToken
+                  const DeviceIcon = device.isMobile ? Smartphone : Laptop
+
+                  return (
+                    <div
+                      key={activeSession.id}
+                      className="flex min-w-0 items-center gap-4 px-5 py-4 sm:px-6"
+                    >
+                      <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-secondary">
+                        <DeviceIcon className="size-5 text-primary" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="font-medium">{device.label}</p>
+                          {isCurrent ? (
+                            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
+                              Session actuelle
+                            </span>
+                          ) : null}
+                        </div>
+                        <p className="mt-0.5 text-xs text-muted-foreground">
+                          {activeSession.ipAddress ?? 'Adresse IP indisponible'} ·{' '}
+                          activité le{' '}
+                          {new Intl.DateTimeFormat('fr-FR', {
+                            dateStyle: 'medium',
+                            timeStyle: 'short',
+                          }).format(new Date(activeSession.updatedAt))}
+                        </p>
+                      </div>
+                      {isCurrent ? (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={logOut}
+                          disabled={loggingOut}
+                        >
+                          {loggingOut ? 'Déconnexion...' : 'Se déconnecter'}
+                        </Button>
+                      ) : (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => revokeSession(activeSession.token)}
+                          disabled={revokingToken === activeSession.token}
+                        >
+                          <LogOut className="size-4" />
+                          {revokingToken === activeSession.token
+                            ? 'Fermeture...'
+                            : 'Déconnecter'}
+                        </Button>
+                      )}
+                    </div>
+                  )
+                })
+              ) : (
+                <p className="px-5 py-8 text-center text-sm text-muted-foreground sm:px-6">
+                  Aucune session active trouvée.
+                </p>
+              )}
+            </div>
+          </section>
+
+          <section className="rounded-xl border border-destructive/30 bg-card p-5 sm:p-6">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-start gap-3">
+                <Trash2 className="mt-0.5 size-5 shrink-0 text-destructive" />
+                <div>
+                  <h2 className="font-semibold">Supprimer le compte</h2>
+                  <p className="text-sm text-muted-foreground">
+                    Un email de confirmation sera envoyé avant toute suppression.
+                  </p>
+                </div>
+              </div>
+              <Button
+                type="button"
+                variant="destructive"
+                onClick={() => setDeleteDialogOpen(true)}
+                className="self-start sm:self-auto"
+              >
+                <Trash2 className="size-4" />
+                Supprimer mon compte
               </Button>
             </div>
           </section>
@@ -413,6 +693,60 @@ export default function AccountParametersPage() {
               disabled={deletingId !== null}
             >
               {deletingId ? 'Suppression...' : 'Supprimer'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={deleteDialogOpen}
+        onOpenChange={(open) => {
+          if (requestingDeletion) return
+          setDeleteDialogOpen(open)
+          if (!open) setDeleteConfirmation('')
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Demander la suppression du compte ?</DialogTitle>
+            <DialogDescription>
+              Nous enverrons un lien à {user?.email}. La suppression ne sera
+              effectuée qu’après avoir cliqué sur ce lien.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-1.5">
+            <Label htmlFor="delete-confirmation">
+              Saisissez SUPPRIMER pour continuer
+            </Label>
+            <Input
+              id="delete-confirmation"
+              value={deleteConfirmation}
+              onChange={(event) => setDeleteConfirmation(event.target.value)}
+              disabled={requestingDeletion}
+              autoComplete="off"
+              autoFocus
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setDeleteDialogOpen(false)}
+              disabled={requestingDeletion}
+            >
+              Annuler
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={requestAccountDeletion}
+              disabled={
+                requestingDeletion || deleteConfirmation !== 'SUPPRIMER'
+              }
+            >
+              {requestingDeletion
+                ? 'Envoi...'
+                : 'Envoyer l’email de confirmation'}
             </Button>
           </DialogFooter>
         </DialogContent>
