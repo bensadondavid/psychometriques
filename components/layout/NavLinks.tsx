@@ -8,8 +8,14 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-export function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
-  const { setOpen, setOpenMobile } = useSidebar();
+export function NavLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  const { setOpenMobile } = useSidebar();
   const pathname = usePathname();
   const isActive = pathname === href || pathname.startsWith(`${href}/`);
 
@@ -19,7 +25,6 @@ export function NavLink({ href, children }: { href: string; children: React.Reac
         <Link
           href={href}
           onClick={() => {
-            setOpen(false);
             setOpenMobile(false);
           }}
         >

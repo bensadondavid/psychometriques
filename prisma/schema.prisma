@@ -12,6 +12,12 @@ enum Role {
   CLIENT
 }
 
+enum QuestionStatus {
+  DRAFT
+  VALIDATED
+  ARCHIVED
+}
+
 model User {
   id            String    @id
   name          String
@@ -96,6 +102,43 @@ model Passkey {
   @@map("passkey")
 }
 
-// Logique Métier 
+model Chapter {
+  id        Int        @id
+  name      String
+  slug      String     @unique
+  questions Question[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
+  @@map("chapter")
+}
 
+model Question {
+  id              String         @id
+  chapterId       Int
+  chapter         Chapter        @relation(fields: [chapterId], references: [id], onDelete: Restrict)
+  subTheme        String
+  difficulty      Int
+  difficultyLabel String
+  statement       String         @db.Text
+  choice1         String         @db.Text
+  choice2         String         @db.Text
+  choice3         String         @db.Text
+  choice4         String         @db.Text
+  correctChoice   Int
+  explanation     String         @db.Text
+  status          QuestionStatus @default(DRAFT)
+  imagePath       String?
+  imageAlt        String?        @db.Text
+  sourceCreatedAt DateTime
+  sourceUpdatedAt DateTime
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([chapterId, difficulty])
+  @@index([status])
+  @@index([subTheme])
+  @@map("question")
+}
+
+// Logique Métier
