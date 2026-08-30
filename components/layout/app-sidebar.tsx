@@ -1,3 +1,7 @@
+import Link from "next/link";
+import { House, Settings } from "lucide-react";
+
+import { AcademicMark } from "@/components/brand/academic-mark";
 import {
   Sidebar,
   SidebarContent,
@@ -20,14 +24,19 @@ type AppSidebarProps = {
 export function AppSidebar({ user }: AppSidebarProps) {
   return (
     <Sidebar>
-      <SidebarHeader>
-        <div className="flex items-center gap-3 px-2 py-2">
-          <Avatar className="h-10 w-10">
+      <SidebarHeader className="border-b border-sidebar-border p-4">
+        <Link href="/account/home" className="text-sidebar-foreground transition-opacity hover:opacity-80">
+          <AcademicMark compact />
+        </Link>
+      </SidebarHeader>
+      <SidebarContent className="pt-3">
+        <div className="mx-3 mb-4 flex items-center gap-3 border-b border-sidebar-border px-1 pb-4">
+          <Avatar className="size-9">
             <AvatarImage
               src={user.image ?? ""}
               alt={user.name ?? "User avatar"}
             />
-            <AvatarFallback className="bg-primary text-primary-foreground font-semibold text-lg">
+            <AvatarFallback className="bg-sidebar-primary font-serif text-base text-sidebar-primary-foreground">
               {user.name?.slice(0, 1).toUpperCase() ||
                 user.email?.slice(0, 1).toUpperCase() ||
                 "U"}
@@ -38,19 +47,17 @@ export function AppSidebar({ user }: AppSidebarProps) {
             <p className="truncate text-sm font-medium text-sidebar-foreground">
               {user.name ?? "Utilisateur"}
             </p>
-            <p className="truncate text-xs text-muted-foreground">
+            <p className="truncate text-xs text-sidebar-foreground/55">
               {user.email ?? ""}
             </p>
           </div>
         </div>
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarMenu>
-          <NavLink href="/account/home">Accueil</NavLink>
-          <NavLink href="/account/parametres">Paramètres</NavLink>
-      </SidebarMenu>
+        <SidebarMenu className="px-3">
+          <NavLink href="/account/home"><House aria-hidden="true" /><span>Accueil</span></NavLink>
+          <NavLink href="/account/parametres"><Settings aria-hidden="true" /><span>Paramètres</span></NavLink>
+        </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="border-t border-sidebar-border p-3">
         <LogOutBtn />
       </SidebarFooter>
     </Sidebar>

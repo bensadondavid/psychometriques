@@ -1,152 +1,65 @@
 'use client'
 
-import { authClient } from "@/lib/auth/auth-client";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { toast } from 'sonner'
 import Link from "next/link";
+import { useState } from "react";
+import { Check } from "lucide-react";
+import { toast } from "sonner";
 
-const inputClass = "h-11 bg-white border border-zinc-200 rounded-lg text-zinc-900 placeholder:text-zinc-400 focus-visible:ring-0 focus-visible:border-zinc-900 transition-colors text-[15px]"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth/auth-client";
+
+const inputClass = "h-12 rounded-none border-[#bdb09f] bg-[#fbf8f2]/80 px-4 text-[15px] text-[#241d19] shadow-none placeholder:text-[#a09384] focus-visible:border-[#45121d] focus-visible:ring-1 focus-visible:ring-[#45121d]";
 
 export default function ForgotPassword() {
-    const [email, setEmail] = useState('')
-    const [isLoading, setIsLoading] = useState(false)
-    const [sent, setSent] = useState(false)
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [sent, setSent] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        try {
-            setIsLoading(true)
-            const result = await authClient.requestPasswordReset({
-                email,
-                redirectTo: '/reset-password',
-            })
-            if (result.error) 
-                return toast.error(result.error.message)
-                setSent(true)
-        } catch {
-            toast.error('Une erreur est survenue')
-        } finally {
-            setIsLoading(false)
-        }
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      setIsLoading(true);
+      const result = await authClient.requestPasswordReset({ email, redirectTo: "/reset-password" });
+      if (result.error) return toast.error(result.error.message);
+      setSent(true);
+    } catch {
+      toast.error("Une erreur est survenue");
+    } finally {
+      setIsLoading(false);
     }
+  };
 
+  if (sent) {
     return (
-        <div className="min-h-screen flex">
-
-            {/* Left panel */}
-            <div className="hidden lg:flex lg:w-[55%] bg-[#0d1117] flex-col justify-between p-14 select-none">
-                <div className="absolute top-[-15%] left-[10%] w-100 h-100 rounded-full bg-indigo-600/20 blur-[120px] pointer-events-none" />
-                <div className="absolute bottom-[10%] left-[25%] w-75 h-75 rounded-full bg-primary/15 blur-[100px] pointer-events-none" />
-
-                <div className="relative flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </div>
-                    <span className="text-white/90 font-semibold tracking-tight">Psychométriques</span>
-                </div>
-
-                <div className="relative space-y-5 max-w-120">
-                    <p className="font-serif italic text-white/85 text-[2rem] leading-[1.35] tracking-[-0.01em]">
-                        Préparez-vous avec méthode, progressez avec confiance.
-                    </p>
-                    <p className="text-white/35 text-sm font-light tracking-wide">Entraînement en français</p>
-                </div>
-
-                <div className="relative flex items-center gap-10">
-                    <div>
-                        <p className="text-white font-semibold text-2xl tracking-tight">2 000+</p>
-                        <p className="text-white/35 text-xs mt-1 font-light tracking-wide uppercase">questions prévues</p>
-                    </div>
-                    <div className="w-px h-8 bg-white/10" />
-                    <div>
-                        <p className="text-white font-semibold text-2xl tracking-tight">100 %</p>
-                        <p className="text-white/35 text-xs mt-1 font-light tracking-wide uppercase">en français</p>
-                    </div>
-                </div>
-            </div>
-
-            {/* Right panel */}
-            <div className="flex-1 flex items-center justify-center bg-zinc-50 px-8 py-16">
-                <div className="w-full max-w-90">
-
-                    <div className="flex items-center gap-2 mb-10 lg:hidden">
-                        <div className="w-7 h-7 rounded-md bg-zinc-900 flex items-center justify-center">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
-                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </div>
-                        <span className="font-semibold text-zinc-900">Psychométriques</span>
-                    </div>
-
-                    {sent ? (
-                        <div className="space-y-4">
-                            <div className="w-12 h-12 rounded-full bg-zinc-900 flex items-center justify-center mb-6">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16z" />
-                                </svg>
-                            </div>
-                            <h1 className="text-[1.6rem] font-semibold text-zinc-900 tracking-tight leading-tight">
-                                Email envoyé
-                            </h1>
-                            <p className="text-zinc-500 text-sm font-normal">
-                                Si un compte existe pour <span className="text-zinc-700 font-medium">{email}</span>, vous recevrez un lien pour réinitialiser votre mot de passe.
-                            </p>
-                            <p className="text-zinc-400 text-sm pt-2">
-                                Vérifiez aussi vos spams.
-                            </p>
-                            <Link
-                                href="/login"
-                                className="inline-block mt-4 text-sm text-zinc-900 font-medium hover:underline underline-offset-4 transition-colors"
-                            >
-                                ← Retour à la connexion
-                            </Link>
-                        </div>
-                    ) : (
-                        <>
-                            <div className="mb-8">
-                                <h1 className="text-[1.6rem] font-semibold text-zinc-900 tracking-tight leading-tight">
-                                    Mot de passe oublié
-                                </h1>
-                                <p className="text-zinc-500 text-sm mt-1.5 font-normal">
-                                    Entrez votre email pour recevoir un lien de réinitialisation.
-                                </p>
-                            </div>
-
-                            <form onSubmit={handleSubmit} className="space-y-4">
-                                <div className="space-y-1.5">
-                                    <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">Email</label>
-                                    <Input
-                                        type="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        placeholder="yonabensadon@leplusbeau.fr"
-                                        className={inputClass}
-                                        required
-                                    />
-                                </div>
-
-                                <Button
-                                    type="submit"
-                                    className="w-full h-11 mt-1 bg-zinc-900 hover:bg-zinc-800 text-white text-[15px] font-medium rounded-lg transition-colors"
-                                    disabled={isLoading}
-                                >
-                                    {isLoading ? 'Envoi…' : 'Envoyer le lien'}
-                                </Button>
-                            </form>
-
-                            <p className="text-center text-sm text-zinc-400 mt-7">
-                                <Link href="/login" className="text-zinc-900 font-medium hover:underline underline-offset-4 transition-colors">
-                                    ← Retour à la connexion
-                                </Link>
-                            </p>
-                        </>
-                    )}
-                </div>
-            </div>
+      <div>
+        <div className="mb-8 grid size-14 place-items-center rounded-full border border-[#9b7a48] text-[#45121d]"><Check className="size-6" /></div>
+        <p className="mb-3 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#9b7a48]">Demande transmise</p>
+        <h1 className="font-serif text-[clamp(2.65rem,13vw,3rem)] leading-[0.95] tracking-[-0.035em] text-[#2a211d]">Consultez votre messagerie</h1>
+        <div className="mt-7 border-l-2 border-[#9b7a48] pl-5 text-sm leading-6 text-[#766a5e]">
+          <p>Si un compte existe pour <strong className="font-semibold text-[#3b302a]">{email}</strong>, vous recevrez un lien de réinitialisation.</p>
+          <p className="mt-3 text-[#918477]">Pensez également à vérifier vos courriers indésirables.</p>
         </div>
-    )
+        <Link href="/login" className="mt-9 inline-flex border-b border-[#45121d] pb-1 text-sm font-semibold text-[#45121d]">Retour à la connexion</Link>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="mb-8 border-b border-[#cbbfae]/70 pb-7">
+        <p className="mb-3 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#9b7a48]">Assistance au compte</p>
+        <h1 className="font-serif text-[clamp(2.65rem,13vw,3.4rem)] leading-[0.95] tracking-[-0.035em] text-[#2a211d]">Réinitialiser votre accès</h1>
+        <p className="mt-4 text-sm leading-6 text-[#766a5e]">Nous vous adresserons un lien sécurisé par email.</p>
+      </div>
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="space-y-2">
+          <label htmlFor="email" className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-[#766a5e]">Adresse email</label>
+          <Input id="email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="prenom.nom@exemple.fr" className={inputClass} required />
+        </div>
+        <Button type="submit" className="h-12 w-full rounded-none bg-[#45121d] text-sm font-semibold tracking-wide text-[#fffaf0] hover:bg-[#591725]" disabled={isLoading}>{isLoading ? "Envoi…" : "Recevoir le lien"}</Button>
+      </form>
+      <p className="mt-8 text-center text-sm text-[#766a5e]"><Link href="/login" className="font-semibold text-[#45121d] underline-offset-4 hover:underline">Retour à la connexion</Link></p>
+    </div>
+  );
 }

@@ -343,15 +343,16 @@ export default function AccountParametersPage() {
   return (
     <section className="min-h-screen w-full min-w-0 px-4 py-6 sm:p-6">
       <div className="mx-auto w-full max-w-5xl">
-        <header className="mb-8 border-b pb-6">
-          <h1 className="text-2xl font-bold sm:text-3xl">Paramètres</h1>
+        <header className="mb-8 border-b border-border pb-6">
+          <p className="mb-2 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#9b7a48]">Compte personnel</p>
+          <h1 className="font-serif text-4xl tracking-[-0.02em] sm:text-5xl">Paramètres</h1>
           <p className="mt-2 text-sm text-muted-foreground">
             Gérez votre profil, votre sécurité et votre session.
           </p>
         </header>
 
         <div className="space-y-6">
-          <section className="overflow-hidden rounded-xl border bg-card">
+          <section className="overflow-hidden border bg-card">
             <div className="border-b px-5 py-4 sm:px-6">
               <div className="flex items-center gap-3">
                 <UserRound className="size-5 text-primary" />
@@ -414,7 +415,7 @@ export default function AccountParametersPage() {
             </div>
           </section>
 
-          <section className="overflow-hidden rounded-xl border bg-card">
+          <section className="overflow-hidden border bg-card">
             <div className="flex flex-col gap-4 border-b px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
               <div className="flex items-start gap-3">
                 <KeyRound className="mt-0.5 size-5 shrink-0 text-primary" />
@@ -491,7 +492,7 @@ export default function AccountParametersPage() {
             </div>
           </section>
 
-          <section className="overflow-hidden rounded-xl border bg-card">
+          <section className="overflow-hidden border bg-card">
             <div className="flex flex-col gap-4 border-b px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
               <div className="flex items-start gap-3">
                 <Globe2 className="mt-0.5 size-5 shrink-0 text-primary" />
@@ -594,7 +595,7 @@ export default function AccountParametersPage() {
             </div>
           </section>
 
-          <section className="rounded-xl border border-destructive/30 bg-card p-5 sm:p-6">
+          <section className="border border-destructive/30 bg-card p-5 sm:p-6">
             <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-start gap-3">
                 <Trash2 className="mt-0.5 size-5 shrink-0 text-destructive" />

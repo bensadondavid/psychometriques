@@ -15,14 +15,16 @@ async function renderAppLayout(children: React.ReactNode) {
   if (!session) redirect('/login')
 
   return (
-    <>
       <SidebarProvider>
         <AppSidebar user={session.user} />
-          <main className="min-w-0 flex-1">
-            <SidebarTrigger />
+          <main className="min-w-0 flex-1 bg-background/85">
+            <header className="sticky top-0 z-20 flex h-14 items-center gap-3 border-b bg-background/90 px-4 backdrop-blur-md">
+              <SidebarTrigger />
+              <span className="h-5 w-px bg-border" />
+              <p className="text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-muted-foreground">Espace de préparation</p>
+            </header>
             {children}
           </main>
       </SidebarProvider>
-    </>
   );
 }

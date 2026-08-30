@@ -32,7 +32,11 @@ export const LogOutBtn = ()=>{
     }
 
     return (
-        <Button onClick={signOut} disabled={isSigningOut}>
+        <Button
+            onClick={signOut}
+            disabled={isSigningOut}
+            className="w-full border border-sidebar-border bg-transparent text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+        >
             {isSigningOut ? 'Déconnexion...' : 'Se déconnecter'}
         </Button>
     )
