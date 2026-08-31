@@ -17,7 +17,7 @@ export default async function AdminLayout({
     where: { id: session.user.id },
     select: { role: true },
   });
-  if (user?.role !== "ADMIN") redirect("/account/home");
+  if (user?.role !== "admin") redirect("/account/home");
 
   return (
     <SidebarProvider>

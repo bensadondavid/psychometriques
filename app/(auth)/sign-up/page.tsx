@@ -8,6 +8,10 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth/auth-client";
+import {
+  TurnstileCaptcha,
+  turnstileSiteKey,
+} from "@/components/auth/turnstile-captcha";
 
 const inputClass = "h-12 rounded-none border-[#bdb09f] bg-[#fbf8f2]/80 px-4 text-[15px] text-[#241d19] shadow-none placeholder:text-[#a09384] focus-visible:border-[#45121d] focus-visible:ring-1 focus-visible:ring-[#45121d]";
 const labelClass = "text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-[#766a5e]";
@@ -19,6 +23,8 @@ export default function SignUp() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaResetKey, setCaptchaResetKey] = useState(0);
 
   const handleGoogle = async () => {
     try {
@@ -45,13 +51,24 @@ export default function SignUp() {
     }
     try {
       setIsLoading(true);
-      const result = await authClient.signUp.email({ email: formData.email, password: formData.password, name: `${formData.firstName} ${formData.lastName}`.trim() });
+      const result = await authClient.signUp.email({
+        email: formData.email,
+        password: formData.password,
+        name: `${formData.firstName} ${formData.lastName}`.trim(),
+        fetchOptions: captchaToken
+          ? { headers: { "x-captcha-response": captchaToken } }
+          : undefined,
+      });
       if (result.error) return toast.error(result.error.message);
       toast.success("Compte créé ! Vérifiez votre email pour continuer.");
     } catch {
       toast.error("Une erreur est survenue");
     } finally {
       setIsLoading(false);
+      if (turnstileSiteKey) {
+        setCaptchaToken("");
+        setCaptchaResetKey((value) => value + 1);
+      }
     }
   };
 
@@ -79,7 +96,11 @@ export default function SignUp() {
             <div className="relative"><Input id="confirmation" type={showConfirm ? "text" : "password"} autoComplete="new-password" value={confirmationPassword} onChange={(event) => setConfirmationPassword(event.target.value)} placeholder="Répétez" className={`${inputClass} pr-11`} minLength={8} required /><button type="button" onClick={() => setShowConfirm((value) => !value)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8f8274] hover:text-[#45121d]" aria-label={showConfirm ? "Masquer la confirmation" : "Afficher la confirmation"}>{showConfirm ? <EyeOff className="size-4" /> : <Eye className="size-4" />}</button></div>
           </div>
         </div>
-        <Button type="submit" className="h-12 w-full rounded-none bg-[#45121d] text-sm font-semibold tracking-wide text-[#fffaf0] hover:bg-[#591725]" disabled={isLoading}>{isLoading ? "Création…" : "Créer mon espace"}</Button>
+        <TurnstileCaptcha
+          onTokenChange={setCaptchaToken}
+          resetKey={captchaResetKey}
+        />
+        <Button type="submit" className="h-12 w-full rounded-none bg-[#45121d] text-sm font-semibold tracking-wide text-[#fffaf0] hover:bg-[#591725]" disabled={isLoading || (Boolean(turnstileSiteKey) && !captchaToken)}>{isLoading ? "Création…" : "Créer mon espace"}</Button>
       </form>
 
       <div className="my-5 flex items-center gap-4"><span className="h-px flex-1 bg-[#cbbfae]/70" /><span className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[#918477]">Ou</span><span className="h-px flex-1 bg-[#cbbfae]/70" /></div>

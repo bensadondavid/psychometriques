@@ -19,7 +19,7 @@ export async function requireAdmin(
     select: { role: true },
   });
 
-  if (user?.role !== "ADMIN") {
+  if (user?.role !== "admin") {
     return {
       ok: false,
       status: 403,

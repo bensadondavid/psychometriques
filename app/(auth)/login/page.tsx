@@ -2,13 +2,17 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { Eye, EyeOff, Fingerprint } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth/auth-client";
+import {
+  TurnstileCaptcha,
+  turnstileSiteKey,
+} from "@/components/auth/turnstile-captcha";
 
 const inputClass = "h-12 rounded-none border-[#bdb09f] bg-[#fbf8f2]/80 px-4 text-[15px] text-[#241d19] shadow-none placeholder:text-[#a09384] focus-visible:border-[#45121d] focus-visible:ring-1 focus-visible:ring-[#45121d]";
 const labelClass = "text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-[#766a5e]";
@@ -32,6 +36,13 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isPasskeyLoading, setIsPasskeyLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaResetKey, setCaptchaResetKey] = useState(0);
+  const lastLoginMethod = useSyncExternalStore(
+    () => () => undefined,
+    () => authClient.getLastUsedLoginMethod(),
+    () => null,
+  );
 
   const handleGoogle = async () => {
     try {
@@ -62,7 +73,13 @@ export default function Login() {
     event.preventDefault();
     try {
       setIsLoading(true);
-      const result = await authClient.signIn.email({ email, password });
+      const result = await authClient.signIn.email({
+        email,
+        password,
+        fetchOptions: captchaToken
+          ? { headers: { "x-captcha-response": captchaToken } }
+          : undefined,
+      });
       if (result.error) return toast.error(result.error.message);
       toast.success("Connecté !");
       setTimeout(() => router.replace("/account/home"), 800);
@@ -70,6 +87,10 @@ export default function Login() {
       toast.error("Une erreur est survenue");
     } finally {
       setIsLoading(false);
+      if (turnstileSiteKey) {
+        setCaptchaToken("");
+        setCaptchaResetKey((value) => value + 1);
+      }
     }
   };
 
@@ -98,14 +119,19 @@ export default function Login() {
             </button>
           </div>
         </div>
-        <Button type="submit" className="h-12 w-full rounded-none bg-[#45121d] text-sm font-semibold tracking-wide text-[#fffaf0] hover:bg-[#591725]" disabled={isLoading}>
+        <TurnstileCaptcha
+          onTokenChange={setCaptchaToken}
+          resetKey={captchaResetKey}
+        />
+        <Button type="submit" className="h-12 w-full rounded-none bg-[#45121d] text-sm font-semibold tracking-wide text-[#fffaf0] hover:bg-[#591725]" disabled={isLoading || (Boolean(turnstileSiteKey) && !captchaToken)}>
           {isLoading ? "Connexion…" : "Accéder à mon espace"}
+          {lastLoginMethod === "email" ? <span className="ml-2 text-[10px] font-normal opacity-75">Dernière utilisation</span> : null}
         </Button>
       </form>
 
       <div className="my-7 flex items-center gap-4"><span className="h-px flex-1 bg-[#cbbfae]/70" /><span className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[#918477]">Ou continuer avec</span><span className="h-px flex-1 bg-[#cbbfae]/70" /></div>
       <div className="grid gap-3 sm:grid-cols-2">
-        <button type="button" onClick={handleGoogle} disabled={isGoogleLoading} className="flex h-12 items-center justify-center gap-3 border border-[#bdb09f] bg-[#fbf8f2]/70 text-sm font-medium transition-colors hover:border-[#75695d] hover:bg-white disabled:opacity-60"><GoogleMark />{isGoogleLoading ? "Redirection…" : "Google"}</button>
+        <button type="button" onClick={handleGoogle} disabled={isGoogleLoading} className="flex h-12 items-center justify-center gap-3 border border-[#bdb09f] bg-[#fbf8f2]/70 text-sm font-medium transition-colors hover:border-[#75695d] hover:bg-white disabled:opacity-60"><GoogleMark />{isGoogleLoading ? "Redirection…" : "Google"}{lastLoginMethod === "google" ? <span className="text-[10px] text-[#766a5e]">Dernière utilisation</span> : null}</button>
         <button type="button" onClick={handlePasskey} disabled={isPasskeyLoading} className="flex h-12 items-center justify-center gap-3 border border-[#bdb09f] bg-[#fbf8f2]/70 text-sm font-medium transition-colors hover:border-[#75695d] hover:bg-white disabled:opacity-60"><Fingerprint className="size-4 text-[#45121d]" />{isPasskeyLoading ? "Vérification…" : "Passkey"}</button>
       </div>
       <p className="mt-8 text-center text-sm text-[#766a5e]">Vous débutez ? <Link href="/sign-up" className="font-semibold text-[#45121d] underline-offset-4 hover:underline">Créer un compte</Link></p>

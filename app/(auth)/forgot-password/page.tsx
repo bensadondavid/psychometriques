@@ -8,6 +8,10 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth/auth-client";
+import {
+  TurnstileCaptcha,
+  turnstileSiteKey,
+} from "@/components/auth/turnstile-captcha";
 
 const inputClass = "h-12 rounded-none border-[#bdb09f] bg-[#fbf8f2]/80 px-4 text-[15px] text-[#241d19] shadow-none placeholder:text-[#a09384] focus-visible:border-[#45121d] focus-visible:ring-1 focus-visible:ring-[#45121d]";
 
@@ -15,18 +19,30 @@ export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaResetKey, setCaptchaResetKey] = useState(0);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       setIsLoading(true);
-      const result = await authClient.requestPasswordReset({ email, redirectTo: "/reset-password" });
+      const result = await authClient.requestPasswordReset({
+        email,
+        redirectTo: "/reset-password",
+        fetchOptions: captchaToken
+          ? { headers: { "x-captcha-response": captchaToken } }
+          : undefined,
+      });
       if (result.error) return toast.error(result.error.message);
       setSent(true);
     } catch {
       toast.error("Une erreur est survenue");
     } finally {
       setIsLoading(false);
+      if (turnstileSiteKey) {
+        setCaptchaToken("");
+        setCaptchaResetKey((value) => value + 1);
+      }
     }
   };
 
@@ -57,7 +73,11 @@ export default function ForgotPassword() {
           <label htmlFor="email" className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-[#766a5e]">Adresse email</label>
           <Input id="email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="prenom.nom@exemple.fr" className={inputClass} required />
         </div>
-        <Button type="submit" className="h-12 w-full rounded-none bg-[#45121d] text-sm font-semibold tracking-wide text-[#fffaf0] hover:bg-[#591725]" disabled={isLoading}>{isLoading ? "Envoi…" : "Recevoir le lien"}</Button>
+        <TurnstileCaptcha
+          onTokenChange={setCaptchaToken}
+          resetKey={captchaResetKey}
+        />
+        <Button type="submit" className="h-12 w-full rounded-none bg-[#45121d] text-sm font-semibold tracking-wide text-[#fffaf0] hover:bg-[#591725]" disabled={isLoading || (Boolean(turnstileSiteKey) && !captchaToken)}>{isLoading ? "Envoi…" : "Recevoir le lien"}</Button>
       </form>
       <p className="mt-8 text-center text-sm text-[#766a5e]"><Link href="/login" className="font-semibold text-[#45121d] underline-offset-4 hover:underline">Retour à la connexion</Link></p>
     </div>
