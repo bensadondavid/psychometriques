@@ -3,8 +3,9 @@ import Link from "next/link";
 
 import { AcademicMark } from "@/components/brand/academic-mark";
 import { NavLink } from "@/components/layout/NavLinks";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { LogOutBtn } from "@/components/ui/logOutBtn";
+import { getUserInitials } from "@/lib/user-initials";
 import {
   Sidebar,
   SidebarContent,
@@ -73,11 +74,8 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
       <SidebarFooter className="border-t border-sidebar-border">
         <div className="flex items-center gap-3 px-2 py-2">
           <Avatar className="size-9">
-            <AvatarImage src={user.image ?? ""} alt={user.name} />
-            <AvatarFallback className="bg-sidebar-primary font-serif text-sidebar-primary-foreground">
-              {user.name.slice(0, 1).toUpperCase() ||
-                user.email.slice(0, 1).toUpperCase() ||
-                "A"}
+            <AvatarFallback className="bg-[#f5f0e7] font-serif font-semibold text-[#45121d]">
+              {getUserInitials(user.name)}
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">

@@ -552,8 +552,7 @@ export default function AccountParametersPage() {
                           ) : null}
                         </div>
                         <p className="mt-0.5 text-xs text-muted-foreground">
-                          {activeSession.ipAddress ?? 'Adresse IP indisponible'} ·{' '}
-                          activité le{' '}
+                          Dernière activité le{' '}
                           {new Intl.DateTimeFormat('fr-FR', {
                             dateStyle: 'medium',
                             timeStyle: 'short',

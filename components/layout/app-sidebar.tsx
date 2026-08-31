@@ -9,7 +9,8 @@ import {
   SidebarHeader,
   SidebarMenu,
 } from "@/components/ui/sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { getUserInitials } from "@/lib/user-initials";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 import { LogOutBtn } from "../ui/logOutBtn";
 import { NavLink } from "./NavLinks";
 
@@ -30,16 +31,16 @@ export function AppSidebar({ user }: AppSidebarProps) {
         </Link>
       </SidebarHeader>
       <SidebarContent className="pt-3">
-        <div className="mx-3 mb-4 flex items-center gap-3 border-b border-sidebar-border px-1 pb-4">
+        <SidebarMenu className="px-3">
+          <NavLink href="/account/home"><House aria-hidden="true" /><span>Accueil</span></NavLink>
+          <NavLink href="/account/parametres"><Settings aria-hidden="true" /><span>Paramètres</span></NavLink>
+        </SidebarMenu>
+      </SidebarContent>
+      <SidebarFooter className="border-t border-sidebar-border p-3">
+        <div className="mb-3 flex items-center gap-3 border-b border-sidebar-border px-1 pb-3 pt-2">
           <Avatar className="size-9">
-            <AvatarImage
-              src={user.image ?? ""}
-              alt={user.name ?? "User avatar"}
-            />
-            <AvatarFallback className="bg-sidebar-primary font-serif text-base text-sidebar-primary-foreground">
-              {user.name?.slice(0, 1).toUpperCase() ||
-                user.email?.slice(0, 1).toUpperCase() ||
-                "U"}
+            <AvatarFallback className="bg-[#f5f0e7] font-serif text-base font-semibold text-[#45121d]">
+              {getUserInitials(user.name)}
             </AvatarFallback>
           </Avatar>
 
@@ -52,12 +53,6 @@ export function AppSidebar({ user }: AppSidebarProps) {
             </p>
           </div>
         </div>
-        <SidebarMenu className="px-3">
-          <NavLink href="/account/home"><House aria-hidden="true" /><span>Accueil</span></NavLink>
-          <NavLink href="/account/parametres"><Settings aria-hidden="true" /><span>Paramètres</span></NavLink>
-        </SidebarMenu>
-      </SidebarContent>
-      <SidebarFooter className="border-t border-sidebar-border p-3">
         <LogOutBtn />
       </SidebarFooter>
     </Sidebar>

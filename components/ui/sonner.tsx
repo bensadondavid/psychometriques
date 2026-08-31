@@ -30,15 +30,33 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }}
       style={
         {
-          "--normal-bg": "var(--popover)",
-          "--normal-text": "var(--popover-foreground)",
+          "--normal-bg": "var(--card)",
+          "--normal-text": "var(--card-foreground)",
           "--normal-border": "var(--border)",
+          "--success-bg": "var(--card)",
+          "--success-text": "var(--primary)",
+          "--success-border": "var(--accent)",
+          "--info-bg": "var(--secondary)",
+          "--info-text": "var(--secondary-foreground)",
+          "--info-border": "var(--border)",
+          "--warning-bg": "var(--secondary)",
+          "--warning-text": "var(--primary)",
+          "--warning-border": "var(--accent)",
+          "--error-bg": "var(--primary)",
+          "--error-text": "var(--primary-foreground)",
+          "--error-border": "var(--accent)",
           "--border-radius": "var(--radius)",
         } as React.CSSProperties
       }
+      richColors
       toastOptions={{
         classNames: {
-          toast: "cn-toast",
+          toast: "font-sans shadow-[0_14px_40px_rgb(69_18_29_/_0.16)]",
+          title: "font-semibold tracking-[-0.01em]",
+          description: "opacity-75",
+          icon: "text-current",
+          actionButton: "!bg-[#d6b476] !text-[#351018] hover:!bg-[#c9a465]",
+          cancelButton: "!bg-[#e8dfd2] !text-[#45121d] hover:!bg-[#ddd1c1]",
         },
       }}
       {...props}

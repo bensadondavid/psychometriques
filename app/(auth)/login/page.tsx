@@ -77,7 +77,7 @@ export default function Login() {
     <div>
       <div className="mb-8 border-b border-[#cbbfae]/70 pb-7">
         <p className="mb-3 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#9b7a48]">Accès personnel</p>
-        <h1 className="font-serif text-[clamp(2.8rem,14vw,3.4rem)] leading-none tracking-[-0.035em] text-[#2a211d]">Bienvenue</h1>
+        <h1 className="font-serif text-[clamp(2.8rem,14vw,3.4rem)] leading-none tracking-[-0.035em] text-[#2a211d]">Bon retour</h1>
         <p className="mt-4 text-sm leading-6 text-[#766a5e]">Retrouvez votre parcours et poursuivez votre préparation.</p>
       </div>
 

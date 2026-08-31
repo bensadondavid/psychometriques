@@ -59,7 +59,7 @@ export default function SignUp() {
     <div>
       <div className="mb-6 border-b border-[#cbbfae]/70 pb-5 sm:mb-7 sm:pb-6">
         <p className="mb-3 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#9b7a48]">Votre préparation commence ici</p>
-        <h1 className="font-serif text-[clamp(2.65rem,13vw,3rem)] leading-[0.94] tracking-[-0.035em] text-[#2a211d]">Créer votre parcours</h1>
+        <h1 className="font-serif text-[clamp(2.65rem,13vw,3rem)] leading-[0.94] tracking-[-0.035em] text-[#2a211d]">Bienvenue</h1>
         <p className="mt-3 text-sm leading-6 text-[#766a5e]">Créez votre espace de préparation personnel.</p>
       </div>
 
