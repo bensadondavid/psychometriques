@@ -77,6 +77,11 @@ export type TwoFactor = Prisma.TwoFactorModel
  */
 export type Subscription = Prisma.SubscriptionModel
 /**
+ * Model Program
+ *
+ */
+export type Program = Prisma.ProgramModel
+/**
  * Model Chapter
  * 
  */

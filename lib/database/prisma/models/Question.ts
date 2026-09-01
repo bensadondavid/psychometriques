@@ -39,6 +39,7 @@ export type QuestionSumAggregateOutputType = {
 }
 
 export type QuestionMinAggregateOutputType = {
+  programSlug: string | null
   id: string | null
   chapterId: number | null
   subTheme: string | null
@@ -61,6 +62,7 @@ export type QuestionMinAggregateOutputType = {
 }
 
 export type QuestionMaxAggregateOutputType = {
+  programSlug: string | null
   id: string | null
   chapterId: number | null
   subTheme: string | null
@@ -83,6 +85,7 @@ export type QuestionMaxAggregateOutputType = {
 }
 
 export type QuestionCountAggregateOutputType = {
+  programSlug: number
   id: number
   chapterId: number
   subTheme: number
@@ -119,6 +122,7 @@ export type QuestionSumAggregateInputType = {
 }
 
 export type QuestionMinAggregateInputType = {
+  programSlug?: true
   id?: true
   chapterId?: true
   subTheme?: true
@@ -141,6 +145,7 @@ export type QuestionMinAggregateInputType = {
 }
 
 export type QuestionMaxAggregateInputType = {
+  programSlug?: true
   id?: true
   chapterId?: true
   subTheme?: true
@@ -163,6 +168,7 @@ export type QuestionMaxAggregateInputType = {
 }
 
 export type QuestionCountAggregateInputType = {
+  programSlug?: true
   id?: true
   chapterId?: true
   subTheme?: true
@@ -272,6 +278,7 @@ export type QuestionGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 export type QuestionGroupByOutputType = {
+  programSlug: string
   id: string
   chapterId: number
   subTheme: string
@@ -317,6 +324,7 @@ export type QuestionWhereInput = {
   AND?: Prisma.QuestionWhereInput | Prisma.QuestionWhereInput[]
   OR?: Prisma.QuestionWhereInput[]
   NOT?: Prisma.QuestionWhereInput | Prisma.QuestionWhereInput[]
+  programSlug?: Prisma.StringFilter<"Question"> | string
   id?: Prisma.StringFilter<"Question"> | string
   chapterId?: Prisma.IntFilter<"Question"> | number
   subTheme?: Prisma.StringFilter<"Question"> | string
@@ -340,6 +348,7 @@ export type QuestionWhereInput = {
 }
 
 export type QuestionOrderByWithRelationInput = {
+  programSlug?: Prisma.SortOrder
   id?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   subTheme?: Prisma.SortOrder
@@ -363,10 +372,12 @@ export type QuestionOrderByWithRelationInput = {
 }
 
 export type QuestionWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  programSlug_id?: Prisma.QuestionProgramSlugIdCompoundUniqueInput
   AND?: Prisma.QuestionWhereInput | Prisma.QuestionWhereInput[]
   OR?: Prisma.QuestionWhereInput[]
   NOT?: Prisma.QuestionWhereInput | Prisma.QuestionWhereInput[]
+  programSlug?: Prisma.StringFilter<"Question"> | string
+  id?: Prisma.StringFilter<"Question"> | string
   chapterId?: Prisma.IntFilter<"Question"> | number
   subTheme?: Prisma.StringFilter<"Question"> | string
   difficulty?: Prisma.IntFilter<"Question"> | number
@@ -386,9 +397,10 @@ export type QuestionWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Question"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Question"> | Date | string
   chapter?: Prisma.XOR<Prisma.ChapterScalarRelationFilter, Prisma.ChapterWhereInput>
-}, "id">
+}, "programSlug_id">
 
 export type QuestionOrderByWithAggregationInput = {
+  programSlug?: Prisma.SortOrder
   id?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   subTheme?: Prisma.SortOrder
@@ -419,6 +431,7 @@ export type QuestionScalarWhereWithAggregatesInput = {
   AND?: Prisma.QuestionScalarWhereWithAggregatesInput | Prisma.QuestionScalarWhereWithAggregatesInput[]
   OR?: Prisma.QuestionScalarWhereWithAggregatesInput[]
   NOT?: Prisma.QuestionScalarWhereWithAggregatesInput | Prisma.QuestionScalarWhereWithAggregatesInput[]
+  programSlug?: Prisma.StringWithAggregatesFilter<"Question"> | string
   id?: Prisma.StringWithAggregatesFilter<"Question"> | string
   chapterId?: Prisma.IntWithAggregatesFilter<"Question"> | number
   subTheme?: Prisma.StringWithAggregatesFilter<"Question"> | string
@@ -463,6 +476,7 @@ export type QuestionCreateInput = {
 }
 
 export type QuestionUncheckedCreateInput = {
+  programSlug: string
   id: string
   chapterId: number
   subTheme: string
@@ -507,6 +521,7 @@ export type QuestionUpdateInput = {
 }
 
 export type QuestionUncheckedUpdateInput = {
+  programSlug?: Prisma.StringFieldUpdateOperationsInput | string
   id?: Prisma.StringFieldUpdateOperationsInput | string
   chapterId?: Prisma.IntFieldUpdateOperationsInput | number
   subTheme?: Prisma.StringFieldUpdateOperationsInput | string
@@ -529,6 +544,7 @@ export type QuestionUncheckedUpdateInput = {
 }
 
 export type QuestionCreateManyInput = {
+  programSlug: string
   id: string
   chapterId: number
   subTheme: string
@@ -572,6 +588,7 @@ export type QuestionUpdateManyMutationInput = {
 }
 
 export type QuestionUncheckedUpdateManyInput = {
+  programSlug?: Prisma.StringFieldUpdateOperationsInput | string
   id?: Prisma.StringFieldUpdateOperationsInput | string
   chapterId?: Prisma.IntFieldUpdateOperationsInput | number
   subTheme?: Prisma.StringFieldUpdateOperationsInput | string
@@ -603,7 +620,13 @@ export type QuestionOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type QuestionProgramSlugIdCompoundUniqueInput = {
+  programSlug: string
+  id: string
+}
+
 export type QuestionCountOrderByAggregateInput = {
+  programSlug?: Prisma.SortOrder
   id?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   subTheme?: Prisma.SortOrder
@@ -632,6 +655,7 @@ export type QuestionAvgOrderByAggregateInput = {
 }
 
 export type QuestionMaxOrderByAggregateInput = {
+  programSlug?: Prisma.SortOrder
   id?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   subTheme?: Prisma.SortOrder
@@ -654,6 +678,7 @@ export type QuestionMaxOrderByAggregateInput = {
 }
 
 export type QuestionMinOrderByAggregateInput = {
+  programSlug?: Prisma.SortOrder
   id?: Prisma.SortOrder
   chapterId?: Prisma.SortOrder
   subTheme?: Prisma.SortOrder
@@ -799,6 +824,7 @@ export type QuestionScalarWhereInput = {
   AND?: Prisma.QuestionScalarWhereInput | Prisma.QuestionScalarWhereInput[]
   OR?: Prisma.QuestionScalarWhereInput[]
   NOT?: Prisma.QuestionScalarWhereInput | Prisma.QuestionScalarWhereInput[]
+  programSlug?: Prisma.StringFilter<"Question"> | string
   id?: Prisma.StringFilter<"Question"> | string
   chapterId?: Prisma.IntFilter<"Question"> | number
   subTheme?: Prisma.StringFilter<"Question"> | string
@@ -907,6 +933,7 @@ export type QuestionUncheckedUpdateManyWithoutChapterInput = {
 
 
 export type QuestionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  programSlug?: boolean
   id?: boolean
   chapterId?: boolean
   subTheme?: boolean
@@ -930,6 +957,7 @@ export type QuestionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
 }, ExtArgs["result"]["question"]>
 
 export type QuestionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  programSlug?: boolean
   id?: boolean
   chapterId?: boolean
   subTheme?: boolean
@@ -953,6 +981,7 @@ export type QuestionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
 }, ExtArgs["result"]["question"]>
 
 export type QuestionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  programSlug?: boolean
   id?: boolean
   chapterId?: boolean
   subTheme?: boolean
@@ -976,6 +1005,7 @@ export type QuestionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 }, ExtArgs["result"]["question"]>
 
 export type QuestionSelectScalar = {
+  programSlug?: boolean
   id?: boolean
   chapterId?: boolean
   subTheme?: boolean
@@ -997,7 +1027,7 @@ export type QuestionSelectScalar = {
   updatedAt?: boolean
 }
 
-export type QuestionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "chapterId" | "subTheme" | "difficulty" | "difficultyLabel" | "statement" | "choice1" | "choice2" | "choice3" | "choice4" | "correctChoice" | "explanation" | "status" | "imagePath" | "imageAlt" | "sourceCreatedAt" | "sourceUpdatedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["question"]>
+export type QuestionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"programSlug" | "id" | "chapterId" | "subTheme" | "difficulty" | "difficultyLabel" | "statement" | "choice1" | "choice2" | "choice3" | "choice4" | "correctChoice" | "explanation" | "status" | "imagePath" | "imageAlt" | "sourceCreatedAt" | "sourceUpdatedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["question"]>
 export type QuestionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   chapter?: boolean | Prisma.ChapterDefaultArgs<ExtArgs>
 }
@@ -1014,6 +1044,7 @@ export type $QuestionPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     chapter: Prisma.$ChapterPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
+    programSlug: string
     id: string
     chapterId: number
     subTheme: string
@@ -1116,8 +1147,8 @@ export interface QuestionDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * // Get first 10 Questions
    * const questions = await prisma.question.findMany({ take: 10 })
    * 
-   * // Only select the `id`
-   * const questionWithIdOnly = await prisma.question.findMany({ select: { id: true } })
+   * // Only select the `programSlug`
+   * const questionWithProgramSlugOnly = await prisma.question.findMany({ select: { programSlug: true } })
    * 
    */
   findMany<T extends QuestionFindManyArgs>(args?: Prisma.SelectSubset<T, QuestionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -1161,9 +1192,9 @@ export interface QuestionDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    *   ]
    * })
    * 
-   * // Create many Questions and only return the `id`
-   * const questionWithIdOnly = await prisma.question.createManyAndReturn({
-   *   select: { id: true },
+   * // Create many Questions and only return the `programSlug`
+   * const questionWithProgramSlugOnly = await prisma.question.createManyAndReturn({
+   *   select: { programSlug: true },
    *   data: [
    *     // ... provide data here
    *   ]
@@ -1252,9 +1283,9 @@ export interface QuestionDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    *   ]
    * })
    * 
-   * // Update zero or more Questions and only return the `id`
-   * const questionWithIdOnly = await prisma.question.updateManyAndReturn({
-   *   select: { id: true },
+   * // Update zero or more Questions and only return the `programSlug`
+   * const questionWithProgramSlugOnly = await prisma.question.updateManyAndReturn({
+   *   select: { programSlug: true },
    *   where: {
    *     // ... provide filter here
    *   },
@@ -1457,6 +1488,7 @@ export interface Prisma__QuestionClient<T, Null = never, ExtArgs extends runtime
  * Fields of the Question model
  */
 export interface QuestionFieldRefs {
+  readonly programSlug: Prisma.FieldRef<"Question", 'String'>
   readonly id: Prisma.FieldRef<"Question", 'String'>
   readonly chapterId: Prisma.FieldRef<"Question", 'Int'>
   readonly subTheme: Prisma.FieldRef<"Question", 'String'>

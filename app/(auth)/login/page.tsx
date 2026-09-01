@@ -28,6 +28,14 @@ function GoogleMark() {
   );
 }
 
+function LastUsedBadge() {
+  return (
+    <span className="pointer-events-none absolute -right-1 -top-2.5 z-10 rounded-full border border-[#f5f0e7] bg-[#45121d] px-2 py-1 text-[0.58rem] font-semibold uppercase leading-none tracking-[0.08em] text-[#fffaf0] shadow-[0_4px_12px_rgba(69,18,29,0.24)]">
+      Dernière utilisation
+    </span>
+  );
+}
+
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -123,15 +131,20 @@ export default function Login() {
           onTokenChange={setCaptchaToken}
           resetKey={captchaResetKey}
         />
-        <Button type="submit" className="h-12 w-full rounded-none bg-[#45121d] text-sm font-semibold tracking-wide text-[#fffaf0] hover:bg-[#591725]" disabled={isLoading || (Boolean(turnstileSiteKey) && !captchaToken)}>
-          {isLoading ? "Connexion…" : "Accéder à mon espace"}
-          {lastLoginMethod === "email" ? <span className="ml-2 text-[10px] font-normal opacity-75">Dernière utilisation</span> : null}
-        </Button>
+        <div className="relative">
+          {lastLoginMethod === "email" ? <LastUsedBadge /> : null}
+          <Button type="submit" className="h-12 w-full rounded-none bg-[#45121d] text-sm font-semibold tracking-wide text-[#fffaf0] hover:bg-[#591725]" disabled={isLoading || (Boolean(turnstileSiteKey) && !captchaToken)}>
+            {isLoading ? "Connexion…" : "Accéder à mon espace"}
+          </Button>
+        </div>
       </form>
 
       <div className="my-7 flex items-center gap-4"><span className="h-px flex-1 bg-[#cbbfae]/70" /><span className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[#918477]">Ou continuer avec</span><span className="h-px flex-1 bg-[#cbbfae]/70" /></div>
       <div className="grid gap-3 sm:grid-cols-2">
-        <button type="button" onClick={handleGoogle} disabled={isGoogleLoading} className="flex h-12 items-center justify-center gap-3 border border-[#bdb09f] bg-[#fbf8f2]/70 text-sm font-medium transition-colors hover:border-[#75695d] hover:bg-white disabled:opacity-60"><GoogleMark />{isGoogleLoading ? "Redirection…" : "Google"}{lastLoginMethod === "google" ? <span className="text-[10px] text-[#766a5e]">Dernière utilisation</span> : null}</button>
+        <div className="relative">
+          {lastLoginMethod === "google" ? <LastUsedBadge /> : null}
+          <button type="button" onClick={handleGoogle} disabled={isGoogleLoading} className="flex h-12 w-full items-center justify-center gap-3 border border-[#bdb09f] bg-[#fbf8f2]/70 text-sm font-medium transition-colors hover:border-[#75695d] hover:bg-white disabled:opacity-60"><GoogleMark />{isGoogleLoading ? "Redirection…" : "Google"}</button>
+        </div>
         <button type="button" onClick={handlePasskey} disabled={isPasskeyLoading} className="flex h-12 items-center justify-center gap-3 border border-[#bdb09f] bg-[#fbf8f2]/70 text-sm font-medium transition-colors hover:border-[#75695d] hover:bg-white disabled:opacity-60"><Fingerprint className="size-4 text-[#45121d]" />{isPasskeyLoading ? "Vérification…" : "Passkey"}</button>
       </div>
       <p className="mt-8 text-center text-sm text-[#766a5e]">Vous débutez ? <Link href="/sign-up" className="font-semibold text-[#45121d] underline-offset-4 hover:underline">Créer un compte</Link></p>

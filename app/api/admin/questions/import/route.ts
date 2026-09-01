@@ -22,8 +22,9 @@ function slugify(value: string) {
     .replace(/^-|-$/g, "");
 }
 
-function questionData(question: CsvQuestion) {
+function questionData(programSlug: string, question: CsvQuestion) {
   return {
+    programSlug,
     chapterId: question.chapterId,
     subTheme: question.subTheme,
     difficulty: question.difficulty,
@@ -62,6 +63,20 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const file = formData.get("file");
     const mode = formData.get("mode") === "import" ? "import" : "validate";
+    const programSlug = formData.get("programSlug");
+
+    if (typeof programSlug !== "string" || !programSlug)
+      return json({ ok: false, message: "Sélectionnez un parcours." }, 400);
+
+    const program = await prisma.program.findUnique({
+      where: { slug: programSlug },
+      select: { slug: true, name: true, isActive: true },
+    });
+    if (!program || !program.isActive)
+      return json(
+        { ok: false, message: "Ce parcours n’est pas disponible." },
+        400,
+      );
 
     if (!(file instanceof File))
       return json({ ok: false, message: "Aucun fichier CSV reçu." }, 400);
@@ -85,6 +100,7 @@ export async function POST(request: Request) {
     const baseResponse = {
       ok: validation.valid,
       mode,
+      program: { slug: program.slug, name: program.name },
       file: { name: file.name, size: file.size, checksum },
       summary: validation.summary,
       preview: validation.preview,
@@ -97,7 +113,7 @@ export async function POST(request: Request) {
 
     const ids = validation.rows.map((question) => question.idQuestion);
     const existing = await prisma.question.findMany({
-      where: { id: { in: ids } },
+      where: { programSlug, id: { in: ids } },
       select: { id: true },
     });
     const existingIds = new Set(existing.map((question) => question.id));
@@ -109,11 +125,12 @@ export async function POST(request: Request) {
     await prisma.$transaction(
       [...chapters].map(([id, name]) =>
         prisma.chapter.upsert({
-          where: { id },
+          where: { programSlug_id: { programSlug, id } },
           create: {
+            programSlug,
             id,
             name,
-            slug: `quantitatif-${String(id).padStart(2, "0")}-${slugify(name)}`,
+            slug: `${String(id).padStart(2, "0")}-${slugify(name)}`,
           },
           update: { name },
         }),
@@ -125,9 +142,11 @@ export async function POST(request: Request) {
       const batch = validation.rows.slice(start, start + BATCH_SIZE);
       await prisma.$transaction(
         batch.map((question) => {
-          const data = questionData(question);
+          const data = questionData(programSlug, question);
           return prisma.question.upsert({
-            where: { id: question.idQuestion },
+            where: {
+              programSlug_id: { programSlug, id: question.idQuestion },
+            },
             create: { id: question.idQuestion, ...data },
             update: data,
           });

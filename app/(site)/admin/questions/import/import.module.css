@@ -44,6 +44,35 @@
   padding: clamp(1rem, 3vw, 1.75rem);
 }
 
+.programField {
+  display: grid;
+  gap: 0.45rem;
+  margin-bottom: 1rem;
+}
+
+.programField span {
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.programField select {
+  width: min(100%, 24rem);
+  min-height: 2.75rem;
+  border: 1px solid var(--input);
+  border-radius: 0.2rem;
+  background: var(--background);
+  color: var(--foreground);
+  padding: 0 0.8rem;
+}
+
+.programField select:focus-visible {
+  border-color: var(--primary);
+  outline: 3px solid color-mix(in srgb, var(--primary) 18%, transparent);
+}
+
 .dropzone {
   display: flex;
   min-height: 150px;

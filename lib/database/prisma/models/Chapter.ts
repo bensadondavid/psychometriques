@@ -35,6 +35,7 @@ export type ChapterSumAggregateOutputType = {
 }
 
 export type ChapterMinAggregateOutputType = {
+  programSlug: string | null
   id: number | null
   name: string | null
   slug: string | null
@@ -43,6 +44,7 @@ export type ChapterMinAggregateOutputType = {
 }
 
 export type ChapterMaxAggregateOutputType = {
+  programSlug: string | null
   id: number | null
   name: string | null
   slug: string | null
@@ -51,6 +53,7 @@ export type ChapterMaxAggregateOutputType = {
 }
 
 export type ChapterCountAggregateOutputType = {
+  programSlug: number
   id: number
   name: number
   slug: number
@@ -69,6 +72,7 @@ export type ChapterSumAggregateInputType = {
 }
 
 export type ChapterMinAggregateInputType = {
+  programSlug?: true
   id?: true
   name?: true
   slug?: true
@@ -77,6 +81,7 @@ export type ChapterMinAggregateInputType = {
 }
 
 export type ChapterMaxAggregateInputType = {
+  programSlug?: true
   id?: true
   name?: true
   slug?: true
@@ -85,6 +90,7 @@ export type ChapterMaxAggregateInputType = {
 }
 
 export type ChapterCountAggregateInputType = {
+  programSlug?: true
   id?: true
   name?: true
   slug?: true
@@ -180,6 +186,7 @@ export type ChapterGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 export type ChapterGroupByOutputType = {
+  programSlug: string
   id: number
   name: string
   slug: string
@@ -211,36 +218,45 @@ export type ChapterWhereInput = {
   AND?: Prisma.ChapterWhereInput | Prisma.ChapterWhereInput[]
   OR?: Prisma.ChapterWhereInput[]
   NOT?: Prisma.ChapterWhereInput | Prisma.ChapterWhereInput[]
+  programSlug?: Prisma.StringFilter<"Chapter"> | string
   id?: Prisma.IntFilter<"Chapter"> | number
   name?: Prisma.StringFilter<"Chapter"> | string
   slug?: Prisma.StringFilter<"Chapter"> | string
   createdAt?: Prisma.DateTimeFilter<"Chapter"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Chapter"> | Date | string
+  program?: Prisma.XOR<Prisma.ProgramScalarRelationFilter, Prisma.ProgramWhereInput>
   questions?: Prisma.QuestionListRelationFilter
 }
 
 export type ChapterOrderByWithRelationInput = {
+  programSlug?: Prisma.SortOrder
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  program?: Prisma.ProgramOrderByWithRelationInput
   questions?: Prisma.QuestionOrderByRelationAggregateInput
 }
 
 export type ChapterWhereUniqueInput = Prisma.AtLeast<{
-  id?: number
-  slug?: string
+  programSlug_slug?: Prisma.ChapterProgramSlugSlugCompoundUniqueInput
+  programSlug_id?: Prisma.ChapterProgramSlugIdCompoundUniqueInput
   AND?: Prisma.ChapterWhereInput | Prisma.ChapterWhereInput[]
   OR?: Prisma.ChapterWhereInput[]
   NOT?: Prisma.ChapterWhereInput | Prisma.ChapterWhereInput[]
+  programSlug?: Prisma.StringFilter<"Chapter"> | string
+  id?: Prisma.IntFilter<"Chapter"> | number
   name?: Prisma.StringFilter<"Chapter"> | string
+  slug?: Prisma.StringFilter<"Chapter"> | string
   createdAt?: Prisma.DateTimeFilter<"Chapter"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Chapter"> | Date | string
+  program?: Prisma.XOR<Prisma.ProgramScalarRelationFilter, Prisma.ProgramWhereInput>
   questions?: Prisma.QuestionListRelationFilter
-}, "id" | "slug">
+}, "programSlug_id" | "programSlug_slug">
 
 export type ChapterOrderByWithAggregationInput = {
+  programSlug?: Prisma.SortOrder
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
@@ -257,6 +273,7 @@ export type ChapterScalarWhereWithAggregatesInput = {
   AND?: Prisma.ChapterScalarWhereWithAggregatesInput | Prisma.ChapterScalarWhereWithAggregatesInput[]
   OR?: Prisma.ChapterScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ChapterScalarWhereWithAggregatesInput | Prisma.ChapterScalarWhereWithAggregatesInput[]
+  programSlug?: Prisma.StringWithAggregatesFilter<"Chapter"> | string
   id?: Prisma.IntWithAggregatesFilter<"Chapter"> | number
   name?: Prisma.StringWithAggregatesFilter<"Chapter"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Chapter"> | string
@@ -270,10 +287,12 @@ export type ChapterCreateInput = {
   slug: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  program: Prisma.ProgramCreateNestedOneWithoutChaptersInput
   questions?: Prisma.QuestionCreateNestedManyWithoutChapterInput
 }
 
 export type ChapterUncheckedCreateInput = {
+  programSlug: string
   id: number
   name: string
   slug: string
@@ -288,10 +307,12 @@ export type ChapterUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  program?: Prisma.ProgramUpdateOneRequiredWithoutChaptersNestedInput
   questions?: Prisma.QuestionUpdateManyWithoutChapterNestedInput
 }
 
 export type ChapterUncheckedUpdateInput = {
+  programSlug?: Prisma.StringFieldUpdateOperationsInput | string
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
@@ -301,6 +322,7 @@ export type ChapterUncheckedUpdateInput = {
 }
 
 export type ChapterCreateManyInput = {
+  programSlug: string
   id: number
   name: string
   slug: string
@@ -317,6 +339,7 @@ export type ChapterUpdateManyMutationInput = {
 }
 
 export type ChapterUncheckedUpdateManyInput = {
+  programSlug?: Prisma.StringFieldUpdateOperationsInput | string
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
@@ -324,7 +347,28 @@ export type ChapterUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type ChapterListRelationFilter = {
+  every?: Prisma.ChapterWhereInput
+  some?: Prisma.ChapterWhereInput
+  none?: Prisma.ChapterWhereInput
+}
+
+export type ChapterOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
+export type ChapterProgramSlugSlugCompoundUniqueInput = {
+  programSlug: string
+  slug: string
+}
+
+export type ChapterProgramSlugIdCompoundUniqueInput = {
+  programSlug: string
+  id: number
+}
+
 export type ChapterCountOrderByAggregateInput = {
+  programSlug?: Prisma.SortOrder
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
@@ -337,6 +381,7 @@ export type ChapterAvgOrderByAggregateInput = {
 }
 
 export type ChapterMaxOrderByAggregateInput = {
+  programSlug?: Prisma.SortOrder
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
@@ -345,6 +390,7 @@ export type ChapterMaxOrderByAggregateInput = {
 }
 
 export type ChapterMinOrderByAggregateInput = {
+  programSlug?: Prisma.SortOrder
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   slug?: Prisma.SortOrder
@@ -361,6 +407,48 @@ export type ChapterScalarRelationFilter = {
   isNot?: Prisma.ChapterWhereInput
 }
 
+export type ChapterCreateNestedManyWithoutProgramInput = {
+  create?: Prisma.XOR<Prisma.ChapterCreateWithoutProgramInput, Prisma.ChapterUncheckedCreateWithoutProgramInput> | Prisma.ChapterCreateWithoutProgramInput[] | Prisma.ChapterUncheckedCreateWithoutProgramInput[]
+  connectOrCreate?: Prisma.ChapterCreateOrConnectWithoutProgramInput | Prisma.ChapterCreateOrConnectWithoutProgramInput[]
+  createMany?: Prisma.ChapterCreateManyProgramInputEnvelope
+  connect?: Prisma.ChapterWhereUniqueInput | Prisma.ChapterWhereUniqueInput[]
+}
+
+export type ChapterUncheckedCreateNestedManyWithoutProgramInput = {
+  create?: Prisma.XOR<Prisma.ChapterCreateWithoutProgramInput, Prisma.ChapterUncheckedCreateWithoutProgramInput> | Prisma.ChapterCreateWithoutProgramInput[] | Prisma.ChapterUncheckedCreateWithoutProgramInput[]
+  connectOrCreate?: Prisma.ChapterCreateOrConnectWithoutProgramInput | Prisma.ChapterCreateOrConnectWithoutProgramInput[]
+  createMany?: Prisma.ChapterCreateManyProgramInputEnvelope
+  connect?: Prisma.ChapterWhereUniqueInput | Prisma.ChapterWhereUniqueInput[]
+}
+
+export type ChapterUpdateManyWithoutProgramNestedInput = {
+  create?: Prisma.XOR<Prisma.ChapterCreateWithoutProgramInput, Prisma.ChapterUncheckedCreateWithoutProgramInput> | Prisma.ChapterCreateWithoutProgramInput[] | Prisma.ChapterUncheckedCreateWithoutProgramInput[]
+  connectOrCreate?: Prisma.ChapterCreateOrConnectWithoutProgramInput | Prisma.ChapterCreateOrConnectWithoutProgramInput[]
+  upsert?: Prisma.ChapterUpsertWithWhereUniqueWithoutProgramInput | Prisma.ChapterUpsertWithWhereUniqueWithoutProgramInput[]
+  createMany?: Prisma.ChapterCreateManyProgramInputEnvelope
+  set?: Prisma.ChapterWhereUniqueInput | Prisma.ChapterWhereUniqueInput[]
+  disconnect?: Prisma.ChapterWhereUniqueInput | Prisma.ChapterWhereUniqueInput[]
+  delete?: Prisma.ChapterWhereUniqueInput | Prisma.ChapterWhereUniqueInput[]
+  connect?: Prisma.ChapterWhereUniqueInput | Prisma.ChapterWhereUniqueInput[]
+  update?: Prisma.ChapterUpdateWithWhereUniqueWithoutProgramInput | Prisma.ChapterUpdateWithWhereUniqueWithoutProgramInput[]
+  updateMany?: Prisma.ChapterUpdateManyWithWhereWithoutProgramInput | Prisma.ChapterUpdateManyWithWhereWithoutProgramInput[]
+  deleteMany?: Prisma.ChapterScalarWhereInput | Prisma.ChapterScalarWhereInput[]
+}
+
+export type ChapterUncheckedUpdateManyWithoutProgramNestedInput = {
+  create?: Prisma.XOR<Prisma.ChapterCreateWithoutProgramInput, Prisma.ChapterUncheckedCreateWithoutProgramInput> | Prisma.ChapterCreateWithoutProgramInput[] | Prisma.ChapterUncheckedCreateWithoutProgramInput[]
+  connectOrCreate?: Prisma.ChapterCreateOrConnectWithoutProgramInput | Prisma.ChapterCreateOrConnectWithoutProgramInput[]
+  upsert?: Prisma.ChapterUpsertWithWhereUniqueWithoutProgramInput | Prisma.ChapterUpsertWithWhereUniqueWithoutProgramInput[]
+  createMany?: Prisma.ChapterCreateManyProgramInputEnvelope
+  set?: Prisma.ChapterWhereUniqueInput | Prisma.ChapterWhereUniqueInput[]
+  disconnect?: Prisma.ChapterWhereUniqueInput | Prisma.ChapterWhereUniqueInput[]
+  delete?: Prisma.ChapterWhereUniqueInput | Prisma.ChapterWhereUniqueInput[]
+  connect?: Prisma.ChapterWhereUniqueInput | Prisma.ChapterWhereUniqueInput[]
+  update?: Prisma.ChapterUpdateWithWhereUniqueWithoutProgramInput | Prisma.ChapterUpdateWithWhereUniqueWithoutProgramInput[]
+  updateMany?: Prisma.ChapterUpdateManyWithWhereWithoutProgramInput | Prisma.ChapterUpdateManyWithWhereWithoutProgramInput[]
+  deleteMany?: Prisma.ChapterScalarWhereInput | Prisma.ChapterScalarWhereInput[]
+}
+
 export type ChapterCreateNestedOneWithoutQuestionsInput = {
   create?: Prisma.XOR<Prisma.ChapterCreateWithoutQuestionsInput, Prisma.ChapterUncheckedCreateWithoutQuestionsInput>
   connectOrCreate?: Prisma.ChapterCreateOrConnectWithoutQuestionsInput
@@ -375,15 +463,73 @@ export type ChapterUpdateOneRequiredWithoutQuestionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ChapterUpdateToOneWithWhereWithoutQuestionsInput, Prisma.ChapterUpdateWithoutQuestionsInput>, Prisma.ChapterUncheckedUpdateWithoutQuestionsInput>
 }
 
+export type ChapterCreateWithoutProgramInput = {
+  id: number
+  name: string
+  slug: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  questions?: Prisma.QuestionCreateNestedManyWithoutChapterInput
+}
+
+export type ChapterUncheckedCreateWithoutProgramInput = {
+  id: number
+  name: string
+  slug: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  questions?: Prisma.QuestionUncheckedCreateNestedManyWithoutChapterInput
+}
+
+export type ChapterCreateOrConnectWithoutProgramInput = {
+  where: Prisma.ChapterWhereUniqueInput
+  create: Prisma.XOR<Prisma.ChapterCreateWithoutProgramInput, Prisma.ChapterUncheckedCreateWithoutProgramInput>
+}
+
+export type ChapterCreateManyProgramInputEnvelope = {
+  data: Prisma.ChapterCreateManyProgramInput | Prisma.ChapterCreateManyProgramInput[]
+  skipDuplicates?: boolean
+}
+
+export type ChapterUpsertWithWhereUniqueWithoutProgramInput = {
+  where: Prisma.ChapterWhereUniqueInput
+  update: Prisma.XOR<Prisma.ChapterUpdateWithoutProgramInput, Prisma.ChapterUncheckedUpdateWithoutProgramInput>
+  create: Prisma.XOR<Prisma.ChapterCreateWithoutProgramInput, Prisma.ChapterUncheckedCreateWithoutProgramInput>
+}
+
+export type ChapterUpdateWithWhereUniqueWithoutProgramInput = {
+  where: Prisma.ChapterWhereUniqueInput
+  data: Prisma.XOR<Prisma.ChapterUpdateWithoutProgramInput, Prisma.ChapterUncheckedUpdateWithoutProgramInput>
+}
+
+export type ChapterUpdateManyWithWhereWithoutProgramInput = {
+  where: Prisma.ChapterScalarWhereInput
+  data: Prisma.XOR<Prisma.ChapterUpdateManyMutationInput, Prisma.ChapterUncheckedUpdateManyWithoutProgramInput>
+}
+
+export type ChapterScalarWhereInput = {
+  AND?: Prisma.ChapterScalarWhereInput | Prisma.ChapterScalarWhereInput[]
+  OR?: Prisma.ChapterScalarWhereInput[]
+  NOT?: Prisma.ChapterScalarWhereInput | Prisma.ChapterScalarWhereInput[]
+  programSlug?: Prisma.StringFilter<"Chapter"> | string
+  id?: Prisma.IntFilter<"Chapter"> | number
+  name?: Prisma.StringFilter<"Chapter"> | string
+  slug?: Prisma.StringFilter<"Chapter"> | string
+  createdAt?: Prisma.DateTimeFilter<"Chapter"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Chapter"> | Date | string
+}
+
 export type ChapterCreateWithoutQuestionsInput = {
   id: number
   name: string
   slug: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  program: Prisma.ProgramCreateNestedOneWithoutChaptersInput
 }
 
 export type ChapterUncheckedCreateWithoutQuestionsInput = {
+  programSlug: string
   id: number
   name: string
   slug: string
@@ -413,9 +559,45 @@ export type ChapterUpdateWithoutQuestionsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  program?: Prisma.ProgramUpdateOneRequiredWithoutChaptersNestedInput
 }
 
 export type ChapterUncheckedUpdateWithoutQuestionsInput = {
+  programSlug?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ChapterCreateManyProgramInput = {
+  id: number
+  name: string
+  slug: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ChapterUpdateWithoutProgramInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  questions?: Prisma.QuestionUpdateManyWithoutChapterNestedInput
+}
+
+export type ChapterUncheckedUpdateWithoutProgramInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  questions?: Prisma.QuestionUncheckedUpdateManyWithoutChapterNestedInput
+}
+
+export type ChapterUncheckedUpdateManyWithoutProgramInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
@@ -455,32 +637,39 @@ export type ChapterCountOutputTypeCountQuestionsArgs<ExtArgs extends runtime.Typ
 
 
 export type ChapterSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  programSlug?: boolean
   id?: boolean
   name?: boolean
   slug?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  program?: boolean | Prisma.ProgramDefaultArgs<ExtArgs>
   questions?: boolean | Prisma.Chapter$questionsArgs<ExtArgs>
   _count?: boolean | Prisma.ChapterCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["chapter"]>
 
 export type ChapterSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  programSlug?: boolean
   id?: boolean
   name?: boolean
   slug?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  program?: boolean | Prisma.ProgramDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["chapter"]>
 
 export type ChapterSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  programSlug?: boolean
   id?: boolean
   name?: boolean
   slug?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  program?: boolean | Prisma.ProgramDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["chapter"]>
 
 export type ChapterSelectScalar = {
+  programSlug?: boolean
   id?: boolean
   name?: boolean
   slug?: boolean
@@ -488,20 +677,27 @@ export type ChapterSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ChapterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "createdAt" | "updatedAt", ExtArgs["result"]["chapter"]>
+export type ChapterOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"programSlug" | "id" | "name" | "slug" | "createdAt" | "updatedAt", ExtArgs["result"]["chapter"]>
 export type ChapterInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  program?: boolean | Prisma.ProgramDefaultArgs<ExtArgs>
   questions?: boolean | Prisma.Chapter$questionsArgs<ExtArgs>
   _count?: boolean | Prisma.ChapterCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type ChapterIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type ChapterIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type ChapterIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  program?: boolean | Prisma.ProgramDefaultArgs<ExtArgs>
+}
+export type ChapterIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  program?: boolean | Prisma.ProgramDefaultArgs<ExtArgs>
+}
 
 export type $ChapterPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Chapter"
   objects: {
+    program: Prisma.$ProgramPayload<ExtArgs>
     questions: Prisma.$QuestionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
+    programSlug: string
     id: number
     name: string
     slug: string
@@ -590,8 +786,8 @@ export interface ChapterDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * // Get first 10 Chapters
    * const chapters = await prisma.chapter.findMany({ take: 10 })
    * 
-   * // Only select the `id`
-   * const chapterWithIdOnly = await prisma.chapter.findMany({ select: { id: true } })
+   * // Only select the `programSlug`
+   * const chapterWithProgramSlugOnly = await prisma.chapter.findMany({ select: { programSlug: true } })
    * 
    */
   findMany<T extends ChapterFindManyArgs>(args?: Prisma.SelectSubset<T, ChapterFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ChapterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -635,9 +831,9 @@ export interface ChapterDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   ]
    * })
    * 
-   * // Create many Chapters and only return the `id`
-   * const chapterWithIdOnly = await prisma.chapter.createManyAndReturn({
-   *   select: { id: true },
+   * // Create many Chapters and only return the `programSlug`
+   * const chapterWithProgramSlugOnly = await prisma.chapter.createManyAndReturn({
+   *   select: { programSlug: true },
    *   data: [
    *     // ... provide data here
    *   ]
@@ -726,9 +922,9 @@ export interface ChapterDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   ]
    * })
    * 
-   * // Update zero or more Chapters and only return the `id`
-   * const chapterWithIdOnly = await prisma.chapter.updateManyAndReturn({
-   *   select: { id: true },
+   * // Update zero or more Chapters and only return the `programSlug`
+   * const chapterWithProgramSlugOnly = await prisma.chapter.updateManyAndReturn({
+   *   select: { programSlug: true },
    *   where: {
    *     // ... provide filter here
    *   },
@@ -901,6 +1097,7 @@ readonly fields: ChapterFieldRefs;
  */
 export interface Prisma__ChapterClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  program<T extends Prisma.ProgramDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProgramDefaultArgs<ExtArgs>>): Prisma.Prisma__ProgramClient<runtime.Types.Result.GetResult<Prisma.$ProgramPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   questions<T extends Prisma.Chapter$questionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Chapter$questionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -931,6 +1128,7 @@ export interface Prisma__ChapterClient<T, Null = never, ExtArgs extends runtime.
  * Fields of the Chapter model
  */
 export interface ChapterFieldRefs {
+  readonly programSlug: Prisma.FieldRef<"Chapter", 'String'>
   readonly id: Prisma.FieldRef<"Chapter", 'Int'>
   readonly name: Prisma.FieldRef<"Chapter", 'String'>
   readonly slug: Prisma.FieldRef<"Chapter", 'String'>
@@ -1190,6 +1388,10 @@ export type ChapterCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    */
   data: Prisma.ChapterCreateManyInput | Prisma.ChapterCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ChapterIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1260,6 +1462,10 @@ export type ChapterUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many Chapters to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ChapterIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

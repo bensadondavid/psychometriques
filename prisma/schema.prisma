@@ -148,21 +148,39 @@ model Subscription {
   @@map("subscription")
 }
 
-model Chapter {
-  id        Int        @id
-  name      String
-  slug      String     @unique
-  questions Question[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+model Program {
+  slug        String    @id
+  name        String
+  description String?   @db.Text
+  isActive    Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  chapters    Chapter[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
+  @@map("program")
+}
+
+model Chapter {
+  programSlug String
+  program     Program    @relation(fields: [programSlug], references: [slug], onDelete: Restrict)
+  id          Int
+  name        String
+  slug        String
+  questions   Question[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@id([programSlug, id])
+  @@unique([programSlug, slug])
   @@map("chapter")
 }
 
 model Question {
-  id              String         @id
+  programSlug     String
+  id              String
   chapterId       Int
-  chapter         Chapter        @relation(fields: [chapterId], references: [id], onDelete: Restrict)
+  chapter         Chapter        @relation(fields: [programSlug, chapterId], references: [programSlug, id], onDelete: Restrict)
   subTheme        String
   difficulty      Int
   difficultyLabel String
@@ -181,9 +199,10 @@ model Question {
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
 
-  @@index([chapterId, difficulty])
-  @@index([status])
-  @@index([subTheme])
+  @@id([programSlug, id])
+  @@index([programSlug, chapterId, difficulty])
+  @@index([programSlug, status])
+  @@index([programSlug, subTheme])
   @@map("question")
 }
 

@@ -28,10 +28,18 @@ type ImportResult = {
   issues?: Issue[];
   imported?: { inserted: number; updated: number };
   expectedHeaders?: string[];
+  program?: { slug: string; name: string };
 };
 
-export function CsvQuestionImport() {
+type ProgramOption = { slug: string; name: string };
+
+export function CsvQuestionImport({ programs }: { programs: ProgramOption[] }) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [programSlug, setProgramSlug] = useState(
+    programs.find((program) => program.slug === "psychometrique")?.slug ??
+      programs[0]?.slug ??
+      "",
+  );
   const [file, setFile] = useState<File | null>(null);
   const [result, setResult] = useState<ImportResult | null>(null);
   const [busy, setBusy] = useState<"validate" | "import" | null>(null);
@@ -45,6 +53,7 @@ export function CsvQuestionImport() {
       const body = new FormData();
       body.set("file", file);
       body.set("mode", mode);
+      body.set("programSlug", programSlug);
       const response = await fetch("/api/admin/questions/import", {
         method: "POST",
         body,
@@ -78,6 +87,24 @@ export function CsvQuestionImport() {
       </section>
 
       <section className={styles.card}>
+        <label className={styles.programField}>
+          <span>Parcours de destination</span>
+          <select
+            value={programSlug}
+            onChange={(event) => {
+              setProgramSlug(event.target.value);
+              setResult(null);
+            }}
+            disabled={busy !== null}
+          >
+            {programs.map((program) => (
+              <option key={program.slug} value={program.slug}>
+                {program.name}
+              </option>
+            ))}
+          </select>
+        </label>
+
         <div
           className={styles.dropzone}
           onClick={() => inputRef.current?.click()}
@@ -117,7 +144,7 @@ export function CsvQuestionImport() {
         <div className={styles.actions}>
           <button
             className={styles.secondary}
-            disabled={!file || busy !== null}
+            disabled={!file || !programSlug || busy !== null}
             onClick={() => submit("validate")}
             type="button"
           >
@@ -127,6 +154,7 @@ export function CsvQuestionImport() {
             className={styles.primary}
             disabled={
               !file ||
+              !programSlug ||
               busy !== null ||
               !result?.ok ||
               result.mode !== "validate"
@@ -163,7 +191,8 @@ export function CsvQuestionImport() {
 
           {result.imported && (
             <div className={styles.successBanner}>
-              Import terminé : <strong>{result.imported.inserted}</strong>{" "}
+              Import {result.program ? `· ${result.program.name} ` : ""}
+              terminé : <strong>{result.imported.inserted}</strong>{" "}
               question(s) ajoutée(s) et{" "}
               <strong>{result.imported.updated}</strong> mise(s) à jour.
             </div>

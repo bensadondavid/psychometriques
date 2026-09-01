@@ -58,6 +58,7 @@ export const ModelName = {
   Passkey: 'Passkey',
   TwoFactor: 'TwoFactor',
   Subscription: 'Subscription',
+  Program: 'Program',
   Chapter: 'Chapter',
   Question: 'Question'
 } as const
@@ -197,7 +198,21 @@ export const SubscriptionScalarFieldEnum = {
 export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
 
 
+export const ProgramScalarFieldEnum = {
+  slug: 'slug',
+  name: 'name',
+  description: 'description',
+  isActive: 'isActive',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProgramScalarFieldEnum = (typeof ProgramScalarFieldEnum)[keyof typeof ProgramScalarFieldEnum]
+
+
 export const ChapterScalarFieldEnum = {
+  programSlug: 'programSlug',
   id: 'id',
   name: 'name',
   slug: 'slug',
@@ -209,6 +224,7 @@ export type ChapterScalarFieldEnum = (typeof ChapterScalarFieldEnum)[keyof typeo
 
 
 export const QuestionScalarFieldEnum = {
+  programSlug: 'programSlug',
   id: 'id',
   chapterId: 'chapterId',
   subTheme: 'subTheme',
