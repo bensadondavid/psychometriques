@@ -1,12 +1,6 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import {
-  admin,
-  captcha,
-  haveIBeenPwned,
-  lastLoginMethod,
-  twoFactor,
-} from "better-auth/plugins";
+import { admin, captcha, haveIBeenPwned, lastLoginMethod, twoFactor,} from "better-auth/plugins";
 import { i18n, locales } from "@better-auth/i18n";
 import { prisma } from "../database/prisma";
 import { passkey } from "@better-auth/passkey";
