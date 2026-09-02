@@ -54,7 +54,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </div>
 
         <footer className="relative z-10 hidden items-center justify-between border-t border-[#cbbfae]/50 px-6 py-4 text-[0.62rem] uppercase tracking-[0.18em] text-[#8a7e71] sm:flex sm:px-10 lg:px-14 xl:px-20">
-          <span>Préparation psychométrique</span>
+          <span>Préparation psychométriques</span>
           <span className="hidden sm:inline">Rigueur · Confiance · Réussite</span>
         </footer>
       </section>

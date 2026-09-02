@@ -60,7 +60,11 @@ export default function SignUp() {
           : undefined,
       });
       if (result.error) return toast.error(result.error.message);
-      toast.success("Compte créé ! Vérifiez votre email pour continuer.");
+      toast.success("Vérifiez votre adresse email", {
+        description:
+          "Le compte existait peut-être déjà, mais n’avait simplement pas encore été vérifié. Un nouveau lien vient de vous être envoyé.",
+        duration: 8000,
+      });
     } catch {
       toast.error("Une erreur est survenue");
     } finally {

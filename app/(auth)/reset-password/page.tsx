@@ -9,6 +9,10 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth/auth-client";
+import {
+  TurnstileCaptcha,
+  turnstileSiteKey,
+} from "@/components/auth/turnstile-captcha";
 
 const inputClass = "h-12 rounded-none border-[#bdb09f] bg-[#fbf8f2]/80 px-4 text-[15px] text-[#241d19] shadow-none placeholder:text-[#a09384] focus-visible:border-[#45121d] focus-visible:ring-1 focus-visible:ring-[#45121d]";
 const labelClass = "text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-[#766a5e]";
@@ -26,6 +30,8 @@ function ResetPasswordContent() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaResetKey, setCaptchaResetKey] = useState(0);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -36,7 +42,13 @@ function ResetPasswordContent() {
     if (!token) return toast.error("Lien invalide ou expiré");
     try {
       setIsLoading(true);
-      const result = await authClient.resetPassword({ newPassword: password, token });
+      const result = await authClient.resetPassword({
+        newPassword: password,
+        token,
+        fetchOptions: captchaToken
+          ? { headers: { "x-captcha-response": captchaToken } }
+          : undefined,
+      });
       if (result.error) return toast.error(result.error.message);
       toast.success("Mot de passe mis à jour !");
       setTimeout(() => router.push("/login"), 800);
@@ -44,6 +56,10 @@ function ResetPasswordContent() {
       toast.error("Une erreur est survenue");
     } finally {
       setIsLoading(false);
+      if (turnstileSiteKey) {
+        setCaptchaToken("");
+        setCaptchaResetKey((value) => value + 1);
+      }
     }
   };
 
@@ -74,7 +90,11 @@ function ResetPasswordContent() {
           <label htmlFor="confirmation" className={labelClass}>Confirmation</label>
           <div className="relative"><Input id="confirmation" type={showConfirm ? "text" : "password"} autoComplete="new-password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} placeholder="Répétez votre mot de passe" className={`${inputClass} pr-12`} minLength={8} required /><button type="button" onClick={() => setShowConfirm((value) => !value)} className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8f8274] hover:text-[#45121d]" aria-label={showConfirm ? "Masquer la confirmation" : "Afficher la confirmation"}>{showConfirm ? <EyeOff className="size-4" /> : <Eye className="size-4" />}</button></div>
         </div>
-        <Button type="submit" className="h-12 w-full rounded-none bg-[#45121d] text-sm font-semibold tracking-wide text-[#fffaf0] hover:bg-[#591725]" disabled={isLoading}>{isLoading ? "Mise à jour…" : "Enregistrer le mot de passe"}</Button>
+        <TurnstileCaptcha
+          onTokenChange={setCaptchaToken}
+          resetKey={captchaResetKey}
+        />
+        <Button type="submit" className="h-12 w-full rounded-none bg-[#45121d] text-sm font-semibold tracking-wide text-[#fffaf0] hover:bg-[#591725]" disabled={isLoading || (Boolean(turnstileSiteKey) && !captchaToken)}>{isLoading ? "Mise à jour…" : "Enregistrer le mot de passe"}</Button>
       </form>
       <p className="mt-8 text-center text-sm text-[#766a5e]"><Link href="/login" className="font-semibold text-[#45121d] underline-offset-4 hover:underline">Retour à la connexion</Link></p>
     </div>

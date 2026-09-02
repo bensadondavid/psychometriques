@@ -1,11 +1,9 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { admin, captcha, haveIBeenPwned, lastLoginMethod, twoFactor,} from "better-auth/plugins";
+import { admin, captcha, lastLoginMethod, twoFactor,} from "better-auth/plugins";
 import { i18n, locales } from "@better-auth/i18n";
 import { prisma } from "../database/prisma";
 import { passkey } from "@better-auth/passkey";
-import { stripe } from "@better-auth/stripe";
-import Stripe from "stripe";
 import { sendAccountDeletionEmail } from "../mail/emails/account-deletion-email";
 import { sendPasswordResetEmail } from "../mail/emails/password-reset-email";
 import { sendVerificationEmail } from "../mail/emails/verification-email";
@@ -13,44 +11,20 @@ import { sendVerificationEmail } from "../mail/emails/verification-email";
 const turnstileSecretKey = process.env.TURNSTILE_SECRET_KEY;
 const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-const stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-const stripeMonthlyPriceId = process.env.STRIPE_PREMIUM_PRICE_ID;
-const stripeAnnualPriceId = process.env.STRIPE_PREMIUM_ANNUAL_PRICE_ID;
-
 const captchaPlugin =
   turnstileSecretKey && turnstileSiteKey
     ? captcha({
         provider: "cloudflare-turnstile",
         secretKey: turnstileSecretKey,
+        endpoints: [
+          "/sign-up/email",
+          "/sign-in/email",
+          "/request-password-reset",
+          "/reset-password",
+        ],
       })
     : null;
 
-const stripePlugin =
-  stripeSecretKey && stripeWebhookSecret
-    ? stripe({
-        stripeClient: new Stripe(stripeSecretKey),
-        stripeWebhookSecret,
-        createCustomerOnSignUp: true,
-        ...(stripeMonthlyPriceId
-          ? {
-              subscription: {
-                enabled: true as const,
-                requireEmailVerification: true,
-                plans: [
-                  {
-                    name: "premium",
-                    priceId: stripeMonthlyPriceId,
-                    ...(stripeAnnualPriceId
-                      ? { annualDiscountPriceId: stripeAnnualPriceId }
-                      : {}),
-                  },
-                ],
-              },
-            }
-          : {}),
-      })
-    : null;
 
 export const auth = betterAuth({
   appName: "Psychométriques",
@@ -68,7 +42,7 @@ export const auth = betterAuth({
 
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true,
+    requireEmailVerification: false,
     minPasswordLength: 8,
     maxPasswordLength: 120,
     revokeSessionsOnPasswordReset: true,
@@ -88,7 +62,7 @@ export const auth = betterAuth({
         email: user.email,
         url,
       })
-    }
+    },
   },
 
   emailVerification:{
@@ -152,13 +126,7 @@ export const auth = betterAuth({
       translations: { fr: locales.fr },
       detection: ["header"],
     }),
-    haveIBeenPwned({
-      enabled: process.env.NODE_ENV === "production",
-      customPasswordCompromisedMessage:
-        "Ce mot de passe apparaît dans une fuite de données. Choisissez-en un autre.",
-    }),
     lastLoginMethod(),
     ...(captchaPlugin ? [captchaPlugin] : []),
-    ...(stripePlugin ? [stripePlugin] : []),
   ],
 });

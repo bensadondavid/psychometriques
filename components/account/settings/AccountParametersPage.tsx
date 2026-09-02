@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useRequireVerifiedEmail } from '@/hooks/use-require-verified-email'
 import { authClient } from '@/lib/auth/auth-client'
 
 type PasskeyToDelete = {
@@ -101,6 +102,7 @@ function getPasskeyRegistrationError(error: {
 export default function AccountParametersPage() {
   const router = useRouter()
   const session = authClient.useSession()
+  const requireVerifiedEmail = useRequireVerifiedEmail()
   const passkeys = authClient.useListPasskeys()
   const [activeSessions, setActiveSessions] = useState<AccountSession[]>([])
   const [loadingSessions, setLoadingSessions] = useState(true)
@@ -154,7 +156,9 @@ export default function AccountParametersPage() {
     }
   }, [user])
 
-  const openNameDialog = () => {
+  const openNameDialog = async () => {
+    if (!(await requireVerifiedEmail())) return
+
     setDisplayName(user?.name ?? '')
     setNameDialogOpen(true)
   }
@@ -189,6 +193,8 @@ export default function AccountParametersPage() {
   }
 
   const addPasskey = async () => {
+    if (!(await requireVerifiedEmail())) return
+
     try {
       setAddingPasskey(true)
       const { error } = await authClient.passkey.addPasskey({
@@ -212,6 +218,7 @@ export default function AccountParametersPage() {
 
   const deletePasskey = async () => {
     if (!passkeyToDelete) return
+    if (!(await requireVerifiedEmail())) return
 
     try {
       setDeletingId(passkeyToDelete.id)
@@ -247,7 +254,7 @@ export default function AccountParametersPage() {
         return
       }
 
-      toast.success('Email de vérification envoyé')
+      toast.success('Un nouvel email de vérification vient de vous être envoyé.')
     } catch {
       toast.error('Impossible d’envoyer l’email.')
     } finally {
