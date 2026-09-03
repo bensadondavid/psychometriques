@@ -1,562 +1,423 @@
-# Psychométriques
+# Plateforme de préparation aux examens et à l’hébreu
 
-Plateforme française d’entraînement aux tests psychométriques, construite avec
-Next.js, Better Auth, Prisma, PostgreSQL/Neon et déployée sur Vercel.
+Plateforme pédagogique francophone pour les examens psychométriques, AMIR et
+YAEL, ainsi que pour l’apprentissage de l’hébreu en Oulpan, du niveau Aleph au
+niveau Vav.
 
-L’objectif est de proposer des exercices de raisonnement verbal, quantitatif et
-géométrique, avec correction immédiate, historique, statistiques et accès par
-abonnement.
+Le développement commence par les psychométriques. AMIR, YAEL et Oulpan seront
+présents dans le catalogue et l’interface, mais resteront indiqués comme
+prochainement disponibles jusqu’à la création de leur contenu.
 
-## Méthode de travail
+Ce README est la référence produit et technique du projet : état réel, décisions
+validées, architecture cible, feuille de route et premier résultat attendu.
 
-Le projet est construit strictement étape par étape.
+## Vision produit
 
-- Une seule étape fonctionnelle est développée à la fois.
-- Chaque étape est testée et validée avant de commencer la suivante.
-- Après chaque tâche terminée, sa case est cochée dans cette feuille de route ;
-  les décisions d’architecture prises en cours de route y sont aussi reportées.
-- Une migration Prisma est relue avant son application.
-- Les systèmes existants sont réutilisés avant d’en créer de nouveaux.
-- Le MVP reste simple : aucune abstraction n’est ajoutée sans besoin concret.
+La plateforme permettra de :
 
-## État actuel
+- découvrir les programmes et leurs parcours ;
+- suivre des leçons organisées dans un ordre pédagogique ;
+- réaliser des exercices composés de questions ;
+- consulter les corrections puis, plus tard, sa progression ;
+- acheter un programme seul ou un pack ;
+- recevoir un accès offert ou financé par une organisation ;
+- proposer des partenariats aux prépas qui souhaitent équiper leurs élèves.
 
-- [x] Ancien domaine de vocabulaire supprimé.
-- [x] Nouvelle base Neon créée.
-- [x] Migration Prisma initiale appliquée.
-- [x] Connexions Prisma directe et poolée vérifiées.
-- [x] Better Auth vérifié avec email, Google et passkeys.
-- [x] Tables `user`, `session`, `account`, `verification` et `passkey` créées.
-- [x] TypeScript et ESLint valides.
-- [ ] Première fonctionnalité psychométrique à construire.
+## Vocabulaire
 
-La base ne contient actuellement aucun modèle métier psychométrique.
+- **Programme** : Psychométriques, AMIR, YAEL ou Oulpan.
+- **Parcours** : déclinaison d’un programme ; un niveau d’Oulpan est un parcours.
+- **Leçon** : unité pédagogique avec un contenu éditorial optionnel.
+- **Exercice** : activité rattachée à une leçon.
+- **Question** : élément réutilisable de la banque de questions.
+- **Offre** : produit commercial vendu seul ou en pack.
+- **Droit d’accès** : autorisation réelle de consulter un programme/parcours.
+- **Abonnement** : relation de facturation récurrente avec un prestataire.
 
-## Choix techniques actés
+Le mot `plan` est évité dans le modèle : `parcours` décrit la pédagogie et
+`offre` décrit le commerce.
 
-- Next.js App Router pour le site et le backend.
-- Server Components pour les lectures initiales.
-- Server Actions pour les mutations internes de l’interface.
-- Route Handlers pour les webhooks et intégrations externes.
-- Prisma avec Neon PostgreSQL.
-- `DATABASE_URL` directe pour les migrations.
-- `DATABASE_POOLER_URL` poolée pour l’application.
-- Better Auth pour les utilisateurs et les sessions.
-- `React.cache` uniquement pour dédupliquer les lectures privées pendant une
-  même requête, notamment la session courante.
-- Variables d’environnement lues par un module serveur unique et validées avec
-  Zod avant l’utilisation de Prisma, Better Auth, Resend ou une intégration
-  externe.
-- Autorisations centralisées dans des helpers serveur comme `requireUser()` et
-  `requireAdmin()` ; le proxy reste uniquement un filtre rapide et ne constitue
-  jamais la vérification de sécurité définitive.
-- Rôles utilisateurs représentés par un enum Prisma typé, pas par une chaîne
-  libre.
-- Difficulté sous forme d’enum fixe, pas de table dédiée.
-- Correction des réponses côté client pendant une session d’entraînement.
-- Sauvegarde des réponses par lots et à la fin d’une session.
-- Cloudflare R2 pour les illustrations ; seule la clé de l’objet est conservée
-  en base.
-- SVG privilégié pour la géométrie et WebP pour les autres illustrations.
-- Grow envisagé comme prestataire de paiement en shekels. Son intégration est
-  isolée dans `lib/payments/grow`, tandis que `lib/subscriptions` conserve les
-  statuts et règles d’accès propres à la plateforme.
-- Pas de Docker pour le MVP : Vercel, Neon et R2 fournissent déjà les
-  environnements nécessaires. Une branche Neon dédiée sera utilisée pour les
-  tests d’intégration.
-- Vitest pour la logique métier et les composants synchrones.
-- Playwright pour les parcours complets et les Server Components asynchrones.
-- Une seule interface authentifiée sous `/account`. Les outils administratifs
-  vivent sous `/account/admin` et ajoutent un contrôle serveur `requireAdmin()`
-  à la protection utilisateur déjà assurée par le layout `/account`.
+## Catalogue initial
+
+| Programme | Parcours initial | Lancement |
+| --- | --- | --- |
+| Psychométriques | Parcours général puis catégories spécialisées | Actif |
+| AMIR | À préciser | Bientôt disponible |
+| YAEL | À préciser | Bientôt disponible |
+| Oulpan | Aleph, Bet, Gimel, Dalet, He et Vav | Bientôt disponible |
+
+Les niveaux d’Oulpan seront des données en base, pas un enum Prisma, afin de
+pouvoir les réordonner ou les compléter sans modifier le schéma.
+
+## Structure pédagogique cible
+
+```text
+Programme
+└── Parcours
+    └── Leçon
+        └── Exercice
+            └── Questions ordonnées
+```
+
+Modèles prévus pour la première fondation :
+
+- `Program`
+- `Course`
+- `Lesson`
+- `Exercise`
+- `Question`
+- `QuestionOption`
+- `ExerciseQuestion`
+
+La banque de questions reste indépendante : une question peut être utilisée
+dans plusieurs exercices et la table de liaison conserve son ordre. Les
+contenus auront un statut explicite (`DRAFT`, `PUBLISHED`, `ARCHIVED` ou
+`COMING_SOON`). Seul Psychométriques sera publié au départ.
+
+Les pages sans contenu doivent afficher un état vide soigné, jamais du faux
+contenu codé en dur. La structure devra accepter le français, l’anglais et
+l’hébreu, avec une direction RTL limitée au contenu qui en a besoin.
+
+## Import CSV des questions
+
+L’import CSV devra prévoir :
+
+- un identifiant externe stable ;
+- le programme, le parcours et le thème ;
+- le type et la difficulté ;
+- l’énoncé, les réponses, la bonne réponse et l’explication optionnelle ;
+- le statut de publication ;
+- une prévisualisation avant écriture ;
+- des erreurs précises avec numéros de lignes ;
+- une transaction empêchant un import partiel ;
+- un traitement idempotent évitant les doublons.
+
+L’import alimentera la banque. L’affectation aux exercices restera séparée sauf
+si un besoin d’import combiné est confirmé.
+
+## État actuel de l’authentification
+
+Better Auth et Prisma constituent actuellement la fondation fonctionnelle de la
+base de données.
+
+Déjà présent :
+
+- email et mot de passe, Google et passkeys ;
+- vérification d’email, réinitialisation du mot de passe et suppression du compte ;
+- sessions et révocation après réinitialisation ;
+- rôles techniques `user` et `admin` ;
+- suspension et usurpation via le plugin administrateur ;
+- réponses Better Auth en français ;
+- Cloudflare Turnstile lorsque ses deux clés sont configurées ;
+- route `/sign-in` à la place de `/login` ;
+- suppression de l’ancienne logique de double authentification.
+
+Le schéma contient seulement `User`, `Session`, `Account`, `Verification` et
+`Passkey`. La vérification d’email est envoyée mais n’est pas encore obligatoire
+pour utiliser le compte ; ce choix sera revu avant l’ouverture commerciale.
+
+Workflow Prisma retenu :
+
+```bash
+pnpm prisma format
+pnpm prisma migrate dev
+pnpm prisma generate
+```
+
+## Rôles et droits d’accès
+
+Les rôles restent uniquement `user` et `admin`. Un client, un utilisateur
+gratuit et un élève financé par une prépa restent des utilisateurs ordinaires.
+
+Leur accès sera géré par un droit indépendant, avec notamment ces origines :
+
+```text
+PURCHASE
+COMPLIMENTARY
+ORGANIZATION
+ADMIN
+```
+
+Un droit pourra viser un programme ou un parcours et comporter une expiration.
+Cela remplace proprement le besoin d’un rôle `specialuser`.
+
+## Offres commerciales
+
+Le catalogue commercial pourra proposer :
+
+- un programme seul ;
+- un niveau d’Oulpan précis ;
+- un pack de plusieurs programmes/parcours ;
+- une offre tout compris ;
+- une durée prépayée ;
+- un abonnement mensuel ou annuel ;
+- une offre entreprise par nombre de places ;
+- un accès offert par l’administration.
+
+Une offre accorde un ou plusieurs contenus via `OfferGrant`. Ses prix sont
+séparés afin de gérer plusieurs devises et fournisseurs.
+
+```text
+Offer
+├── OfferGrant
+└── Price
+
+ProviderCustomer
+Order
+Payment
+Subscription
+Entitlement
+```
+
+## Paiements
+
+Deux fournisseurs sont envisagés :
+
+- **Stripe**, rattaché à l’activité d’auto-entrepreneur, pour les paiements
+  internationaux et notamment les prix en euros ;
+- **Grow**, après validation du compte commercial, pour les cartes israéliennes,
+  les prix en shekels et des moyens locaux comme Bit.
+
+```text
+Choix de l’offre
+└── Choix du paiement
+    ├── Stripe : carte internationale / EUR
+    └── Grow : carte israélienne / ILS / Bit
+```
+
+Stripe et Grow encaissent ; la plateforme décide des droits d’accès. Les règles
+obligatoires sont :
+
+- ne jamais accorder un accès grâce à la seule redirection de succès ;
+- vérifier les webhooks et les traiter sans doublons ;
+- activer/prolonger les droits après confirmation serveur ;
+- gérer renouvellements, échecs, annulations et remboursements ;
+- conserver les identifiants externes sans données de carte ;
+- définir explicitement les prix par devise et fournisseur ;
+- prévoir éventuellement une période de grâce.
+
+Grow documente les paiements récurrents par carte, tandis que Bit reste un
+paiement ponctuel. Une offre Bit devra donc probablement être prépayée pour une
+durée définie.
+
+Références : [Stripe Checkout](https://docs.stripe.com/payments/checkout),
+[Grow API](https://developers.grow.business/) et
+[moyens de paiement Grow](https://developers.grow.business/reference/payments).
+
+Les tarifs, devises, durées et obligations de facturation seront validés avant
+l’intégration en production.
+
+## Quotas de questions
+
+La limitation mensuelle n’est pas décidée et ne bloque pas le MVP. Le modèle
+pourra accueillir plus tard une politique d’utilisation et des compteurs par
+période.
+
+Recommandation initiale : essai gratuit éventuellement limité et abonnements
+payants illimités. Une formule payante avec quota ne sera créée que si les
+données produit la justifient.
+
+## Entreprises et partenariats
+
+Une prépa sera une organisation, jamais un compte partagé.
+
+```text
+Organization
+├── OrganizationMember
+├── OrganizationContract
+├── SeatAllocation
+└── Cohort
+```
+
+À terme, elle pourra acheter des places, inviter ses élèves, former des groupes,
+attribuer des programmes et consulter des données de progression dans un cadre
+à définir. Les premiers contrats pourront être administrés et facturés
+manuellement.
+
+## Interface cible
+
+La direction artistique actuelle est conservée : bordeaux, crème, doré,
+typographie éditoriale et ambiance académique.
+
+Évolutions prévues :
+
+- accueil présentant les quatre programmes ;
+- Psychométriques actif et les autres marqués `Bientôt disponible` ;
+- niveaux Aleph à Vav visibles sur Oulpan ;
+- tableau de bord centré sur le parcours actuel ;
+- pages de leçons/exercices avec des états vides travaillés ;
+- navigation cohérente entre catalogue, apprentissage, compte et administration ;
+- suppression des promesses non vérifiables comme `10 000+ questions`.
+
+Routes envisagées :
+
+```text
+/
+/programmes
+/programmes/[programSlug]
+/tarifs
+/sign-in
+/sign-up
+
+/account/home
+/account/programmes
+/account/programmes/[programSlug]/parcours/[courseSlug]
+/account/lecons/[lessonSlug]
+/account/exercices/[exerciseId]
+/account/parametres
+/account/abonnement
+
+/account/admin/catalogue
+/account/admin/lecons
+/account/admin/exercices
+/account/admin/questions/import
+/account/admin/organisations
+```
+
+L’ancien espace `/admin` séparé devra être retiré ou déplacé pour conserver une
+seule convention administrative.
+
+## État réel du dépôt
+
+### Réalisé
+
+- [x] Next.js App Router, TypeScript et Tailwind CSS.
+- [x] Direction artistique et composants UI de base.
+- [x] PostgreSQL piloté par Prisma.
+- [x] Socle Better Auth coordonné avec Prisma.
+- [x] Connexions email, Google et passkeys.
+- [x] Emails de compte et protection Turnstile conditionnelle.
+- [x] Rôles `user` et `admin`.
+- [x] Renommage en cours de `/login` vers `/sign-in`.
+- [x] Retrait des anciens modèles métier pour repartir de zéro.
+- [x] Premiers layouts du compte et de l’administration.
+
+### À nettoyer ou construire
+
+- [ ] D’anciens fichiers d’import référencent encore les modèles supprimés.
+- [ ] TypeScript, ESLint et le build doivent être remis entièrement au vert.
+- [ ] Les routes administratives ne suivent pas toutes `/account/admin`.
+- [ ] Les textes présentent encore le site comme uniquement psychométrique.
+- [ ] Le nouveau domaine pédagogique n’existe pas encore dans Prisma.
+- [ ] Aucun paiement ni droit commercial n’est encore implémenté.
+
+## Technologies
+
+- Next.js 16, React 19 et TypeScript
+- Tailwind CSS 4
+- Better Auth
+- Prisma 7 avec PostgreSQL/Neon
+- Resend et Cloudflare Turnstile
+- Stripe installé mais pas encore intégré
+- pnpm
+
+Avant de modifier une API Next.js, lire la documentation de la version installée
+dans `node_modules/next/dist/docs`.
+
+```bash
+pnpm dev
+pnpm lint
+pnpm test
+pnpm build
+pnpm prisma format
+pnpm prisma migrate dev
+pnpm prisma generate
+```
+
+Une migration appliquée ne doit jamais être réécrite.
 
 ## Feuille de route
 
-### 0. Nettoyage et fondations — terminé
-
-- [x] Retirer les pages, routes, composants et modèles `Word` et `List`.
-- [x] Retirer les anciens dossiers vides liés aux mots, listes et exercices.
-- [x] Écarter la route `/admin` séparée au profit de `/account/admin`.
-- [x] Préparer l’arborescence cible des fonctionnalités, sans publier de routes
-  incomplètes.
-- [x] Conserver l’authentification, les comptes et les composants UI utiles.
-- [x] Repartir avec une migration initiale adaptée à la nouvelle base.
-- [x] Vérifier Prisma, Neon et Better Auth en conditions réelles.
-- [x] Renommer le projet et fournir une page d’accueil temporaire.
-
-### 1. Définir le catalogue de questions
-
-Avant de modifier la base, fixer définitivement les valeurs et relations du
-catalogue.
-
-- [ ] Définir les matières initiales : verbal et quantitatif.
-- [ ] Définir les premières catégories de chaque matière.
-- [ ] Fixer les difficultés, par exemple `EASY`, `MEDIUM`, `HARD`.
-- [ ] Fixer les statuts éditoriaux : `DRAFT`, `VALIDATED`, `PUBLISHED`.
-- [ ] Fixer les accès : `FREE`, `PREMIUM`.
-- [ ] Définir le format exact d’une question et de ses quatre réponses.
-- [ ] Définir le contrat CSV avant de construire l’import.
-
-Livrable : une spécification courte, validée, sans changement de base.
-
-### 2. Mettre en place les tests unitaires de base
-
-La stratégie de tests est introduite progressivement : aucun outil ou test
-n’est ajouté avant d’avoir un comportement réel à vérifier.
-
-- [ ] Installer et configurer Vitest.
-- [ ] Ajouter React Testing Library uniquement lorsque les premiers composants
-  interactifs doivent être testés.
-- [ ] Ajouter les scripts `test`, `test:run` et éventuellement `test:coverage`.
-- [ ] Créer une convention simple pour les fichiers `*.test.ts` et
-  `*.test.tsx`.
-- [ ] Tester en priorité les fonctions métier pures, sans base de données.
-- [ ] Éviter les snapshots volumineux et privilégier les comportements.
-- [ ] Exécuter les tests unitaires avec TypeScript et ESLint avant chaque étape
-  validée.
-
-Livrable : Vitest fonctionnel avec un premier test utile, pas un test factice.
-
-### 3. Centraliser et valider les variables d’environnement
-
-- [ ] Créer un module serveur unique, par exemple `lib/env/server.ts`.
-- [ ] Valider les variables avec Zod au démarrage ou lors du premier import.
-- [ ] Séparer les variables obligatoires des variables facultatives selon
-  l’environnement.
-- [ ] Vérifier notamment `DATABASE_URL`, `DATABASE_POOLER_URL`,
-  `BETTER_AUTH_URL` et `BETTER_AUTH_SECRET`.
-- [ ] Uniformiser le nom de la variable d’expéditeur Resend et supprimer les
-  variantes `RESEND_MAIL`, `RESEND_EMAIL` ou `RESEND_FROM_EMAIL` inutilisées.
-- [ ] Faire importer ce module par Prisma, Better Auth et Resend au lieu de lire
-  directement `process.env` dans plusieurs fichiers.
-- [ ] Empêcher toute importation de secrets dans un Client Component avec
-  `server-only`.
-- [ ] Conserver `.env.example` sans aucun secret réel.
-
-Livrable : une erreur explicite au démarrage lorsqu’une configuration requise
-est absente ou invalide.
-
-Tests à écrire pendant cette étape :
-
-- [ ] accepter un environnement complet et valide ;
-- [ ] rejeter un secret Better Auth trop court ;
-- [ ] rejeter une URL de base de données invalide ;
-- [ ] distinguer les variables obligatoires et facultatives selon
-  l’environnement.
-
-### 4. Typer les rôles et centraliser les autorisations
-
-- [x] Remplacer `role String` par un enum Prisma `Role`.
-- [x] Définir les rôles initiaux, par exemple `CLIENT` et `ADMIN`.
-- [x] Générer, relire et appliquer la migration du rôle.
-- [ ] Créer `requireUser()` pour les opérations nécessitant une session valide.
-- [ ] Créer `requireAdmin()` pour les opérations administratives.
-- [ ] Faire relire l’utilisateur et son rôle depuis une source serveur fiable.
-- [ ] Utiliser ces helpers dans les layouts, Server Actions et Route Handlers.
-- [ ] Garder `proxy.ts` comme redirection optimiste fondée sur le cookie, sans
-  lui confier l’autorisation définitive.
-- [ ] Prévoir une procédure explicite pour nommer le premier administrateur.
-- [ ] Vérifier les accès déconnecté, utilisateur et administrateur.
-
-Livrable : rôles typés et contrôles d’accès réutilisables avant la création de
-l’administration.
-
-Tests à écrire pendant cette étape :
-
-- [ ] refuser l’accès sans session ;
-- [ ] accepter un utilisateur connecté pour `requireUser()` ;
-- [ ] refuser un utilisateur normal pour `requireAdmin()` ;
-- [ ] accepter un administrateur pour `requireAdmin()`.
-
-### 5. Créer le modèle de données des questions
-
-- [ ] Ajouter les enums `Difficulty`, `QuestionStatus` et `ContentAccess`.
-- [ ] Ajouter `Subject` et `Category`.
-- [ ] Ajouter `Question`.
-- [ ] Ajouter quatre `QuestionOption` ordonnées par question.
-- [ ] Ajouter l’énoncé, l’explication et la durée recommandée.
-- [ ] Ajouter `imageKey` et `imageAlt` facultatifs.
-- [ ] Ajouter l’auteur, le validateur et les dates éditoriales utiles.
-- [ ] Ajouter une empreinte normalisée pour détecter les doublons.
-- [ ] Ajouter les index nécessaires aux filtres de publication et
-  d’entraînement.
-- [ ] Générer, relire et appliquer la migration Prisma.
-- [ ] Vérifier le schéma sur Neon.
-
-Livrable : modèle vide mais fonctionnel, sans interface administrateur.
-
-Tests à écrire pendant cette étape :
-
-- [ ] valider exactement quatre options ;
-- [ ] imposer une seule bonne réponse ;
-- [ ] produire une empreinte stable après normalisation ;
-- [ ] détecter deux questions équivalentes comme doublons ;
-- [ ] vérifier les valeurs des enums et les contraintes principales.
-
-### 6. Mettre en place l’espace administrateur
-
-- [ ] Créer le layout `/account/admin` dans l’interface authentifiée existante.
-- [ ] Protéger ce layout côté serveur avec `requireAdmin()`.
-- [ ] Afficher le lien d’administration uniquement aux administrateurs.
-- [ ] Ajouter une page d’accueil administrative minimale.
-- [ ] Préparer la navigation des futurs écrans de catalogue, questions et
-  import.
-
-Livrable : espace administrateur vide mais correctement protégé.
-
-### 7. Préparer les tests d’intégration Neon
-
-- [ ] Créer une branche Neon réservée aux tests automatisés.
-- [ ] Ajouter des variables d’environnement de test distinctes.
-- [ ] Interdire l’utilisation des URL de production pendant les tests.
-- [ ] Appliquer les migrations à la branche de test.
-- [ ] Prévoir un jeu minimal de données artificielles.
-- [ ] Créer une procédure reproductible de nettoyage ou recréation de la
-  branche.
-- [ ] Ne jamais utiliser `prisma migrate reset` sur la production.
-
-Livrable : base de test isolée et réinitialisable, sans Docker.
-
-### 8. Gérer les matières et catégories
-
-- [ ] Lister les matières et catégories dans `/account/admin/catalogue`.
-- [ ] Créer et modifier une matière.
-- [ ] Créer et modifier une catégorie rattachée à une matière.
-- [ ] Ordonner et activer/désactiver les éléments du catalogue.
-- [ ] Empêcher la suppression d’un élément encore utilisé.
-- [ ] Valider toutes les entrées avec Zod.
-
-Livrable : catalogue configurable depuis l’administration.
-
-Tests d’intégration à écrire pendant cette étape :
-
-- [ ] créer et modifier une matière ;
-- [ ] rattacher une catégorie à la bonne matière ;
-- [ ] empêcher une suppression interdite ;
-- [ ] refuser une mutation à un non-administrateur.
-
-### 9. Construire le CRUD des questions
-
-- [ ] Créer le formulaire complet d’une question.
-- [ ] Imposer exactement quatre réponses et une seule bonne réponse.
-- [ ] Modifier une question existante.
-- [ ] Afficher une liste paginée et filtrable.
-- [ ] Filtrer par matière, catégorie, difficulté, statut et accès.
-- [ ] Passer une question de brouillon à validée puis publiée.
-- [ ] Archiver ou supprimer une question selon les contraintes historiques.
-- [ ] Afficher une prévisualisation proche du futur écran d’entraînement.
-- [ ] Détecter les doublons à la création et à la modification.
-
-Livrable : gestion manuelle complète des questions, sans images ni CSV.
-
-Tests à écrire pendant cette étape :
-
-- [ ] créer une question avec quatre options dans une transaction ;
-- [ ] modifier une question sans perdre ses relations ;
-- [ ] rejeter un doublon ;
-- [ ] filtrer et paginer les questions ;
-- [ ] vérifier les transitions de statut autorisées.
-
-### 10. Ajouter les premiers tests E2E Playwright
-
-Playwright est ajouté lorsque l’administration possède enfin un parcours réel à
-tester. Il doit exécuter l’application compilée ou utiliser son `webServer`.
-
-- [ ] Installer et configurer Playwright.
-- [ ] Tester prioritairement Chromium dans l’intégration continue.
-- [ ] Réserver Firefox et WebKit aux versions importantes ou aux contrôles
-  périodiques.
-- [ ] Tester la redirection d’un visiteur déconnecté.
-- [ ] Tester le refus d’un utilisateur normal dans `/account/admin`.
-- [ ] Tester l’accès d’un administrateur.
-- [ ] Tester la création, la validation et la publication d’une question.
-- [ ] Conserver des sélecteurs accessibles et stables.
-
-Livrable : premiers parcours critiques vérifiés dans un vrai navigateur.
-
-### 11. Intégrer les illustrations Cloudflare R2
-
-- [ ] Créer et configurer le bucket R2.
-- [ ] Ajouter les variables d’environnement R2.
-- [ ] Créer une route ou Server Action d’upload réservée aux administrateurs.
-- [ ] Accepter uniquement SVG et WebP avec limites de taille.
-- [ ] Assainir les SVG avant stockage.
-- [ ] Générer des clés imprévisibles, par exemple
-  `geometry/triangle-a83f2.svg`.
-- [ ] Enregistrer uniquement `imageKey` et `imageAlt` en base.
-- [ ] Configurer le domaine public et `next/image` pour les WebP.
-- [ ] Prévoir la suppression des fichiers devenus orphelins.
-
-Livrable : ajout et affichage sécurisé d’une illustration sur une question.
-
-Tests à écrire pendant cette étape :
-
-- [ ] accepter uniquement SVG et WebP ;
-- [ ] refuser les fichiers trop volumineux ;
-- [ ] vérifier l’assainissement d’un SVG malveillant ;
-- [ ] vérifier la génération d’une clé imprévisible ;
-- [ ] gérer un fichier absent ou supprimé.
-
-### 12. Construire l’import CSV de questions
-
-- [ ] Fournir un modèle CSV téléchargeable.
-- [ ] Lire les séparateurs virgule, point-virgule et tabulation.
-- [ ] Valider les colonnes et chaque ligne côté client pour l’aperçu.
-- [ ] Revalider toutes les données côté serveur.
-- [ ] Afficher les erreurs avec leur numéro de ligne.
-- [ ] Détecter les doublons dans le fichier et dans la base.
-- [ ] Vérifier la cohérence matière/catégorie.
-- [ ] Accepter les valeurs françaises usuelles pour la difficulté puis les
-  convertir vers l’enum.
-- [ ] Importer les questions valides par lots transactionnels.
-- [ ] Créer les questions importées en brouillon par défaut.
-- [ ] Afficher un bilan : importées, ignorées, doublons et erreurs.
-- [ ] Tester des fichiers volumineux avant l’import des 2 000 questions.
-
-Livrable : import fiable de masse, sans IA nécessaire à l’exécution.
-
-Tests à écrire pendant cette étape :
-
-- [ ] tester les séparateurs virgule, point-virgule et tabulation ;
-- [ ] tester les colonnes absentes et valeurs invalides ;
-- [ ] convertir les difficultés françaises vers l’enum ;
-- [ ] détecter les doublons internes et ceux déjà présents en base ;
-- [ ] vérifier l’import transactionnel d’un fichier valide ;
-- [ ] tester un fichier représentatif du volume cible.
-
-### 13. Construire le moteur d’entraînement MVP
-
-- [ ] Créer l’écran de choix de matière, catégorie et difficulté.
-- [ ] Permettre de choisir le nombre de questions.
-- [ ] Ajouter un chronomètre facultatif.
-- [ ] Créer une session depuis les questions publiées accessibles.
-- [ ] Mélanger l’ordre des questions et des réponses côté serveur ou client.
-- [ ] Charger uniquement les questions de la session courante.
-- [ ] Valider les réponses immédiatement côté client.
-- [ ] Afficher la bonne réponse et l’explication.
-- [ ] Permettre de continuer jusqu’au résultat final.
-- [ ] Optimiser l’interface pour téléphone et ordinateur.
-- [ ] Gérer une perte temporaire de connexion sans perdre la session en cours.
-
-Livrable : une session complète jouable, sans statistiques persistantes.
-
-Tests Playwright à ajouter pendant cette étape :
-
-- [ ] choisir une matière, une catégorie et une difficulté ;
-- [ ] lancer une session ;
-- [ ] sélectionner et valider une réponse ;
-- [ ] afficher immédiatement la correction et l’explication ;
-- [ ] terminer une session sur ordinateur et téléphone.
-
-### 14. Enregistrer les sessions et réponses
-
-- [ ] Ajouter `PracticeSession`.
-- [ ] Ajouter les questions sélectionnées et leur ordre dans la session.
-- [ ] Ajouter `QuestionAttempt` pour chaque réponse.
-- [ ] Enregistrer la réponse choisie, sa justesse et le temps passé.
-- [ ] Sauvegarder périodiquement par lot, par exemple toutes les cinq réponses.
-- [ ] Finaliser la session dans une transaction.
-- [ ] Éviter les doublons en cas de nouvel envoi du même lot.
-- [ ] Permettre la reprise d’une session interrompue.
-- [ ] Conserver un historique cohérent si une question est modifiée plus tard.
-
-Livrable : historique fiable des entraînements.
-
-Tests d’intégration à écrire pendant cette étape :
-
-- [ ] sauvegarder un lot de réponses ;
-- [ ] renvoyer le même lot sans créer de doublon ;
-- [ ] reprendre une session interrompue ;
-- [ ] finaliser une session dans une transaction.
-
-### 15. Ajouter progression, statistiques et révision
-
-- [ ] Créer le tableau de bord utilisateur.
-- [ ] Calculer le taux de réussite global.
-- [ ] Calculer les résultats par matière, catégorie et difficulté.
-- [ ] Afficher le temps moyen par question.
-- [ ] Afficher l’évolution dans le temps.
-- [ ] Lister les sessions récentes.
-- [ ] Créer un mode « questions ratées ».
-- [ ] Éviter qu’une même mauvaise tentative soit comptée plusieurs fois dans
-  les indicateurs de maîtrise.
-- [ ] Prévoir des index et agrégations adaptés au volume réel.
-
-Livrable : progression consultable et révision ciblée.
-
-Tests unitaires à écrire pendant cette étape :
-
-- [ ] calculer le score global ;
-- [ ] agréger par matière, catégorie et difficulté ;
-- [ ] calculer le temps moyen ;
-- [ ] identifier les questions à réviser ;
-- [ ] éviter le double comptage des tentatives répétées.
-
-### 16. Ajouter l’abonnement et les droits d’accès
-
-- [ ] Valider l’API et le fonctionnement exact de Grow.
-- [ ] Implémenter le client, les types et la validation des notifications Grow
-  dans `lib/payments/grow`.
-- [ ] Conserver dans `lib/subscriptions` la logique indépendante du prestataire :
-  statuts, expiration et droits `FREE` ou `PREMIUM`.
-- [ ] Ajouter `Subscription` avec fournisseur, statut, expiration et référence.
-- [ ] Définir les statuts internes indépendamment des libellés Grow.
-- [ ] Créer le parcours de paiement en shekels.
-- [ ] Créer une route webhook publique dédiée à Grow.
-- [ ] Vérifier la signature ou le mécanisme d’authenticité du webhook.
-- [ ] Conserver les événements reçus pour assurer l’idempotence.
-- [ ] Activer, renouveler, annuler ou expirer automatiquement l’accès.
-- [ ] Contrôler l’accès premium côté serveur au démarrage d’une session.
-- [ ] Afficher l’état de l’abonnement dans le compte utilisateur.
-- [ ] Prévoir la réconciliation des paiements en cas de webhook manqué.
-
-Livrable : abonnement web fonctionnel et accès premium automatisé.
-
-Tests d’intégration à écrire pendant cette étape :
-
-- [ ] accepter un webhook Grow valide et refuser un webhook invalide ;
-- [ ] traiter deux fois le même événement sans double effet ;
-- [ ] activer, renouveler, annuler et expirer un abonnement ;
-- [ ] gérer des événements reçus dans le désordre ;
-- [ ] vérifier les accès gratuit et premium côté serveur.
-
-### 17. Finaliser le produit
-
-- [ ] Remplacer la page temporaire par une vraie page d’accueil publique.
-- [ ] Finaliser l’identité visuelle et le responsive.
-- [ ] Ajouter états de chargement, erreurs, pages 404 et limites vides.
-- [ ] Vérifier l’accessibilité clavier, les labels, contrastes et lecteurs
-  d’écran.
-- [ ] Ajouter les pages légales, confidentialité et conditions d’utilisation.
-- [ ] Configurer les métadonnées, favicon et partage social.
-- [ ] Ajouter une stratégie minimale de logs et de suivi des erreurs.
-- [ ] Vérifier les sauvegardes et restaurations Neon/R2.
-- [ ] Tester les performances avec le volume cible.
-- [ ] Tester les parcours principaux sur mobile et ordinateur.
-- [ ] Exécuter TypeScript, ESLint, build et tests avant chaque déploiement.
-- [ ] Configurer les variables Vercel par environnement.
-- [ ] Déployer une préproduction, la valider, puis lancer la production.
-
-Livrable : première version publique exploitable.
-
-Tests finaux :
-
-- [ ] exécuter tous les tests unitaires et d’intégration ;
-- [ ] exécuter les parcours Playwright critiques ;
-- [ ] vérifier Chromium, Firefox et WebKit avant le lancement ;
-- [ ] tester les tailles téléphone, tablette et ordinateur ;
-- [ ] vérifier clavier, lecteurs d’écran, contrastes et labels ;
-- [ ] vérifier le build de production et les performances avec le volume cible.
-
-## Stratégie de tests
-
-### Vérifications statiques
-
-À exécuter continuellement :
-
-```bash
-pnpm exec prisma validate
-pnpm exec next typegen
-pnpm exec tsc --noEmit
-pnpm lint
-pnpm build
-```
-
-### Tests unitaires et de composants
-
-Vitest couvre les fonctions pures, validations Zod, conversions, calculs,
-empreintes, droits d’accès et composants interactifs synchrones. Les tests
-vérifient des comportements observables plutôt que de grands snapshots.
-
-### Tests d’intégration
-
-Ils utilisent une branche Neon indépendante et uniquement des données
-artificielles. Ils couvrent Prisma, les transactions, Server Actions, imports,
-sessions, statistiques et webhooks.
-
-### Tests de bout en bout
-
-Playwright couvre les parcours complets, notamment l’authentification, les
-protections administratives, le CRUD, l’import et l’entraînement. Les Server
-Components asynchrones sont vérifiés par ces tests plutôt que rendus isolément
-avec Vitest.
-
-### Ce que nous ne testons pas directement
-
-Nous ne réimplémentons pas les tests internes de Better Auth, Prisma, Neon,
-Next.js ou R2. Nous testons uniquement notre configuration et nos parcours qui
-reposent sur ces services.
-
-## Docker
-
-Docker n’est pas nécessaire pour le MVP. Le développement et les tests
-utilisent Vercel, une branche Neon isolée et R2. Ajouter Docker maintenant
-créerait une configuration supplémentaire sans reproduire exactement
-l’environnement Vercel.
-
-Docker pourra être réévalué si le projet doit plus tard :
-
-- utiliser PostgreSQL localement et hors ligne ;
-- garantir un environnement identique à une équipe plus large ;
-- lancer plusieurs services locaux ;
-- être auto-hébergé en dehors de Vercel.
-
-## Ordre de travail immédiat
-
-Les prochaines étapes à traiter, une par une, sont :
-
-1. valider la structure exacte du catalogue et du CSV ;
-2. installer Vitest avec un premier test métier utile ;
-3. centraliser et valider les variables d’environnement ;
-4. typer les rôles et centraliser les autorisations ;
-5. concevoir le modèle Prisma des questions ;
-6. appliquer sa migration ;
-7. créer l’espace administrateur protégé sous `/account/admin` ;
-8. préparer la branche Neon de test ;
-9. construire la gestion des matières et catégories ;
-10. construire le CRUD des questions ;
-11. ajouter Playwright sur les premiers parcours réels.
-
-Nous ne commencerons pas l’import CSV, R2 ou le moteur d’entraînement avant que
-le CRUD manuel d’une question soit validé.
-
-## Environnement local
-
-Créer `.env` à partir de `.env.example`, puis renseigner les valeurs réelles.
-
-```bash
-cp .env.example .env
-pnpm dev
-```
-
-Variables utilisées actuellement :
-
-```text
-DATABASE_URL
-DATABASE_POOLER_URL
-BETTER_AUTH_URL
-BETTER_AUTH_SECRET
-GOOGLE_CLIENT_ID
-GOOGLE_CLIENT_SECRET
-RESEND_API_KEY
-RESEND_MAIL
-```
-
-`DATABASE_URL` est réservée à Prisma Migrate. L’application utilise
-`DATABASE_POOLER_URL` via l’adaptateur Neon.
-
-## Vérifications courantes
-
-```bash
-pnpm exec prisma validate
-pnpm exec prisma migrate status
-pnpm exec prisma generate
-pnpm exec next typegen
-pnpm exec tsc --noEmit
-pnpm lint
-pnpm build
-```
-
-Les migrations doivent être commitées et appliquées avec une commande adaptée à
-l’environnement. `prisma migrate reset` ne doit jamais être utilisé sur la base
-de production.
+### Phase 0 — Assainissement
+
+- [ ] Retirer les références aux anciens modèles métier.
+- [ ] Unifier les routes administratives et les redirections `/sign-in`.
+- [ ] Valider Prisma, TypeScript, ESLint, tests et build.
+- [ ] Mettre `AGENTS.md` en accord avec ce README.
+
+### Phase 1 — Fondation pédagogique
+
+- [ ] Ajouter les modèles du catalogue, des leçons, exercices et questions.
+- [ ] Créer et relire la migration Prisma.
+- [ ] Initialiser les quatre programmes et Aleph à Vav.
+- [ ] Publier uniquement Psychométriques.
+
+### Phase 2 — Refonte de l’interface
+
+- [ ] Généraliser le nom, les métadonnées et les textes.
+- [ ] Créer l’accueil et le catalogue multi-programmes.
+- [ ] Refaire le tableau de bord et les navigations.
+- [ ] Créer les états vides et préparer le contenu RTL.
+
+### Phase 3 — Psychométriques
+
+- [ ] Définir ses catégories et thèmes.
+- [ ] Construire le parcours leçons → exercices.
+- [ ] Créer le lecteur, la correction et les explications.
+
+### Phase 4 — Import CSV
+
+- [ ] Documenter le format.
+- [ ] Créer prévisualisation, validation et erreurs par ligne.
+- [ ] Rendre l’import transactionnel et idempotent.
+- [ ] Permettre l’affectation aux exercices et tester les cas critiques.
+
+### Phase 5 — Progression
+
+- [ ] Enregistrer sessions et réponses.
+- [ ] Ajouter avancement, historique, erreurs et statistiques.
+
+### Phase 6 — Accès et offres
+
+- [ ] Ajouter les droits indépendants des rôles.
+- [ ] Ajouter offres, contenus accordés et prix.
+- [ ] Décider si un quota de questions est réellement nécessaire.
+
+### Phase 7 — Paiements
+
+- [ ] Valider les comptes Stripe et Grow et définir les tarifs.
+- [ ] Intégrer les deux checkouts et leurs webhooks.
+- [ ] Gérer le cycle complet des abonnements et paiements.
+- [ ] Vérifier facturation et comptabilité.
+
+### Phase 8 — Entreprises
+
+- [ ] Ajouter organisations, responsables, contrats et places.
+- [ ] Ajouter invitations CSV, groupes et attributions de programmes.
+- [ ] Définir le partage des données de progression.
+
+### Phase 9 — Autres programmes
+
+- [ ] Développer AMIR, YAEL puis Oulpan Aleph à Vav.
+- [ ] N’activer chaque programme que lorsque son contenu est prêt.
+
+## Premier résultat attendu
+
+Le premier jalon ne comprend ni paiement réel, ni statistiques avancées, ni
+contenu complet. Il doit produire une fondation propre et démontrable.
+
+Il est terminé lorsque :
+
+1. Prisma, TypeScript, ESLint, les tests et le build passent ;
+2. l’authentification fonctionne toujours avec `/sign-in` ;
+3. Prisma contient la structure pédagogique minimale ;
+4. les quatre programmes et les six niveaux Oulpan existent ;
+5. seul Psychométriques peut être commencé ;
+6. l’accueil et le tableau de bord présentent la nouvelle vision ;
+7. les autres programmes affichent un état `Bientôt disponible` ;
+8. une leçon et un exercice psychométriques vides sont navigables ;
+9. aucune fausse quantité de contenu ou promesse commerciale n’est affichée ;
+10. le README et `AGENTS.md` décrivent la même architecture.
+
+Cette base permettra ensuite de construire le contenu Psychométriques et son
+import CSV sans refaire l’interface lors de l’ajout d’AMIR, YAEL, Oulpan,
+Stripe, Grow ou des partenaires.
+
+## Hors périmètre du premier jalon
+
+- contenu pédagogique complet ;
+- paiements et tarifs définitifs ;
+- quota mensuel ;
+- statistiques avancées ;
+- espace entreprise complet ;
+- activation d’AMIR, YAEL ou Oulpan.

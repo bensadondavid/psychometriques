@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { admin, captcha, lastLoginMethod, twoFactor,} from "better-auth/plugins";
+import { admin, captcha, lastLoginMethod } from "better-auth/plugins";
 import { i18n, locales } from "@better-auth/i18n";
 import { prisma } from "../database/prisma";
 import { passkey } from "@better-auth/passkey";
@@ -52,7 +52,6 @@ export const auth = betterAuth({
       banned: false,
       banReason: null,
       banExpires: null,
-      twoFactorEnabled: false,
       ...additionalFields,
       id,
     }),
@@ -120,7 +119,6 @@ export const auth = betterAuth({
       bannedUserMessage:
         "Ce compte a été suspendu. Contactez l’assistance si vous pensez qu’il s’agit d’une erreur.",
     }),
-    twoFactor({ issuer: "Psychométriques" }),
     passkey(),
     i18n({
       translations: { fr: locales.fr },

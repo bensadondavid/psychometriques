@@ -22,7 +22,7 @@ export const LogOutBtn = ()=>{
                 return
             }
 
-            router.replace('/login')
+            router.replace('/sign-in')
             router.refresh()
         } catch {
             toast.error('Impossible de se déconnecter.')

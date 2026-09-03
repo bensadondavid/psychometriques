@@ -56,7 +56,7 @@ export default function ForgotPassword() {
           <p>Si un compte existe pour <strong className="font-semibold text-[#3b302a]">{email}</strong>, vous recevrez un lien de réinitialisation.</p>
           <p className="mt-3 text-[#918477]">Pensez également à vérifier vos courriers indésirables.</p>
         </div>
-        <Link href="/login" className="mt-9 inline-flex border-b border-[#45121d] pb-1 text-sm font-semibold text-[#45121d]">Retour à la connexion</Link>
+        <Link href="/sign-in" className="mt-9 inline-flex border-b border-[#45121d] pb-1 text-sm font-semibold text-[#45121d]">Retour à la connexion</Link>
       </div>
     );
   }
@@ -79,7 +79,7 @@ export default function ForgotPassword() {
         />
         <Button type="submit" className="h-12 w-full rounded-none bg-[#45121d] text-sm font-semibold tracking-wide text-[#fffaf0] hover:bg-[#591725]" disabled={isLoading || (Boolean(turnstileSiteKey) && !captchaToken)}>{isLoading ? "Envoi…" : "Recevoir le lien"}</Button>
       </form>
-      <p className="mt-8 text-center text-sm text-[#766a5e]"><Link href="/login" className="font-semibold text-[#45121d] underline-offset-4 hover:underline">Retour à la connexion</Link></p>
+      <p className="mt-8 text-center text-sm text-[#766a5e]"><Link href="/sign-in" className="font-semibold text-[#45121d] underline-offset-4 hover:underline">Retour à la connexion</Link></p>
     </div>
   );
 }

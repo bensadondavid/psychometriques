@@ -55,12 +55,7 @@ export const ModelName = {
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
-  Passkey: 'Passkey',
-  TwoFactor: 'TwoFactor',
-  Subscription: 'Subscription',
-  Program: 'Program',
-  Chapter: 'Chapter',
-  Question: 'Question'
+  Passkey: 'Passkey'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -89,8 +84,6 @@ export const UserScalarFieldEnum = {
   banned: 'banned',
   banReason: 'banReason',
   banExpires: 'banExpires',
-  twoFactorEnabled: 'twoFactorEnabled',
-  stripeCustomerId: 'stripeCustomerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -160,93 +153,6 @@ export const PasskeyScalarFieldEnum = {
 } as const
 
 export type PasskeyScalarFieldEnum = (typeof PasskeyScalarFieldEnum)[keyof typeof PasskeyScalarFieldEnum]
-
-
-export const TwoFactorScalarFieldEnum = {
-  id: 'id',
-  secret: 'secret',
-  backupCodes: 'backupCodes',
-  userId: 'userId',
-  verified: 'verified',
-  failedVerificationCount: 'failedVerificationCount',
-  lockedUntil: 'lockedUntil'
-} as const
-
-export type TwoFactorScalarFieldEnum = (typeof TwoFactorScalarFieldEnum)[keyof typeof TwoFactorScalarFieldEnum]
-
-
-export const SubscriptionScalarFieldEnum = {
-  id: 'id',
-  plan: 'plan',
-  referenceId: 'referenceId',
-  stripeCustomerId: 'stripeCustomerId',
-  stripeSubscriptionId: 'stripeSubscriptionId',
-  status: 'status',
-  periodStart: 'periodStart',
-  periodEnd: 'periodEnd',
-  trialStart: 'trialStart',
-  trialEnd: 'trialEnd',
-  cancelAtPeriodEnd: 'cancelAtPeriodEnd',
-  cancelAt: 'cancelAt',
-  canceledAt: 'canceledAt',
-  endedAt: 'endedAt',
-  seats: 'seats',
-  billingInterval: 'billingInterval',
-  stripeScheduleId: 'stripeScheduleId'
-} as const
-
-export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
-
-
-export const ProgramScalarFieldEnum = {
-  slug: 'slug',
-  name: 'name',
-  description: 'description',
-  isActive: 'isActive',
-  sortOrder: 'sortOrder',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ProgramScalarFieldEnum = (typeof ProgramScalarFieldEnum)[keyof typeof ProgramScalarFieldEnum]
-
-
-export const ChapterScalarFieldEnum = {
-  programSlug: 'programSlug',
-  id: 'id',
-  name: 'name',
-  slug: 'slug',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type ChapterScalarFieldEnum = (typeof ChapterScalarFieldEnum)[keyof typeof ChapterScalarFieldEnum]
-
-
-export const QuestionScalarFieldEnum = {
-  programSlug: 'programSlug',
-  id: 'id',
-  chapterId: 'chapterId',
-  subTheme: 'subTheme',
-  difficulty: 'difficulty',
-  difficultyLabel: 'difficultyLabel',
-  statement: 'statement',
-  choice1: 'choice1',
-  choice2: 'choice2',
-  choice3: 'choice3',
-  choice4: 'choice4',
-  correctChoice: 'correctChoice',
-  explanation: 'explanation',
-  status: 'status',
-  imagePath: 'imagePath',
-  imageAlt: 'imageAlt',
-  sourceCreatedAt: 'sourceCreatedAt',
-  sourceUpdatedAt: 'sourceUpdatedAt',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type QuestionScalarFieldEnum = (typeof QuestionScalarFieldEnum)[keyof typeof QuestionScalarFieldEnum]
 
 
 export const SortOrder = {

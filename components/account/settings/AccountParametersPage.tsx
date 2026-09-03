@@ -312,7 +312,7 @@ export default function AccountParametersPage() {
     try {
       setRequestingDeletion(true)
       const { error } = await authClient.deleteUser({
-        callbackURL: '/login?accountDeleted=true',
+        callbackURL: '/sign-in?accountDeleted=true',
       })
 
       if (error) {
@@ -340,7 +340,7 @@ export default function AccountParametersPage() {
         return
       }
 
-      router.push('/login')
+      router.push('/sign-in')
       router.refresh()
     } finally {
       setLoggingOut(false)

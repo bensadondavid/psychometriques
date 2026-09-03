@@ -51,7 +51,7 @@ function ResetPasswordContent() {
       });
       if (result.error) return toast.error(result.error.message);
       toast.success("Mot de passe mis à jour !");
-      setTimeout(() => router.push("/login"), 800);
+      setTimeout(() => router.push("/sign-in"), 800);
     } catch {
       toast.error("Une erreur est survenue");
     } finally {
@@ -96,7 +96,7 @@ function ResetPasswordContent() {
         />
         <Button type="submit" className="h-12 w-full rounded-none bg-[#45121d] text-sm font-semibold tracking-wide text-[#fffaf0] hover:bg-[#591725]" disabled={isLoading || (Boolean(turnstileSiteKey) && !captchaToken)}>{isLoading ? "Mise à jour…" : "Enregistrer le mot de passe"}</Button>
       </form>
-      <p className="mt-8 text-center text-sm text-[#766a5e]"><Link href="/login" className="font-semibold text-[#45121d] underline-offset-4 hover:underline">Retour à la connexion</Link></p>
+      <p className="mt-8 text-center text-sm text-[#766a5e]"><Link href="/sign-in" className="font-semibold text-[#45121d] underline-offset-4 hover:underline">Retour à la connexion</Link></p>
     </div>
   );
 }

@@ -66,28 +66,3 @@ export type Verification = Prisma.VerificationModel
  * 
  */
 export type Passkey = Prisma.PasskeyModel
-/**
- * Model TwoFactor
- * 
- */
-export type TwoFactor = Prisma.TwoFactorModel
-/**
- * Model Subscription
- * 
- */
-export type Subscription = Prisma.SubscriptionModel
-/**
- * Model Program
- *
- */
-export type Program = Prisma.ProgramModel
-/**
- * Model Chapter
- * 
- */
-export type Chapter = Prisma.ChapterModel
-/**
- * Model Question
- * 
- */
-export type Question = Prisma.QuestionModel

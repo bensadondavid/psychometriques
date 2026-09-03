@@ -12,30 +12,21 @@ enum Role {
   admin
 }
 
-enum QuestionStatus {
-  DRAFT
-  VALIDATED
-  ARCHIVED
-}
-
 model User {
-  id               String      @id
-  name             String
-  email            String
-  emailVerified    Boolean     @default(false)
-  image            String?
-  role             Role        @default(user)
-  banned           Boolean     @default(false)
-  banReason        String?
-  banExpires       DateTime?
-  twoFactorEnabled Boolean     @default(false)
-  stripeCustomerId String?
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
-  sessions         Session[]
-  accounts         Account[]
-  passkeys         Passkey[]
-  twoFactors       TwoFactor[]
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  role          Role      @default(user)
+  banned        Boolean   @default(false)
+  banReason     String?
+  banExpires    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  passkeys      Passkey[]
 
   @@unique([email])
   @@map("user")
@@ -75,6 +66,7 @@ model Account {
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 
+  @@unique([issuer, accountId])
   @@index([userId])
   @@map("account")
 }
@@ -110,100 +102,5 @@ model Passkey {
   @@map("passkey")
 }
 
-model TwoFactor {
-  id                      String    @id
-  secret                  String
-  backupCodes             String
-  userId                  String
-  user                    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  verified                Boolean   @default(true)
-  failedVerificationCount Int       @default(0)
-  lockedUntil             DateTime?
 
-  @@index([secret])
-  @@index([userId])
-  @@map("twoFactor")
-}
-
-model Subscription {
-  id                   String    @id
-  plan                 String
-  referenceId          String
-  stripeCustomerId     String?
-  stripeSubscriptionId String?
-  status               String    @default("incomplete")
-  periodStart          DateTime?
-  periodEnd            DateTime?
-  trialStart           DateTime?
-  trialEnd             DateTime?
-  cancelAtPeriodEnd    Boolean   @default(false)
-  cancelAt             DateTime?
-  canceledAt           DateTime?
-  endedAt              DateTime?
-  seats                Int?
-  billingInterval      String?
-  stripeScheduleId     String?
-
-  @@index([referenceId])
-  @@map("subscription")
-}
-
-model Program {
-  slug        String    @id
-  name        String
-  description String?   @db.Text
-  isActive    Boolean   @default(true)
-  sortOrder   Int       @default(0)
-  chapters    Chapter[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  @@map("program")
-}
-
-model Chapter {
-  programSlug String
-  program     Program    @relation(fields: [programSlug], references: [slug], onDelete: Restrict)
-  id          Int
-  name        String
-  slug        String
-  questions   Question[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-
-  @@id([programSlug, id])
-  @@unique([programSlug, slug])
-  @@map("chapter")
-}
-
-model Question {
-  programSlug     String
-  id              String
-  chapterId       Int
-  chapter         Chapter        @relation(fields: [programSlug, chapterId], references: [programSlug, id], onDelete: Restrict)
-  subTheme        String
-  difficulty      Int
-  difficultyLabel String
-  statement       String         @db.Text
-  choice1         String         @db.Text
-  choice2         String         @db.Text
-  choice3         String         @db.Text
-  choice4         String         @db.Text
-  correctChoice   Int
-  explanation     String         @db.Text
-  status          QuestionStatus @default(DRAFT)
-  imagePath       String?
-  imageAlt        String?        @db.Text
-  sourceCreatedAt DateTime
-  sourceUpdatedAt DateTime
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-
-  @@id([programSlug, id])
-  @@index([programSlug, chapterId, difficulty])
-  @@index([programSlug, status])
-  @@index([programSlug, subTheme])
-  @@map("question")
-}
-
-// Logique Métier
+// Logique metier 

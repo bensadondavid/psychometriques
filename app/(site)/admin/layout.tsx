@@ -11,7 +11,7 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const session = await getCurrentSession();
-  if (!session) redirect("/login");
+  if (!session) redirect("/sign-in");
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },

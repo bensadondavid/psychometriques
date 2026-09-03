@@ -12,7 +12,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
 async function renderAppLayout(children: React.ReactNode) {
   const session = await getCurrentSession()
-  if (!session) redirect('/login')
+  if (!session) redirect('/sign-in')
 
   return (
       <SidebarProvider>

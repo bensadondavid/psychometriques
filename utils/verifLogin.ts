@@ -9,7 +9,7 @@ export default async function verifLogin(){
         headers : h
     })
     if(!session){
-        redirect('/login')
+        redirect('/sign-in')
     }
     return session
 }
