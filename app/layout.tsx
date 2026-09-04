@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Geist_Mono, Instrument_Serif } from "next/font/google";
+import {
+  Plus_Jakarta_Sans,
+  Geist_Mono,
+  Instrument_Serif,
+} from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
@@ -22,8 +26,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Psychométriques",
-  description: "Préparez les tests psychométriques en français",
+  title: {
+    default: "Examens & Hébreu",
+    template: "%s | Examens & Hébreu",
+  },
+  description:
+    "Plateforme francophone pour préparer les examens psychométriques, AMIR et YAEL, apprendre l’hébreu et avancer dans son parcours en Israël.",
 };
 
 export default function RootLayout({

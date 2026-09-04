@@ -1,8 +1,9 @@
 # Plateforme de préparation aux examens et à l’hébreu
 
-Plateforme pédagogique francophone pour les examens psychométriques, AMIR et
-YAEL, ainsi que pour l’apprentissage de l’hébreu en Oulpan, du niveau Aleph au
-niveau Vav.
+Plateforme pédagogique francophone pour préparer les examens psychométriques,
+AMIR et YAEL, ainsi que pour apprendre l’hébreu en Oulpan, du niveau Aleph au
+niveau Vav. Elle s’adresse autant aux personnes encore en France qu’à celles
+déjà installées en Israël.
 
 Le développement commence par les psychométriques. AMIR, YAEL et Oulpan seront
 présents dans le catalogue et l’interface, mais resteront indiqués comme
@@ -13,15 +14,20 @@ validées, architecture cible, feuille de route et premier résultat attendu.
 
 ## Vision produit
 
-La plateforme permettra de :
+La plateforme n’est pas un service d’orientation : l’utilisateur arrive en
+sachant quelle préparation il recherche. Elle lui permet de :
 
-- découvrir les programmes et leurs parcours ;
+- accéder directement à la formation correspondant à son objectif ;
 - suivre des leçons organisées dans un ordre pédagogique ;
 - réaliser des exercices composés de questions ;
 - consulter les corrections puis, plus tard, sa progression ;
 - acheter un programme seul ou un pack ;
 - recevoir un accès offert ou financé par une organisation ;
 - proposer des partenariats aux prépas qui souhaitent équiper leurs élèves.
+
+La promesse de marque relie ces usages autour d’un même objectif : avancer dans
+ses études, sa langue et son intégration en Israël. Le nom définitif de la
+marque reste à choisir ; `Examens & Hébreu` est un libellé provisoire.
 
 ## Vocabulaire
 
@@ -39,12 +45,12 @@ Le mot `plan` est évité dans le modèle : `parcours` décrit la pédagogie et
 
 ## Catalogue initial
 
-| Programme | Parcours initial | Lancement |
-| --- | --- | --- |
-| Psychométriques | Parcours général puis catégories spécialisées | Actif |
-| AMIR | À préciser | Bientôt disponible |
-| YAEL | À préciser | Bientôt disponible |
-| Oulpan | Aleph, Bet, Gimel, Dalet, He et Vav | Bientôt disponible |
+| Programme       | Parcours initial                              | Lancement          |
+| --------------- | --------------------------------------------- | ------------------ |
+| Psychométriques | Parcours général puis catégories spécialisées | Actif              |
+| AMIR            | À préciser                                    | Bientôt disponible |
+| YAEL            | À préciser                                    | Bientôt disponible |
+| Oulpan          | Aleph, Bet, Gimel, Dalet, He et Vav           | Bientôt disponible |
 
 Les niveaux d’Oulpan seront des données en base, pas un enum Prisma, afin de
 pouvoir les réordonner ou les compléter sans modifier le schéma.
@@ -236,8 +242,69 @@ manuellement.
 
 ## Interface cible
 
-La direction artistique actuelle est conservée : bordeaux, crème, doré,
-typographie éditoriale et ambiance académique.
+La direction artistique associe la sobriété institutionnelle du bordeaux et de
+l’ivoire à une mise en scène contemporaine et immersive. Les principes sont :
+
+- une typographie éditoriale forte et une hiérarchie très lisible ;
+- des compositions amples sans pages artificiellement vides ;
+- une progression visuelle inspirée des présentations produit d’Apple ;
+- des aperçus réels de la plateforme plutôt que des illustrations génériques ;
+- des animations sobres et accessibles ;
+- une 3D uniquement lorsqu’elle représente le produit ou la méthode ;
+- aucun langage visuel de SaaS préfabriqué ou de site généré automatiquement.
+
+Le marketing doit lui-même se vivre comme un parcours. L’accueil utilise une
+séquence au scroll où le même objet se transforme successivement en choix de
+formation, leçon, exercice, correction et progression. Cette première version
+utilise une 3D CSS légère, sans dépendance WebGL, et respecte la préférence de
+mouvement réduit.
+
+L’espace `/account` restera volontairement plus simple et fonctionnel. Les pages
+marketing sans contenu spécifique ne doivent pas être remplies de texte
+générique : elles restent hors de la navigation ou redirigent vers une page
+utile jusqu’à ce qu’un vrai contenu puisse être publié.
+
+L’application est séparée selon l’intention et le layout :
+
+```text
+(marketing)  catalogue, méthode, ressources et conversion publiques
+(auth)       inscription, connexion et récupération de compte
+(app)        apprentissage authentifié sous /account
+```
+
+Ces groupes sont invisibles dans les URLs. Ils partagent le même root layout
+Next.js afin de conserver une navigation fluide.
+
+Une **ressource d’examen** explique une réalité externe ; une **page formation**
+présente la préparation proposée par la plateforme. Par exemple,
+`/examens/amir` informe sur AMIR et `/formations/amir` présente notre future
+formation. Les ressources soutiennent la préparation et le référencement, mais
+ne transforment pas le site en outil d’orientation.
+
+Dans l’état actuel, les ressources officielles ne sont pas encore rédigées :
+les anciennes routes `/examens`, `/ressources`, `/methode` et `/tarifs`
+redirigent vers une partie utile du site. Elles retrouveront une page autonome
+seulement lorsque leur contenu aura une fonction claire.
+
+Oulpan appartient au même catalogue et au même compte utilisateur, tout en
+conservant un univers identifiable consacré à la langue.
+
+### Domaines et référencement
+
+Un domaine de marque principal héberge l’intégralité de la plateforme. Des
+domaines descriptifs pourront être achetés pour les principales catégories et
+rediriger en `301` vers leur page canonique :
+
+```text
+psychometriques.fr -> domaine-principal.fr/formations/psychometriques
+oulpan.fr           -> domaine-principal.fr/oulpan
+domaine-amir.fr     -> domaine-principal.fr/formations/amir
+domaine-yael.fr     -> domaine-principal.fr/formations/yael
+```
+
+Ils servent la mémorisation, les campagnes et la protection des noms. Ils ne
+doivent pas héberger des copies du site ni diviser les contenus et les liens
+entrants entre quatre propriétés indépendantes.
 
 Évolutions prévues :
 
@@ -253,9 +320,16 @@ Routes envisagées :
 
 ```text
 /
-/programmes
-/programmes/[programSlug]
-/tarifs
+/examens                     redirection provisoire
+/examens/[examSlug]          redirection provisoire
+/oulpan
+/oulpan/[levelSlug]
+/formations
+/formations/[programSlug]
+/methode                     redirection provisoire vers le parcours
+/ressources                  redirection provisoire
+/tarifs                      redirection provisoire
+/entreprises
 /sign-in
 /sign-up
 
@@ -274,8 +348,8 @@ Routes envisagées :
 /account/admin/organisations
 ```
 
-L’ancien espace `/admin` séparé devra être retiré ou déplacé pour conserver une
-seule convention administrative.
+L’administration utilise uniquement `/account/admin` et hérite de la protection
+du compte, avec un contrôle serveur supplémentaire du rôle `admin`.
 
 ## État réel du dépôt
 
@@ -291,13 +365,15 @@ seule convention administrative.
 - [x] Renommage en cours de `/login` vers `/sign-in`.
 - [x] Retrait des anciens modèles métier pour repartir de zéro.
 - [x] Premiers layouts du compte et de l’administration.
+- [x] Groupes de routes `(marketing)`, `(auth)` et `(app)` mis en place.
+- [x] Administration déplacée sous `/account/admin`.
+- [x] Premières pages publiques de formations, de ressources et d’Oulpan créées.
+- [x] Ancien import incompatible retiré en attendant le nouveau modèle.
+- [x] Identité générale appliquée au site, à l’authentification et aux emails.
+- [x] Prisma, TypeScript, ESLint, les tests et le build sont validés.
 
 ### À nettoyer ou construire
 
-- [ ] D’anciens fichiers d’import référencent encore les modèles supprimés.
-- [ ] TypeScript, ESLint et le build doivent être remis entièrement au vert.
-- [ ] Les routes administratives ne suivent pas toutes `/account/admin`.
-- [ ] Les textes présentent encore le site comme uniquement psychométrique.
 - [ ] Le nouveau domaine pédagogique n’existe pas encore dans Prisma.
 - [ ] Aucun paiement ni droit commercial n’est encore implémenté.
 
@@ -330,10 +406,11 @@ Une migration appliquée ne doit jamais être réécrite.
 
 ### Phase 0 — Assainissement
 
-- [ ] Retirer les références aux anciens modèles métier.
-- [ ] Unifier les routes administratives et les redirections `/sign-in`.
-- [ ] Valider Prisma, TypeScript, ESLint, tests et build.
-- [ ] Mettre `AGENTS.md` en accord avec ce README.
+- [x] Retirer les références aux anciens modèles métier.
+- [x] Unifier les routes administratives sous `/account/admin`.
+- [x] Vérifier toutes les redirections vers `/sign-in`.
+- [x] Valider Prisma, TypeScript, ESLint, tests et build.
+- [x] Mettre `AGENTS.md` en accord avec ce README.
 
 ### Phase 1 — Fondation pédagogique
 
@@ -344,8 +421,17 @@ Une migration appliquée ne doit jamais être réécrite.
 
 ### Phase 2 — Refonte de l’interface
 
-- [ ] Généraliser le nom, les métadonnées et les textes.
-- [ ] Créer l’accueil et le catalogue multi-programmes.
+- [x] Généraliser le nom, les métadonnées et les textes.
+- [x] Créer un accueil dense centré sur l’apprentissage et l’intégration.
+- [x] Créer le catalogue `/formations` avec un accès direct par objectif.
+- [x] Dissocier subtilement l’univers Oulpan dans la même plateforme.
+- [x] Créer l’univers public Oulpan sans le séparer de la plateforme.
+- [x] Remplacer l’accueil statique par un parcours marketing au scroll.
+- [x] Faire évoluer l’objet pédagogique avec les étapes de l’apprentissage.
+- [x] Retirer de la navigation les pages secondaires sans contenu propre.
+- [ ] Choisir le nom définitif et remplacer le libellé provisoire.
+- [ ] Valider puis configurer le domaine principal et les domaines descriptifs.
+- [ ] Compléter et sourcer les informations officielles des examens.
 - [ ] Refaire le tableau de bord et les navigations.
 - [ ] Créer les états vides et préparer le contenu RTL.
 

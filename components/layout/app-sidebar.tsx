@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { House, Settings } from "lucide-react";
+import { BookOpen, House, Settings } from "lucide-react";
 
 import { AcademicMark } from "@/components/brand/academic-mark";
 import {
@@ -33,6 +33,7 @@ export function AppSidebar({ user }: AppSidebarProps) {
       <SidebarContent className="pt-3">
         <SidebarMenu className="px-3">
           <NavLink href="/account/home"><House aria-hidden="true" /><span>Accueil</span></NavLink>
+          <NavLink href="/account/programmes"><BookOpen aria-hidden="true" /><span>Mes programmes</span></NavLink>
           <NavLink href="/account/parametres"><Settings aria-hidden="true" /><span>Paramètres</span></NavLink>
         </SidebarMenu>
       </SidebarContent>

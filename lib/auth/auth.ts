@@ -27,7 +27,7 @@ const captchaPlugin =
 
 
 export const auth = betterAuth({
-  appName: "Psychométriques",
+  appName: "Examens & Hébreu",
   baseURL: process.env.BETTER_AUTH_URL!,
   secret: process.env.BETTER_AUTH_SECRET!,
 

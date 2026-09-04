@@ -54,6 +54,9 @@ pnpm prisma generate
 ## Next.js architecture
 
 - Use App Router conventions from the installed Next.js documentation.
+- Organize pages by layout intent: `(marketing)` for the public catalogue,
+  method, resources and conversion, `(auth)` for authentication and `(app)/account` for the protected
+  product. Route group names must not appear in URLs.
 - Prefer Server Components for initial reads.
 - Prefer Server Actions for mutations initiated by the internal application UI.
 - Use Route Handlers for webhooks, authentication endpoints, CSV uploads and
@@ -64,6 +67,8 @@ pnpm prisma generate
   layout or data-access function that accesses protected data.
 - Keep authenticated user pages under `/account` and administration under
   `/account/admin`. Do not create a second independent `/admin` convention.
+- Keep one top-level root layout. Use nested layouts for the three experiences
+  instead of creating independent root layouts and full-page reloads.
 
 ## Database and domain model
 
@@ -132,8 +137,14 @@ pnpm prisma generate
 
 ## Interface and content
 
-- Preserve the established academic visual direction: burgundy, cream and gold,
-  editorial typography and restrained ornamentation.
+- Preserve the burgundy and ivory palette, strong editorial typography and
+  restrained institutional tone while using contemporary, immersive layouts.
+- Avoid generic generated-SaaS patterns. Motion and 3D must explain the
+  learning experience rather than decorate the page.
+- Treat the marketing homepage as a continuous journey. Keep the authenticated
+  account calmer and more functional than the public experience.
+- Do not publish filler pages. Hide or redirect a public route until it has
+  specific, useful content and a clear user purpose.
 - Reuse existing design tokens and components before adding new variants.
 - Keep the interface usable in French while allowing English and Hebrew lesson
   content.
@@ -141,6 +152,21 @@ pnpm prisma generate
 - Maintain accessible labels, keyboard interaction, focus states and sufficient
   contrast.
 - Do not display unverified claims such as `10 000+ questions`.
+- Do not turn the marketing site into an orientation service. Visitors should
+  be able to access the preparation they already want directly.
+- Keep public exam resources separate from commercial formation pages:
+  `/examens/[examSlug]` explains an external exam, while
+  `/formations/[programSlug]` presents the platform's preparation.
+- Oulpan is not placed under `/examens`; its public levels live under `/oulpan`.
+- Keep Oulpan in the shared catalogue and account while giving the language
+  offer a subtly distinct presentation.
+- Use one canonical brand domain. Any descriptive secondary domains must use
+  permanent redirects to the matching canonical formation, never duplicate the
+  site or redirect every domain indiscriminately to the homepage.
+- Do not duplicate full exam guides inside `/account`. Show a contextual summary
+  and link back to the canonical public guide.
+- Date and cite public information that can change, including registration,
+  official prices, schedules, exam format and scoring rules.
 
 ## Verification
 

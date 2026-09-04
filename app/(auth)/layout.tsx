@@ -26,12 +26,12 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
         <div className="relative z-10 grid grid-cols-2 border-t border-[#f4e9d7]/15">
           <div className="px-12 py-8 xl:px-16">
-            <p className="font-serif text-3xl text-[#f8f0e2]">10 000+</p>
-            <p className="mt-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-[#f4e9d7]/45">Questions d&apos;entraînement</p>
+            <p className="font-serif text-3xl text-[#f8f0e2]">4 programmes</p>
+            <p className="mt-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-[#f4e9d7]/45">Un même espace</p>
           </div>
           <div className="border-l border-[#f4e9d7]/15 px-12 py-8 xl:px-16">
-            <p className="font-serif text-3xl text-[#f8f0e2]">100 %</p>
-            <p className="mt-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-[#f4e9d7]/45">En français</p>
+            <p className="font-serif text-3xl text-[#f8f0e2]">Aleph → Vav</p>
+            <p className="mt-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-[#f4e9d7]/45">Parcours Oulpan</p>
           </div>
         </div>
       </section>
@@ -54,7 +54,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </div>
 
         <footer className="relative z-10 hidden items-center justify-between border-t border-[#cbbfae]/50 px-6 py-4 text-[0.62rem] uppercase tracking-[0.18em] text-[#8a7e71] sm:flex sm:px-10 lg:px-14 xl:px-20">
-          <span>Préparation psychométriques</span>
+          <span>Examens et apprentissage de l&apos;hébreu</span>
           <span className="hidden sm:inline">Rigueur · Confiance · Réussite</span>
         </footer>
       </section>

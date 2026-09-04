@@ -1,12 +1,12 @@
 const BRAND = {
-  name: 'Psychométriques',
-  primary: '#4169e1',
-  primaryDark: '#3152b8',
-  background: '#f4f6f8',
-  surface: '#ffffff',
-  text: '#111827',
-  mutedText: '#667085',
-  border: '#d8dee8',
+  name: 'Examens & Hébreu',
+  primary: '#45121d',
+  primaryDark: '#351018',
+  background: '#f5f0e7',
+  surface: '#fbf8f2',
+  text: '#2a211d',
+  mutedText: '#766a5e',
+  border: '#cbbfae',
 } as const
 
 const HTML_CHARACTERS = /[&<>'"]/g

@@ -13,10 +13,10 @@ export function AcademicMark({ compact = false }: { compact?: boolean }) {
       </div>
       <div>
         <p className={`${compact ? "text-base" : "text-lg"} font-serif leading-none tracking-[0.01em]`}>
-          Psychométriques
+          Examens &amp; Hébreu
         </p>
         <p className={`${compact ? "mt-1 text-[0.5rem] tracking-[0.2em]" : "mt-1.5 text-[0.6rem] tracking-[0.24em]"} font-semibold uppercase opacity-60`}>
-          Préparation psychométriques
+          Plateforme de préparation
         </p>
       </div>
     </div>
