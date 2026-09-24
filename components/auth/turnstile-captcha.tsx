@@ -13,6 +13,7 @@ type TurnstileApi = {
       'error-callback': () => void
       theme: 'light'
       language: 'fr'
+      appearance: 'interaction-only'
     }
   ) => string
   remove: (widgetId: string) => void
@@ -54,6 +55,7 @@ export function TurnstileCaptcha({
       'error-callback': () => callbackRef.current(''),
       theme: 'light',
       language: 'fr',
+      appearance: 'interaction-only',
     })
 
     return () => {
@@ -64,7 +66,7 @@ export function TurnstileCaptcha({
   if (!turnstileSiteKey) return null
 
   return (
-    <div className="min-h-[65px]">
+    <div>
       <Script
         src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
         strategy="afterInteractive"

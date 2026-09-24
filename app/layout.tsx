@@ -27,8 +27,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Examens & Hébreu",
-    template: "%s | Examens & Hébreu",
+    default: "Psychometriques.fr",
+    template: "%s | Psychometriques.fr",
   },
   description:
     "Plateforme francophone pour préparer les examens psychométriques, AMIR et YAEL, apprendre l’hébreu et avancer dans son parcours en Israël.",

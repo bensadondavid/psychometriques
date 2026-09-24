@@ -1,7 +1,5 @@
 import Link from "next/link";
 import { BookOpen, House, Settings } from "lucide-react";
-
-import { AcademicMark } from "@/components/brand/academic-mark";
 import {
   Sidebar,
   SidebarContent,
@@ -27,7 +25,6 @@ export function AppSidebar({ user }: AppSidebarProps) {
     <Sidebar>
       <SidebarHeader className="border-b border-sidebar-border p-4">
         <Link href="/account/home" className="text-sidebar-foreground transition-opacity hover:opacity-80">
-          <AcademicMark compact />
         </Link>
       </SidebarHeader>
       <SidebarContent className="pt-3">
