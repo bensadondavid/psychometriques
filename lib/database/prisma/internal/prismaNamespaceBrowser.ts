@@ -55,7 +55,17 @@ export const ModelName = {
   Session: 'Session',
   Account: 'Account',
   Verification: 'Verification',
-  Passkey: 'Passkey'
+  Passkey: 'Passkey',
+  Program: 'Program',
+  Course: 'Course',
+  Lesson: 'Lesson',
+  Exercise: 'Exercise',
+  QuestionChapter: 'QuestionChapter',
+  Passage: 'Passage',
+  Question: 'Question',
+  QuestionOption: 'QuestionOption',
+  QuestionFigure: 'QuestionFigure',
+  ExerciseQuestion: 'ExerciseQuestion'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -153,6 +163,169 @@ export const PasskeyScalarFieldEnum = {
 } as const
 
 export type PasskeyScalarFieldEnum = (typeof PasskeyScalarFieldEnum)[keyof typeof PasskeyScalarFieldEnum]
+
+
+export const ProgramScalarFieldEnum = {
+  id: 'id',
+  slug: 'slug',
+  name: 'name',
+  description: 'description',
+  status: 'status',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProgramScalarFieldEnum = (typeof ProgramScalarFieldEnum)[keyof typeof ProgramScalarFieldEnum]
+
+
+export const CourseScalarFieldEnum = {
+  id: 'id',
+  programId: 'programId',
+  slug: 'slug',
+  name: 'name',
+  description: 'description',
+  status: 'status',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CourseScalarFieldEnum = (typeof CourseScalarFieldEnum)[keyof typeof CourseScalarFieldEnum]
+
+
+export const LessonScalarFieldEnum = {
+  id: 'id',
+  courseId: 'courseId',
+  slug: 'slug',
+  title: 'title',
+  content: 'content',
+  status: 'status',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LessonScalarFieldEnum = (typeof LessonScalarFieldEnum)[keyof typeof LessonScalarFieldEnum]
+
+
+export const ExerciseScalarFieldEnum = {
+  id: 'id',
+  lessonId: 'lessonId',
+  slug: 'slug',
+  title: 'title',
+  instructions: 'instructions',
+  status: 'status',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExerciseScalarFieldEnum = (typeof ExerciseScalarFieldEnum)[keyof typeof ExerciseScalarFieldEnum]
+
+
+export const QuestionChapterScalarFieldEnum = {
+  id: 'id',
+  programId: 'programId',
+  domain: 'domain',
+  externalId: 'externalId',
+  slug: 'slug',
+  name: 'name',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type QuestionChapterScalarFieldEnum = (typeof QuestionChapterScalarFieldEnum)[keyof typeof QuestionChapterScalarFieldEnum]
+
+
+export const PassageScalarFieldEnum = {
+  id: 'id',
+  programId: 'programId',
+  externalId: 'externalId',
+  title: 'title',
+  theme: 'theme',
+  text: 'text',
+  wordCount: 'wordCount',
+  estimatedLines: 'estimatedLines',
+  language: 'language',
+  status: 'status',
+  sourceCreatedAt: 'sourceCreatedAt',
+  sourceUpdatedAt: 'sourceUpdatedAt',
+  sourceFile: 'sourceFile',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PassageScalarFieldEnum = (typeof PassageScalarFieldEnum)[keyof typeof PassageScalarFieldEnum]
+
+
+export const QuestionScalarFieldEnum = {
+  id: 'id',
+  programId: 'programId',
+  chapterId: 'chapterId',
+  passageId: 'passageId',
+  externalId: 'externalId',
+  domain: 'domain',
+  type: 'type',
+  subTheme: 'subTheme',
+  difficulty: 'difficulty',
+  difficultyLabel: 'difficultyLabel',
+  statement: 'statement',
+  explanation: 'explanation',
+  language: 'language',
+  status: 'status',
+  imagePath: 'imagePath',
+  imageAlt: 'imageAlt',
+  sourceCreatedAt: 'sourceCreatedAt',
+  sourceUpdatedAt: 'sourceUpdatedAt',
+  sourceFile: 'sourceFile',
+  version: 'version',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type QuestionScalarFieldEnum = (typeof QuestionScalarFieldEnum)[keyof typeof QuestionScalarFieldEnum]
+
+
+export const QuestionOptionScalarFieldEnum = {
+  id: 'id',
+  questionId: 'questionId',
+  position: 'position',
+  text: 'text',
+  isCorrect: 'isCorrect',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type QuestionOptionScalarFieldEnum = (typeof QuestionOptionScalarFieldEnum)[keyof typeof QuestionOptionScalarFieldEnum]
+
+
+export const QuestionFigureScalarFieldEnum = {
+  id: 'id',
+  programId: 'programId',
+  path: 'path',
+  fileName: 'fileName',
+  svg: 'svg',
+  byteSize: 'byteSize',
+  checksum: 'checksum',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type QuestionFigureScalarFieldEnum = (typeof QuestionFigureScalarFieldEnum)[keyof typeof QuestionFigureScalarFieldEnum]
+
+
+export const ExerciseQuestionScalarFieldEnum = {
+  id: 'id',
+  exerciseId: 'exerciseId',
+  questionId: 'questionId',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExerciseQuestionScalarFieldEnum = (typeof ExerciseQuestionScalarFieldEnum)[keyof typeof ExerciseQuestionScalarFieldEnum]
 
 
 export const SortOrder = {

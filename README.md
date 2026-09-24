@@ -65,7 +65,7 @@ Programme
             └── Questions ordonnées
 ```
 
-Modèles prévus pour la première fondation :
+Modèles de la première fondation :
 
 - `Program`
 - `Course`
@@ -74,11 +74,21 @@ Modèles prévus pour la première fondation :
 - `Question`
 - `QuestionOption`
 - `ExerciseQuestion`
+- `QuestionChapter`
+- `Passage`
+- `QuestionFigure`
 
 La banque de questions reste indépendante : une question peut être utilisée
 dans plusieurs exercices et la table de liaison conserve son ordre. Les
 contenus auront un statut explicite (`DRAFT`, `PUBLISHED`, `ARCHIVED` ou
 `COMING_SOON`). Seul Psychométriques sera publié au départ.
+
+Les chapitres de questions sont séparés par domaine (`VERBAL` ou
+`QUANTITATIVE`) : les identifiants de chapitre provenant des CSV peuvent ainsi
+se chevaucher sans collision. Les identifiants de question et de passage des
+CSV sont conservés dans `externalId` pour rendre les imports idempotents. Les
+quatre réponses sont stockées comme `QuestionOption` ordonnées, et les questions
+de compréhension peuvent référencer un `Passage` sans dupliquer son texte.
 
 Les pages sans contenu doivent afficher un état vide soigné, jamais du faux
 contenu codé en dur. La structure devra accepter le français, l’anglais et
@@ -86,20 +96,34 @@ l’hébreu, avec une direction RTL limitée au contenu qui en a besoin.
 
 ## Import CSV des questions
 
-L’import CSV devra prévoir :
+L’import CSV prévoit :
 
 - un identifiant externe stable ;
 - le programme, le parcours et le thème ;
 - le type et la difficulté ;
-- l’énoncé, les réponses, la bonne réponse et l’explication optionnelle ;
+- l’énoncé, les réponses, la bonne réponse et l’explication ;
 - le statut de publication ;
 - une prévisualisation avant écriture ;
 - des erreurs précises avec numéros de lignes ;
 - une transaction empêchant un import partiel ;
 - un traitement idempotent évitant les doublons.
 
-L’import alimentera la banque. L’affectation aux exercices restera séparée sauf
+L’import alimente la banque. L’affectation aux exercices reste séparée sauf
 si un besoin d’import combiné est confirmé.
+
+Pour la réflexion verbale, la page d’administration reconnaît quatre contrats
+distincts : analogies, compréhension et déduction, passages, et questions liées
+aux passages. Les fichiers de passages et leurs questions peuvent être chargés
+par lots. La page réalise la validation à blanc, la détection des doublons dans
+un lot et la prévisualisation. Après confirmation, une route serveur protégée
+refait les contrôles puis écrit les passages, questions et quatre propositions
+dans une transaction idempotente.
+
+La réflexion quantitative possède un cinquième contrat couvrant les 21
+chapitres. Les séries de questions CSV et les figures SVG utilisent deux imports
+indépendants : les questions conservent leur chemin `image_path`, tandis que les
+figures sont stockées séparément dans `QuestionFigure` et peuvent être ajoutées
+avant ou après les questions.
 
 ## État actuel de l’authentification
 
@@ -414,8 +438,8 @@ Une migration appliquée ne doit jamais être réécrite.
 
 ### Phase 1 — Fondation pédagogique
 
-- [ ] Ajouter les modèles du catalogue, des leçons, exercices et questions.
-- [ ] Créer et relire la migration Prisma.
+- [x] Ajouter les modèles du catalogue, des leçons, exercices et questions.
+- [x] Créer et relire la migration Prisma.
 - [ ] Initialiser les quatre programmes et Aleph à Vav.
 - [ ] Publier uniquement Psychométriques.
 
@@ -444,8 +468,8 @@ Une migration appliquée ne doit jamais être réécrite.
 ### Phase 4 — Import CSV
 
 - [ ] Documenter le format.
-- [ ] Créer prévisualisation, validation et erreurs par ligne.
-- [ ] Rendre l’import transactionnel et idempotent.
+- [x] Créer prévisualisation, validation et erreurs par ligne.
+- [x] Rendre l’import transactionnel et idempotent.
 - [ ] Permettre l’affectation aux exercices et tester les cas critiques.
 
 ### Phase 5 — Progression

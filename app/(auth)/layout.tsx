@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { AcademicMark } from "@/components/brand/academic-mark";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -7,7 +6,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <section className="auth-academic-panel relative hidden min-h-screen overflow-hidden bg-[#45121d] text-[#fbf6ec] lg:flex lg:flex-col lg:justify-between">
         <div className="relative z-10 px-12 pt-10 xl:px-16 xl:pt-12">
           <Link href="/" aria-label="Retour à l'accueil" className="transition-opacity hover:opacity-80">
-            <AcademicMark />
           </Link>
         </div>
 
@@ -39,7 +37,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <section className="auth-paper-panel relative flex min-h-screen flex-col overflow-hidden bg-[#f5f0e7]">
         <header className="relative z-10 border-b border-[#d6b476]/30 bg-[#45121d] px-5 py-4 text-[#fbf6ec] sm:px-8 lg:hidden">
           <Link href="/" aria-label="Retour à l'accueil" className="inline-flex transition-opacity hover:opacity-80">
-            <AcademicMark compact />
           </Link>
         </header>
 

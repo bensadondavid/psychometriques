@@ -42,3 +42,53 @@ export type Verification = Prisma.VerificationModel
  * 
  */
 export type Passkey = Prisma.PasskeyModel
+/**
+ * Model Program
+ * 
+ */
+export type Program = Prisma.ProgramModel
+/**
+ * Model Course
+ * 
+ */
+export type Course = Prisma.CourseModel
+/**
+ * Model Lesson
+ * 
+ */
+export type Lesson = Prisma.LessonModel
+/**
+ * Model Exercise
+ * 
+ */
+export type Exercise = Prisma.ExerciseModel
+/**
+ * Model QuestionChapter
+ * 
+ */
+export type QuestionChapter = Prisma.QuestionChapterModel
+/**
+ * Model Passage
+ * 
+ */
+export type Passage = Prisma.PassageModel
+/**
+ * Model Question
+ * 
+ */
+export type Question = Prisma.QuestionModel
+/**
+ * Model QuestionOption
+ * 
+ */
+export type QuestionOption = Prisma.QuestionOptionModel
+/**
+ * Model QuestionFigure
+ * 
+ */
+export type QuestionFigure = Prisma.QuestionFigureModel
+/**
+ * Model ExerciseQuestion
+ * 
+ */
+export type ExerciseQuestion = Prisma.ExerciseQuestionModel

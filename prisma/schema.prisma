@@ -12,6 +12,32 @@ enum Role {
   admin
 }
 
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  COMING_SOON
+}
+
+enum QuestionStatus {
+  DRAFT
+  VALIDATED
+  PUBLISHED
+  ARCHIVED
+}
+
+enum QuestionDomain {
+  VERBAL
+  QUANTITATIVE
+}
+
+enum QuestionType {
+  ANALOGY
+  VERBAL_REASONING
+  PASSAGE_COMPREHENSION
+  QUANTITATIVE
+}
+
 model User {
   id            String    @id
   name          String
@@ -102,5 +128,205 @@ model Passkey {
   @@map("passkey")
 }
 
+model Program {
+  id          String            @id @default(cuid())
+  slug        String            @unique
+  name        String
+  description String?
+  status      ContentStatus     @default(COMING_SOON)
+  sortOrder   Int               @default(0)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  courses     Course[]
+  chapters    QuestionChapter[]
+  passages    Passage[]
+  figures     QuestionFigure[]
 
-// Logique metier 
+  @@index([status, sortOrder])
+  @@map("program")
+}
+
+model Course {
+  id          String        @id @default(cuid())
+  programId   String
+  program     Program       @relation(fields: [programId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  slug        String
+  name        String
+  description String?
+  status      ContentStatus @default(DRAFT)
+  sortOrder   Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  lessons     Lesson[]
+
+  @@unique([programId, slug])
+  @@index([programId, status, sortOrder])
+  @@map("course")
+}
+
+model Lesson {
+  id        String        @id @default(cuid())
+  courseId  String
+  course    Course        @relation(fields: [courseId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  slug      String
+  title     String
+  content   String?
+  status    ContentStatus @default(DRAFT)
+  sortOrder Int           @default(0)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  exercises Exercise[]
+
+  @@unique([courseId, slug])
+  @@index([courseId, status, sortOrder])
+  @@map("lesson")
+}
+
+model Exercise {
+  id           String             @id @default(cuid())
+  lessonId     String
+  lesson       Lesson             @relation(fields: [lessonId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  slug         String
+  title        String
+  instructions String?
+  status       ContentStatus      @default(DRAFT)
+  sortOrder    Int                @default(0)
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  questions    ExerciseQuestion[]
+
+  @@unique([lessonId, slug])
+  @@index([lessonId, status, sortOrder])
+  @@map("exercise")
+}
+
+model QuestionChapter {
+  id         String         @id @default(cuid())
+  programId  String
+  program    Program        @relation(fields: [programId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  domain     QuestionDomain
+  externalId Int
+  slug       String
+  name       String
+  sortOrder  Int            @default(0)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  questions  Question[]
+
+  @@unique([programId, domain, externalId])
+  @@unique([programId, domain, slug])
+  @@unique([id, programId, domain])
+  @@index([programId, domain, sortOrder])
+  @@map("question_chapter")
+}
+
+model Passage {
+  id              String        @id @default(cuid())
+  programId       String
+  program         Program       @relation(fields: [programId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  externalId      String
+  title           String
+  theme           String
+  text            String
+  wordCount       Int
+  estimatedLines  Int
+  language        String        @default("fr")
+  status          ContentStatus @default(DRAFT)
+  sourceCreatedAt DateTime
+  sourceUpdatedAt DateTime
+  sourceFile      String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  questions       Question[]
+
+  @@unique([programId, externalId])
+  @@unique([id, programId])
+  @@index([programId, status])
+  @@index([programId, theme])
+  @@map("passage")
+}
+
+model Question {
+  id              String             @id @default(cuid())
+  programId       String
+  chapterId       String
+  chapter         QuestionChapter    @relation(fields: [chapterId, programId, domain], references: [id, programId, domain], onDelete: Restrict, onUpdate: NoAction)
+  passageId       String?
+  passage         Passage?           @relation(fields: [passageId, programId], references: [id, programId], onDelete: Restrict, onUpdate: NoAction)
+  externalId      String
+  domain          QuestionDomain
+  type            QuestionType
+  subTheme        String
+  difficulty      Int
+  difficultyLabel String
+  statement       String
+  explanation     String
+  language        String             @default("fr")
+  status          QuestionStatus     @default(DRAFT)
+  imagePath       String?
+  imageAlt        String?
+  sourceCreatedAt DateTime
+  sourceUpdatedAt DateTime
+  sourceFile      String?
+  version         Int                @default(1)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  options         QuestionOption[]
+  exercises       ExerciseQuestion[]
+
+  @@unique([programId, externalId])
+  @@index([programId, domain, status])
+  @@index([chapterId, difficulty])
+  @@index([passageId])
+  @@index([subTheme])
+  @@map("question")
+}
+
+model QuestionOption {
+  id         String   @id @default(cuid())
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  position   Int
+  text       String
+  isCorrect  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([questionId, position])
+  @@index([questionId, isCorrect])
+  @@map("question_option")
+}
+
+model QuestionFigure {
+  id        String   @id @default(cuid())
+  programId String
+  program   Program  @relation(fields: [programId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  path      String
+  fileName  String
+  svg       String
+  byteSize  Int
+  checksum  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([programId, path])
+  @@index([programId, fileName])
+  @@index([checksum])
+  @@map("question_figure")
+}
+
+model ExerciseQuestion {
+  id         String   @id @default(cuid())
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  position   Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([exerciseId, questionId])
+  @@unique([exerciseId, position])
+  @@index([questionId])
+  @@map("exercise_question")
+}

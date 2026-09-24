@@ -15,3 +15,41 @@ export const Role = {
 } as const
 
 export type Role = (typeof Role)[keyof typeof Role]
+
+
+export const ContentStatus = {
+  DRAFT: 'DRAFT',
+  PUBLISHED: 'PUBLISHED',
+  ARCHIVED: 'ARCHIVED',
+  COMING_SOON: 'COMING_SOON'
+} as const
+
+export type ContentStatus = (typeof ContentStatus)[keyof typeof ContentStatus]
+
+
+export const QuestionStatus = {
+  DRAFT: 'DRAFT',
+  VALIDATED: 'VALIDATED',
+  PUBLISHED: 'PUBLISHED',
+  ARCHIVED: 'ARCHIVED'
+} as const
+
+export type QuestionStatus = (typeof QuestionStatus)[keyof typeof QuestionStatus]
+
+
+export const QuestionDomain = {
+  VERBAL: 'VERBAL',
+  QUANTITATIVE: 'QUANTITATIVE'
+} as const
+
+export type QuestionDomain = (typeof QuestionDomain)[keyof typeof QuestionDomain]
+
+
+export const QuestionType = {
+  ANALOGY: 'ANALOGY',
+  VERBAL_REASONING: 'VERBAL_REASONING',
+  PASSAGE_COMPREHENSION: 'PASSAGE_COMPREHENSION',
+  QUANTITATIVE: 'QUANTITATIVE'
+} as const
+
+export type QuestionType = (typeof QuestionType)[keyof typeof QuestionType]
