@@ -11,7 +11,7 @@ export default function MarketingLayout({
     <div className="site-shell flex min-h-screen flex-col">
       <MarketingHeader />
       <div className="flex-1">{children}</div>
-      <footer className="border-t border-primary-foreground/10 bg-[#2f0d15] px-4 py-12 text-primary-foreground sm:px-6">
+      <footer className="border-t border-white/10 bg-[#131a22] px-4 py-12 text-[#f3ece1] sm:px-6">
         <div className="mx-auto grid w-full max-w-7xl gap-10 lg:grid-cols-[1.2fr_0.8fr_0.8fr]">
           <div>
             <p className="mt-6 max-w-md text-sm leading-6 text-primary-foreground/55">

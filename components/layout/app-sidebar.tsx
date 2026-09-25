@@ -1,12 +1,6 @@
 import Link from "next/link";
 import { BookOpen, House, Settings } from "lucide-react";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-} from "@/components/ui/sidebar";
+import {Sidebar,SidebarContent,SidebarFooter,SidebarHeader,SidebarMenu,} from "@/components/ui/sidebar";
 import { getUserInitials } from "@/lib/user-initials";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { LogOutBtn } from "../ui/logOutBtn";

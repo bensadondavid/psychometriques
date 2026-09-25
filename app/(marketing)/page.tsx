@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { ArrowDown, ArrowRight, Languages } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+
+import { Accueil } from "@/components/marketing/accueil/accueil";
 
 export const metadata: Metadata = {
   title: "Préparer ses examens",
@@ -10,7 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  return (
-   <main></main>
-  );
+  return <Accueil />;
 }
