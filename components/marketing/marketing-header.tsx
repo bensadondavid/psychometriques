@@ -18,11 +18,10 @@ import { cn } from "@/lib/utils";
 
 const navigation = [
   { href: "/", label: "Accueil" },
-  { href: "/#formations", label: "Catalogue des formations" },
-  { href: "/#question", label: "Méthode & question type" },
-  { href: "/#methode", label: "Bibliothèque d’exercices" },
-  { href: "/#acces", label: "Packs & tarifs" },
-  { href: "/#faq", label: "Questions fréquentes" },
+  { href: "/psychometriques", label: "Psychométriques" },
+  { href: "/langues", label: "Langues" },
+  { href: "/tarifs", label: "Tarifs" },
+  { href: "/faq", label: "Questions fréquentes" },
 ] as const;
 
 function isCurrentPath(pathname: string, href: string) {

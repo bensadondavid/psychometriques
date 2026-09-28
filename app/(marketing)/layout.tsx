@@ -54,7 +54,7 @@ export default function MarketingLayout({
                 <Link href="/#methode" className="hover:text-[#1d1c16]">
                   Notre méthode
                 </Link>
-                <Link href="/#acces" className="hover:text-[#1d1c16]">
+                <Link href="/tarifs" className="hover:text-[#1d1c16]">
                   Packs & tarifs
                 </Link>
               </div>

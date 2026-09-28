@@ -111,14 +111,14 @@ export function AccueilAcces() {
                 </ul>
               </div>
               <Link
-                href="/sign-in"
+                href="/tarifs"
                 className={
                   item.accent
                     ? "mt-8 inline-flex h-12 items-center justify-center rounded-sm bg-[#ffdea5] px-6 text-sm font-semibold text-[#45121d] transition-colors hover:bg-[#fef9f0] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
                     : "mt-8 inline-flex h-11 items-center justify-center rounded-sm bg-[#45121d] px-6 text-sm text-[#fef9f0] transition-colors hover:bg-[#280009] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#45121d]"
                 }
               >
-                Choisir ce pack
+                Voir les cinq packs
               </Link>
             </article>
           ))}

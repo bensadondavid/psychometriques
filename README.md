@@ -306,9 +306,9 @@ formation. Les ressources soutiennent la préparation et le référencement, mai
 ne transforment pas le site en outil d’orientation.
 
 Dans l’état actuel, les ressources officielles ne sont pas encore rédigées :
-les anciennes routes `/examens`, `/ressources`, `/methode` et `/tarifs`
-redirigent vers une partie utile du site. Elles retrouveront une page autonome
-seulement lorsque leur contenu aura une fonction claire.
+les anciennes routes `/examens`, `/ressources` et `/methode` redirigent vers une
+partie utile du site. La route `/tarifs` présente les cinq packs et leur contenu,
+sans afficher de montant tant que les prix, devises et durées ne sont pas validés.
 
 Oulpan appartient au même catalogue et au même compte utilisateur, tout en
 conservant un univers identifiable consacré à la langue.
@@ -352,7 +352,7 @@ Routes envisagées :
 /formations/[programSlug]
 /methode                     redirection provisoire vers le parcours
 /ressources                  redirection provisoire
-/tarifs                      redirection provisoire
+/tarifs                      catalogue des packs, sans montant avant validation
 /entreprises
 /sign-in
 /sign-up

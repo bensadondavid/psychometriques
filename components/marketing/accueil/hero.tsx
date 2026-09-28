@@ -23,7 +23,7 @@ export function AccueilHero() {
             id="accueil-title"
             className="mt-7 max-w-[15ch] font-serif text-[clamp(3.5rem,8.5vw,7.5rem)] leading-[0.9] font-normal tracking-[-0.045em] text-[#45121d]"
           >
-            Préparez les examens qui façonnent votre parcours.
+            La réussite ne s’improvise pas.
           </h1>
 
           <p className="mt-9 max-w-4xl text-[1.125rem] leading-[1.75] text-[#524344]">
