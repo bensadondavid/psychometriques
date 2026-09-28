@@ -14,6 +14,7 @@ type Pack = {
   id: PackId;
   eyebrow: string;
   title: string;
+  monthlyPrice: number;
   description: string;
   features: readonly string[];
   featured?: boolean;
@@ -24,6 +25,7 @@ const packs: readonly Pack[] = [
     id: "amirnet",
     eyebrow: "Anglais académique",
     title: "AMIRNET",
+    monthlyPrice: 79,
     description:
       "Une préparation dédiée à l’épreuve d’anglais, guidée en français du cours à la correction.",
     features: [
@@ -37,6 +39,7 @@ const packs: readonly Pack[] = [
     id: "psychometriques",
     eyebrow: "Préparation essentielle",
     title: "Psychométriques",
+    monthlyPrice: 119,
     description:
       "Le parcours complet pour travailler chaque volet de l’épreuve psychométrique en français.",
     features: [
@@ -51,6 +54,7 @@ const packs: readonly Pack[] = [
     id: "yaelnet",
     eyebrow: "Hébreu académique",
     title: "YAELNET",
+    monthlyPrice: 79,
     description:
       "Une préparation ciblée à l’épreuve d’hébreu, avec une interface et des explications en français.",
     features: [
@@ -64,6 +68,7 @@ const packs: readonly Pack[] = [
     id: "langues",
     eyebrow: "Deux préparations réunies",
     title: "Pack langues",
+    monthlyPrice: 119,
     description:
       "AMIRNET et YAELNET réunis dans un même espace pour préparer les deux épreuves linguistiques.",
     features: [
@@ -77,6 +82,7 @@ const packs: readonly Pack[] = [
     id: "complet",
     eyebrow: "Tous les parcours",
     title: "Pack complet",
+    monthlyPrice: 179,
     description:
       "La formule qui rassemble les Psychométriques, AMIRNET et YAELNET dans une préparation unique.",
     features: [
@@ -87,7 +93,6 @@ const packs: readonly Pack[] = [
     ],
   },
 ] as const;
-
 
 export default function TarifsPage() {
   return (
@@ -103,14 +108,18 @@ export default function TarifsPage() {
               Un pack pour chaque objectif.
             </h1>
           </div>
-            <p className="text-lg leading-[1.7] text-[#524344]">
-              Choisissez une préparation ciblée, réunissez les deux langues ou accédez à
-              l’ensemble des parcours depuis le même espace personnel.
-            </p>
+          <p className="text-lg leading-[1.7] text-[#524344]">
+            Choisissez une préparation ciblée, réunissez les deux langues ou
+            accédez à l’ensemble des parcours depuis le même espace personnel.
+          </p>
         </div>
       </section>
 
-      <section id="packs" className="scroll-mt-24 py-20 lg:py-28" aria-labelledby="packs-title">
+      <section
+        id="packs"
+        className="scroll-mt-24 py-20 lg:py-28"
+        aria-labelledby="packs-title"
+      >
         <div className="mx-auto w-full max-w-7xl px-6 lg:px-12">
           <header className="max-w-2xl">
             <p className="text-[0.625rem] font-bold tracking-[0.28em] text-[#4e5e7f] uppercase">
@@ -149,6 +158,29 @@ export default function TarifsPage() {
                   >
                     {pack.title}
                   </h3>
+                  <div className="mt-6 flex items-end gap-2">
+                    <p
+                      className={`font-serif text-5xl leading-none tracking-[-0.035em] ${
+                        pack.featured ? "text-[#ffdea5]" : "text-[#45121d]"
+                      }`}
+                    >
+                      {pack.monthlyPrice} ₪
+                    </p>
+                    <p
+                      className={`pb-1 text-sm ${
+                        pack.featured ? "text-[#ded9d1]" : "text-[#6f6261]"
+                      }`}
+                    >
+                      / mois
+                    </p>
+                  </div>
+                  <p
+                    className={`mt-2 text-xs ${
+                      pack.featured ? "text-[#ded9d1]" : "text-[#6f6261]"
+                    }`}
+                  >
+                    Sans engagement, résiliable à tout moment
+                  </p>
                   <p
                     className={`mt-5 leading-[1.65] ${
                       pack.featured ? "text-[#ded9d1]" : "text-[#524344]"
@@ -177,16 +209,18 @@ export default function TarifsPage() {
                     ))}
                   </ul>
                 </div>
-                <Link
-                  href="/sign-up"
-                  className={`mt-auto inline-flex h-12 items-center justify-center rounded-sm px-6 pt-0.5 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 ${
-                    pack.featured
-                      ? "bg-[#ffdea5] text-[#45121d] hover:bg-[#fef9f0] focus-visible:outline-white"
-                      : "bg-[#45121d] text-[#fef9f0] hover:bg-[#280009] focus-visible:outline-[#45121d]"
-                  }`}
-                >
-                  Choisir ce pack
-                </Link>
+                <div className="mt-auto pt-8">
+                  <Link
+                    href="/sign-up"
+                    className={`inline-flex h-12 w-full items-center justify-center rounded-sm px-6 pt-0.5 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 ${
+                      pack.featured
+                        ? "bg-[#ffdea5] text-[#45121d] hover:bg-[#fef9f0] focus-visible:outline-white"
+                        : "bg-[#45121d] text-[#fef9f0] hover:bg-[#280009] focus-visible:outline-[#45121d]"
+                    }`}
+                  >
+                    Choisir ce pack
+                  </Link>
+                </div>
               </article>
             ))}
           </div>

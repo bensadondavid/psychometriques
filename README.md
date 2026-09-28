@@ -234,8 +234,19 @@ Références : [Stripe Checkout](https://docs.stripe.com/payments/checkout),
 [Grow API](https://developers.grow.business/) et
 [moyens de paiement Grow](https://developers.grow.business/reference/payments).
 
-Les tarifs, devises, durées et obligations de facturation seront validés avant
-l’intégration en production.
+Les cinq offres publiques sont des abonnements mensuels sans engagement,
+résiliables à tout moment, facturés en NIS :
+
+| Offre           | Prix mensuel |
+| --------------- | ------------ |
+| AMIRNET         | 79 ₪         |
+| YAELNET         | 79 ₪         |
+| Psychométriques | 119 ₪        |
+| Pack langues    | 119 ₪        |
+| Pack complet    | 179 ₪        |
+
+Les obligations de facturation et la configuration exacte du fournisseur de
+paiement restent à valider avant l’intégration en production.
 
 ## Quotas de questions
 
@@ -307,8 +318,8 @@ ne transforment pas le site en outil d’orientation.
 
 Dans l’état actuel, les ressources officielles ne sont pas encore rédigées :
 les anciennes routes `/examens`, `/ressources` et `/methode` redirigent vers une
-partie utile du site. La route `/tarifs` présente les cinq packs et leur contenu,
-sans afficher de montant tant que les prix, devises et durées ne sont pas validés.
+partie utile du site. La route `/tarifs` présente les cinq packs, leur contenu et
+leur tarif mensuel en NIS.
 
 Oulpan appartient au même catalogue et au même compte utilisateur, tout en
 conservant un univers identifiable consacré à la langue.
@@ -352,7 +363,7 @@ Routes envisagées :
 /formations/[programSlug]
 /methode                     redirection provisoire vers le parcours
 /ressources                  redirection provisoire
-/tarifs                      catalogue des packs, sans montant avant validation
+/tarifs                      catalogue des packs et tarifs mensuels en NIS
 /entreprises
 /sign-in
 /sign-up
@@ -485,7 +496,7 @@ Une migration appliquée ne doit jamais être réécrite.
 
 ### Phase 7 — Paiements
 
-- [ ] Valider les comptes Stripe et Grow et définir les tarifs.
+- [ ] Valider les comptes Stripe et Grow et configurer les tarifs retenus.
 - [ ] Intégrer les deux checkouts et leurs webhooks.
 - [ ] Gérer le cycle complet des abonnements et paiements.
 - [ ] Vérifier facturation et comptabilité.
@@ -526,7 +537,7 @@ Stripe, Grow ou des partenaires.
 ## Hors périmètre du premier jalon
 
 - contenu pédagogique complet ;
-- paiements et tarifs définitifs ;
+- intégration des paiements et facturation en production ;
 - quota mensuel ;
 - statistiques avancées ;
 - espace entreprise complet ;
