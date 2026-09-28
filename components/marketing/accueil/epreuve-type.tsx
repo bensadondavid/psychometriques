@@ -1,5 +1,3 @@
-import styles from "./accueil.module.css";
-
 const reponses = [
   { lettre: "A", valeur: "2 cm", correcte: false },
   { lettre: "B", valeur: "2√2 cm", correcte: false },
@@ -9,176 +7,231 @@ const reponses = [
 
 const etapes = [
   {
-    titre: "Identifier la structure",
+    numero: "Étape 1",
+    titre: "Identifier l’angle au centre",
     texte:
-      "Le triangle ABC est rectangle en C : tout angle inscrit dans un demi-cercle et appuyé sur son diamètre est droit.",
+      "L’arc AB mesure 180°. L’arc AC en représente le tiers : l’angle AOC mesure donc 60°.",
   },
   {
-    titre: "Reconnaître le triangle remarquable",
+    numero: "Étape 2",
+    titre: "Lire le triangle rectangle",
     texte:
-      "Avec AB = 8 cm et un angle de 30°, on obtient BC = 4 cm et AC = 4√3 cm.",
+      "Le rayon du demi-cercle vaut 4 cm. OCD est rectangle en D et OC en est l’hypoténuse.",
   },
   {
-    titre: "Calculer la hauteur",
+    numero: "Étape 3",
+    titre: "Appliquer la relation directe",
     texte:
-      "L’aire du triangle s’écrit de deux façons : (AC × BC) ÷ 2 = (AB × CD) ÷ 2.",
+      "Dans OCD, sin(60°) = CD ÷ OC. On obtient CD = 4 × √3 ÷ 2, soit 2√3 cm.",
   },
 ] as const;
 
 export function AccueilEpreuveType() {
   return (
     <section
-      className={styles.revealedSection}
+      id="question"
+      className="bg-[#fef9f0] py-20 text-[#1d1c16] lg:py-24"
       aria-labelledby="epreuve-type-title"
     >
-      <div className={styles.revealedInner}>
-        <header className={styles.revealedHeader}>
-          <p className={styles.revealedEyebrow}>Épreuve type · Révélée</p>
-          <div className={styles.revealedLead}>
-            <h2 id="epreuve-type-title" className={styles.revealedTitle}>
-              Anatomie d’une question.
-            </h2>
-            <p className={styles.revealedIntro}>
-              Comprendre ce que l’exercice mesure, reconnaître sa structure,
-              puis choisir le chemin le plus court.
-            </p>
-          </div>
+      <div className="mx-auto w-full max-w-7xl space-y-12 px-6 lg:px-12">
+        <header className="max-w-3xl space-y-3">
+          <p className="flex items-center gap-2 text-[0.625rem] font-bold tracking-[0.28em] text-[#45121d] uppercase">
+            <span className="h-px w-6 bg-current" aria-hidden="true" />
+            Épreuve type révélée
+          </p>
+          <h2
+            id="epreuve-type-title"
+            className="font-serif text-[clamp(2.5rem,4vw,3.75rem)] leading-[1.05] font-normal tracking-[-0.03em] text-[#45121d]"
+          >
+            Anatomie d’une Question : La Méthode Directe
+          </h2>
+          <p className="max-w-2xl text-base leading-[1.65] text-[#524344]">
+            Une question complète, sa représentation et le raisonnement qui
+            permet d’arriver à la réponse sans détour.
+          </p>
         </header>
 
-        <div className={styles.exerciseStage}>
-          <article className={styles.questionColumn}>
-            <div className={styles.questionMeta}>
-              <span>Exemple pédagogique</span>
-              <span>Réflexion quantitative</span>
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
+          <article className="space-y-6 rounded-sm bg-white p-6 shadow-[0_4px_20px_rgba(42,33,29,0.08)] sm:p-8 lg:col-span-7">
+            <div className="flex flex-col justify-between gap-2 border-b border-[#e7e2d9] pb-4 font-mono text-xs tracking-[0.05em] text-[#4e5e7f] uppercase sm:flex-row">
+              <span>Section II · Réflexion quantitative</span>
+              <span className="text-[#45121d]">Question n° 17</span>
             </div>
 
-            <p className={styles.questionText}>
-              Soit un demi-cercle de diamètre <i>AB</i> = 8 cm. Le point{" "}
-              <i>C</i> appartient au demi-cercle et l’angle <i>CAB</i> mesure
-              30°. Le point <i>D</i> est le projeté orthogonal de <i>C</i> sur [
-              <i>AB</i>]. Quelle est la longueur de [<i>CD</i>] ?
-            </p>
+            <div className="space-y-4">
+              <p className="text-base leading-[1.65]">
+                Soit un demi-cercle de centre O et de diamètre AB = 8 cm. Un
+                point C est placé sur le demi-cercle tel que l’arc AC soit égal
+                au tiers de l’arc AB. Le point D est le projeté orthogonal de C
+                sur le diamètre AB.
+              </p>
+              <p className="font-semibold text-[#45121d]">
+                Quelle est la longueur exacte du segment CD ?
+              </p>
+            </div>
 
-            <figure className={styles.geometryFigure}>
+            <figure className="rounded-sm bg-[#f8f3ea] p-5 sm:p-6">
+              <figcaption className="mb-3 text-center text-[0.6875rem] font-semibold tracking-[0.22em] text-[#4e5e7f] uppercase">
+                Figure 17.1 — Représentation euclidienne
+              </figcaption>
               <svg
-                viewBox="0 0 680 330"
+                className="mx-auto block h-auto w-full max-w-sm text-[#45121d]"
+                viewBox="0 0 400 210"
                 role="img"
                 aria-labelledby="geometry-title geometry-description"
               >
                 <title id="geometry-title">Demi-cercle de diamètre AB</title>
                 <desc id="geometry-description">
-                  Le point C est sur le demi-cercle et sa projection D se trouve
-                  sur le diamètre AB. L’angle CAB mesure trente degrés.
+                  Le point C est placé sur le demi-cercle et sa projection D se
+                  trouve sur le diamètre AB.
                 </desc>
+                <line
+                  x1="40"
+                  x2="360"
+                  y1="180"
+                  y2="180"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                />
                 <path
-                  className={styles.arc}
-                  d="M100 250 A240 240 0 0 1 580 250"
+                  d="M 40 180 A 160 160 0 0 1 360 180"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
                 />
-                <path className={styles.figureLine} d="M100 250 H580" />
+                <line
+                  x1="200"
+                  x2="120"
+                  y1="180"
+                  y2="41.4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                  strokeDasharray="3 3"
+                />
+                <line
+                  x1="120"
+                  x2="120"
+                  y1="41.4"
+                  y2="180"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                />
                 <path
-                  className={styles.figureLine}
-                  d="M100 250 L460 42 L580 250"
+                  d="M 120 168 L 132 168 L 132 180"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1"
                 />
-                <path className={styles.figureGuide} d="M460 42 V250" />
                 <path
-                  className={styles.angleArc}
-                  d="M146 250 A46 46 0 0 0 140 227"
+                  d="M 175 180 A 25 25 0 0 0 187 158"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="0.75"
                 />
-                <path className={styles.rightAngle} d="M444 250 V234 H460" />
-                <circle
-                  className={styles.figurePoint}
-                  cx="100"
-                  cy="250"
-                  r="4"
-                />
-                <circle
-                  className={styles.figurePoint}
-                  cx="340"
-                  cy="250"
-                  r="4"
-                />
-                <circle className={styles.figurePoint} cx="460" cy="42" r="4" />
-                <circle
-                  className={styles.figurePoint}
-                  cx="460"
-                  cy="250"
-                  r="4"
-                />
-                <circle
-                  className={styles.figurePoint}
-                  cx="580"
-                  cy="250"
-                  r="4"
-                />
-                <text className={styles.figureLabel} x="82" y="280">
-                  A
-                </text>
-                <text className={styles.figureLabel} x="327" y="280">
-                  O
-                </text>
-                <text className={styles.figureLabel} x="454" y="24">
-                  C
-                </text>
-                <text className={styles.figureLabel} x="450" y="280">
-                  D
-                </text>
-                <text className={styles.figureLabel} x="575" y="280">
-                  B
-                </text>
-                <text className={styles.angleLabel} x="153" y="237">
-                  30°
-                </text>
+                <circle cx="200" cy="180" r="2.5" fill="currentColor" />
+                <circle cx="120" cy="41.4" r="3" fill="currentColor" />
+                <circle cx="120" cy="180" r="2.5" fill="currentColor" />
+                <g
+                  fill="currentColor"
+                  fontFamily="Plus Jakarta Sans"
+                  fontSize="12"
+                  fontWeight="600"
+                >
+                  <text x="24" y="184">
+                    A
+                  </text>
+                  <text x="368" y="184">
+                    B
+                  </text>
+                  <text x="114" y="30">
+                    C
+                  </text>
+                  <text x="115" y="200">
+                    D
+                  </text>
+                  <text x="196" y="200">
+                    O
+                  </text>
+                  <text x="165" y="160" fontSize="9">
+                    60°
+                  </text>
+                </g>
               </svg>
-              <figcaption>Figure de raisonnement · non à l’échelle</figcaption>
             </figure>
 
-            <div className={styles.answers} aria-label="Choix de réponse">
-              {reponses.map((reponse) => (
-                <div
-                  key={reponse.lettre}
-                  className={
-                    reponse.correcte
-                      ? `${styles.answer} ${styles.answerCorrect}`
-                      : styles.answer
-                  }
-                >
-                  <span className={styles.answerLetter}>{reponse.lettre}</span>
-                  <span>{reponse.valeur}</span>
-                  {reponse.correcte ? (
-                    <span className={styles.answerStatus}>Réponse</span>
-                  ) : null}
-                </div>
-              ))}
+            <div className="space-y-3 pt-2">
+              <p className="text-[0.6875rem] font-semibold tracking-[0.22em] text-[#4e5e7f] uppercase">
+                Propositions
+              </p>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {reponses.map((reponse) => (
+                  <div
+                    key={reponse.lettre}
+                    className={
+                      reponse.correcte
+                        ? "flex items-center gap-3 rounded-sm bg-[#d7e2ff] p-3 font-medium text-[#45121d]"
+                        : "flex items-center gap-3 rounded-sm border border-[#d7c1c3]/30 bg-[#fef9f0] p-3"
+                    }
+                  >
+                    <span
+                      className={
+                        reponse.correcte
+                          ? "grid size-6 place-items-center rounded-sm bg-[#45121d] font-serif text-lg text-[#fef9f0]"
+                          : "grid size-6 place-items-center font-serif text-lg text-[#45121d]"
+                      }
+                    >
+                      {reponse.lettre}
+                    </span>
+                    <span className="text-sm">{reponse.valeur}</span>
+                    {reponse.correcte ? (
+                      <span className="ml-auto text-xs">Réponse</span>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
             </div>
           </article>
 
           <aside
-            className={styles.methodColumn}
+            className="space-y-6 lg:col-span-5"
             aria-label="Méthode de résolution"
           >
-            <p className={styles.methodKicker}>La méthode directe</p>
-            <h3 className={styles.methodTitle}>
-              Décomposer avant de calculer.
-            </h3>
-
-            <div className={styles.methodSteps}>
-              {etapes.map((etape) => (
-                <div key={etape.titre} className={styles.methodStep}>
-                  <h4>{etape.titre}</h4>
-                  <p>{etape.texte}</p>
-                </div>
-              ))}
+            <div className="space-y-6 rounded-sm bg-[#280009] p-6 text-white shadow-[0_4px_20px_rgba(42,33,29,0.08)] sm:p-8">
+              <p className="border-b border-[#45121d] pb-3 text-[0.6875rem] font-semibold tracking-[0.22em] text-[#ded9d1] uppercase">
+                Méthode de résolution
+              </p>
+              <div className="space-y-5">
+                {etapes.map((etape) => (
+                  <div key={etape.numero}>
+                    <p className="font-mono text-xs text-[#ffdea5] uppercase">
+                      {etape.numero} · {etape.titre}
+                    </p>
+                    <p className="mt-1 text-sm leading-[1.55] text-[#f5f0e7]">
+                      {etape.texte}
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="border-t border-[#45121d] pt-4">
+                <p className="text-[0.6875rem] font-semibold tracking-[0.18em] text-[#ffdad6] uppercase">
+                  Résultat
+                </p>
+                <p className="mt-2 font-serif text-3xl">CD = 2√3 cm</p>
+              </div>
             </div>
-
-            <div className={styles.result}>
-              <span>Conclusion</span>
-              <strong>CD = 2√3 cm</strong>
+            <div className="rounded-sm bg-[#ece8df] p-5">
+              <p className="text-[0.6875rem] font-semibold tracking-[0.22em] text-[#4e5e7f] uppercase">
+                Réflexe utile
+              </p>
+              <p className="mt-2 text-sm leading-[1.55] text-[#524344]">
+                Reconnaître la structure géométrique avant de poser le calcul
+                permet de gagner du temps et d’éviter le distracteur construit à
+                partir du diamètre.
+              </p>
             </div>
-
-            <p className={styles.methodNote}>
-              La correction révèle la structure utile, puis le calcul le plus
-              court. L’objectif est de construire un réflexe reproductible.
-            </p>
           </aside>
         </div>
       </div>

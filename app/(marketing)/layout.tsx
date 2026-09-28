@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { MarketingHeader } from "@/components/marketing/marketing-header";
@@ -8,56 +9,73 @@ export default function MarketingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="site-shell flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-[#fef9f0]">
       <MarketingHeader />
       <div className="flex-1">{children}</div>
-      <footer className="border-t border-white/10 bg-[#131a22] px-4 py-12 text-[#f3ece1] sm:px-6">
-        <div className="mx-auto grid w-full max-w-7xl gap-10 lg:grid-cols-[1.2fr_0.8fr_0.8fr]">
-          <div>
-            <p className="mt-6 max-w-md text-sm leading-6 text-primary-foreground/55">
-              Une plateforme francophone pour préparer les examens
-              psychométriques, AMIR et YAEL.
-            </p>
-          </div>
-          <div>
-            <p className="text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-accent">
-              Se préparer
-            </p>
-            <div className="mt-5 grid gap-3 text-sm text-primary-foreground/65">
-              <Link
-                href="/formations/psychometriques"
-                className="hover:text-white"
-              >
-                Psychométrique
-              </Link>
-              <Link href="/formations/amir" className="hover:text-white">
-                AMIR
-              </Link>
-              <Link href="/formations/yael" className="hover:text-white">
-                YAEL
-              </Link>
-              <Link href="/oulpan" className="hover:text-white">
-                Oulpan
-              </Link>
+      <footer className="bg-[#f8f3ea] py-16 text-[#524344]">
+        <div className="mx-auto w-full max-w-7xl px-6 lg:px-12">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5">
+            <div className="space-y-4 lg:col-span-2">
+              <Image
+                src="/logo-psychos.png"
+                height={44}
+                width={44}
+                alt="Psychometriques.fr"
+              />
+              <p className="max-w-md pr-6 text-sm leading-[1.55]">
+                Plateforme francophone de préparation aux examens
+                Psychométriques, AMIRNET et YAEL/YAELNET.
+              </p>
             </div>
-          </div>
-          <div>
-            <p className="text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-accent">
-              La plateforme
-            </p>
-            <div className="mt-5 grid gap-3 text-sm text-primary-foreground/65">
-              <Link href="/entreprises" className="hover:text-white">
-                Partenariats
-              </Link>
-              <Link href="/sign-in" className="hover:text-white">
+            <div>
+              <p className="mb-4 text-[0.6875rem] font-semibold tracking-[0.22em] text-[#45121d] uppercase">
+                Cursus préparatoires
+              </p>
+              <div className="grid gap-2.5 text-sm">
+                <Link href="/#formations" className="hover:text-[#1d1c16]">
+                  Psychométriques
+                </Link>
+                <Link href="/#formations" className="hover:text-[#1d1c16]">
+                  AMIRNET
+                </Link>
+                <Link href="/#formations" className="hover:text-[#1d1c16]">
+                  YAEL & YAELNET
+                </Link>
+              </div>
+            </div>
+            <div>
+              <p className="mb-4 text-[0.6875rem] font-semibold tracking-[0.22em] text-[#45121d] uppercase">
+                Ressources & accès
+              </p>
+              <div className="grid gap-2.5 text-sm">
+                <Link href="/#question" className="hover:text-[#1d1c16]">
+                  Question type
+                </Link>
+                <Link href="/#methode" className="hover:text-[#1d1c16]">
+                  Notre méthode
+                </Link>
+                <Link href="/#acces" className="hover:text-[#1d1c16]">
+                  Packs & tarifs
+                </Link>
+              </div>
+            </div>
+            <div>
+              <p className="mb-4 text-[0.6875rem] font-semibold tracking-[0.22em] text-[#45121d] uppercase">
                 Espace personnel
-              </Link>
+              </p>
+              <div className="grid gap-2.5 text-sm">
+                <Link href="/sign-in" className="hover:text-[#1d1c16]">
+                  Se connecter
+                </Link>
+                <Link href="/sign-up" className="hover:text-[#1d1c16]">
+                  Créer un compte
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="mx-auto mt-12 flex w-full max-w-7xl flex-col gap-2 border-t border-primary-foreground/12 pt-5 text-xs text-primary-foreground/35 sm:flex-row sm:justify-between">
-          <p>Nom de marque provisoire.</p>
-          <p>Plateforme en cours de construction.</p>
+          <div className="mt-14 border-t border-[#e7e2d9] pt-8 text-sm">
+            <p>© 2026 Psychometriques.fr. Tous droits réservés.</p>
+          </div>
         </div>
       </footer>
     </div>

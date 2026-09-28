@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetClose,
@@ -19,9 +18,11 @@ import { cn } from "@/lib/utils";
 
 const navigation = [
   { href: "/", label: "Accueil" },
-  { href: "/formations/psychometriques", label: "Psychométriques" },
-  { href: "/formations/amirnet", label: "AMIRNET" },
-  { href: "/formations/yaelnet", label: "YAELNET" },
+  { href: "/#formations", label: "Catalogue des formations" },
+  { href: "/#question", label: "Méthode & question type" },
+  { href: "/#methode", label: "Bibliothèque d’exercices" },
+  { href: "/#acces", label: "Packs & tarifs" },
+  { href: "/#faq", label: "Questions fréquentes" },
 ] as const;
 
 function isCurrentPath(pathname: string, href: string) {
@@ -36,18 +37,18 @@ export function MarketingHeader() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 bg-[#131a22] text-[#f3ece1]">
-      <div className="flex h-20 w-full items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 bg-[#fef9f0]/90 text-[#45121d] shadow-[0_1px_8px_rgba(42,33,29,0.04)] backdrop-blur-md">
+      <div className="mx-auto flex h-20 w-full items-center justify-between px-6 lg:px-12">
         <Link
           href="/"
-          className="relative z-10 order-2 rounded-full bg-[#f3ece1] transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d3aa8e]"
+          className="relative z-10 order-2 transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#45121d]"
           aria-label="Accueil"
         >
           <Image
             src="/logo-psychos.png"
-            height={64}
-            width={64}
-            alt="Examens et Hébreu"
+            height={48}
+            width={48}
+            alt="Psychometriques.fr"
             priority
           />
         </Link>
@@ -57,7 +58,7 @@ export function MarketingHeader() {
             <SheetTrigger asChild>
               <button
                 type="button"
-                className="grid size-11 place-items-center rounded-sm border border-[#f3ece1]/25 bg-transparent text-[#f3ece1] transition-colors hover:bg-[#f3ece1] hover:text-[#131a22] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d3aa8e]"
+                className="grid size-11 place-items-center rounded-sm border border-[#cbbfae] bg-transparent text-[#45121d] transition-colors hover:bg-[#45121d] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#45121d]"
                 aria-label="Ouvrir le menu"
               >
                 <Menu className="size-5" aria-hidden="true" />
@@ -67,13 +68,13 @@ export function MarketingHeader() {
             <SheetContent
               side="left"
               showCloseButton={false}
-              className="h-dvh max-w-none gap-0 border-0 bg-[#131a22] p-0 text-[#f3ece1] shadow-2xl data-[side=left]:w-screen data-[side=left]:border-r-0 sm:max-w-[28rem] sm:data-[side=left]:w-[28rem]"
+              className="h-dvh max-w-none gap-0 border-0 bg-[#fef9f0] p-0 text-[#45121d] shadow-[0_4px_20px_rgba(42,33,29,0.08)] data-[side=left]:w-screen data-[side=left]:border-r-0 sm:max-w-[34rem] sm:data-[side=left]:w-[34rem]"
             >
               <SheetHeader className="flex h-20 flex-row items-center justify-between px-4 py-0 sm:px-6">
                 <SheetClose asChild>
                   <button
                     type="button"
-                    className="grid size-11 place-items-center rounded-sm border border-[#f3ece1]/25 text-[#f3ece1] transition-colors hover:bg-[#f3ece1] hover:text-[#131a22] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d3aa8e]"
+                    className="grid size-11 place-items-center rounded-sm border border-[#cbbfae] text-[#45121d] transition-colors hover:bg-[#45121d] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#45121d]"
                     aria-label="Fermer le menu"
                   >
                     <X className="size-5" aria-hidden="true" />
@@ -88,20 +89,20 @@ export function MarketingHeader() {
                 <SheetClose asChild>
                   <Link
                     href="/"
-                    className="rounded-full bg-[#f3ece1] transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d3aa8e]"
+                    className="transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#45121d]"
                     aria-label="Retour à l’accueil"
                   >
                     <Image
                       src="/logo-psychos.png"
                       height={56}
                       width={56}
-                      alt="Examens et Hébreu"
+                      alt="Psychometriques.fr"
                     />
                   </Link>
                 </SheetClose>
               </SheetHeader>
 
-              <div className="flex min-h-0 flex-1 flex-col px-5 pb-6 pt-10 sm:px-8 sm:pb-8">
+              <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-5 pt-10 pb-6 sm:px-8 sm:pb-8">
                 <nav aria-label="Navigation principale" className="grid gap-2">
                   {navigation.map((item) => {
                     const isCurrent = isCurrentPath(pathname, item.href);
@@ -112,14 +113,14 @@ export function MarketingHeader() {
                           href={item.href}
                           aria-current={isCurrent ? "page" : undefined}
                           className={cn(
-                            "group flex items-center justify-between rounded-sm px-2 py-3 font-serif text-[clamp(2.3rem,8vw,3.75rem)] leading-none tracking-[-0.035em] text-[#f3ece1]/68 transition-colors hover:text-[#f3ece1] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#d3aa8e] sm:text-[2.6rem]",
-                            isCurrent && "text-[#d3aa8e]",
+                            "group flex items-center justify-between border-b border-[#d7c1c3] px-1 py-4 font-serif text-3xl leading-[1.08] tracking-tight text-[#45121d]/65 transition-colors hover:text-[#45121d] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#45121d]",
+                            isCurrent && "text-[#45121d]",
                           )}
                         >
                           <span>{item.label}</span>
                           <span
                             className={cn(
-                              "size-1.5 rounded-full bg-[#d3aa8e] opacity-0 transition-opacity",
+                              "size-1.5 rounded-full bg-[#d6b476] opacity-0 transition-opacity",
                               isCurrent && "opacity-100",
                             )}
                             aria-hidden="true"
@@ -128,21 +129,24 @@ export function MarketingHeader() {
                       </SheetClose>
                     );
                   })}
+
+                  <SheetClose asChild>
+                    <Link
+                      href="/sign-in"
+                      aria-current={
+                        isCurrentPath(pathname, "/sign-in") ? "page" : undefined
+                      }
+                      className="mt-6 flex items-center justify-center rounded-sm bg-[#45121d] px-5 py-5 text-white transition-colors hover:bg-[#280009] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#45121d]">
+                        Espace personnel
+                    </Link>
+                  </SheetClose>
                 </nav>
 
                 <div className="mt-auto pt-8">
-                  <p className="mb-5 max-w-xs text-sm leading-6 text-[#f3ece1]/48">
-                    Une préparation structurée pour avancer avec méthode.
+                  <p className="max-w-xs text-sm leading-6 text-[#2a211d]/52">
+                    Psychométriques, AMIRNET et YAEL/YAELNET réunis dans un même
+                    espace de préparation.
                   </p>
-                  <SheetClose asChild>
-                    <Button
-                      asChild
-                      size="lg"
-                      className="h-12 w-full rounded-[2px] bg-[#f3ece1] text-[#131a22] shadow-none hover:bg-[#d3aa8e]"
-                    >
-                      <Link href="/sign-in">Se connecter</Link>
-                    </Button>
-                  </SheetClose>
                 </div>
               </div>
             </SheetContent>

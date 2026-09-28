@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -14,23 +14,37 @@ import {
   turnstileSiteKey,
 } from "@/components/auth/turnstile-captcha";
 
-const inputClass = "h-12 rounded-none border-[#bdb09f] bg-[#fbf8f2]/80 px-4 text-[15px] text-[#241d19] shadow-none placeholder:text-[#a09384] focus-visible:border-[#45121d] focus-visible:ring-1 focus-visible:ring-[#45121d]";
-const labelClass = "text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-[#766a5e]";
+const inputClass =
+  "h-12 rounded-sm border-[#bdb09f] bg-white px-4 text-[15px] text-[#1d1c16] shadow-none placeholder:text-[#857374] focus-visible:border-[#45121d] focus-visible:ring-1 focus-visible:ring-[#45121d]";
+const labelClass =
+  "text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-[#766a5e]";
 
 function GoogleMark() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09Z" fill="#4285F4" />
-      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23Z" fill="#34A853" />
-      <path d="M5.84 14.09A6.9 6.9 0 0 1 5.49 12c0-.73.13-1.43.35-2.09V7.07H2.18A11 11 0 0 0 1 12c0 1.78.43 3.45 1.18 4.93l3.66-2.84Z" fill="#FBBC05" />
-      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53Z" fill="#EA4335" />
+      <path
+        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09Z"
+        fill="#4285F4"
+      />
+      <path
+        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23Z"
+        fill="#34A853"
+      />
+      <path
+        d="M5.84 14.09A6.9 6.9 0 0 1 5.49 12c0-.73.13-1.43.35-2.09V7.07H2.18A11 11 0 0 0 1 12c0 1.78.43 3.45 1.18 4.93l3.66-2.84Z"
+        fill="#FBBC05"
+      />
+      <path
+        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53Z"
+        fill="#EA4335"
+      />
     </svg>
   );
 }
 
 function LastUsedBadge() {
   return (
-    <span className="pointer-events-none absolute -right-1 -top-2.5 z-10 rounded-full border border-[#f5f0e7] bg-[#45121d] px-2 py-1 text-[0.58rem] font-semibold uppercase leading-none tracking-[0.08em] text-[#fffaf0] shadow-[0_4px_12px_rgba(69,18,29,0.24)]">
+    <span className="pointer-events-none absolute -top-2.5 -right-1 z-10 rounded-sm border border-[#fef9f0] bg-[#45121d] px-2 py-1 text-[0.58rem] leading-none font-semibold tracking-[0.08em] text-white uppercase shadow-[0_4px_12px_rgba(69,18,29,0.18)]">
       Dernière utilisation
     </span>
   );
@@ -55,7 +69,10 @@ export default function SignIn() {
   const handleGoogle = async () => {
     try {
       setIsGoogleLoading(true);
-      await authClient.signIn.social({ provider: "google", callbackURL: "/account/home" });
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/account/home",
+      });
     } catch {
       toast.error("Erreur avec Google");
     } finally {
@@ -105,25 +122,71 @@ export default function SignIn() {
   return (
     <div>
       <div className="mb-8 border-b border-[#cbbfae]/70 pb-7">
-        <p className="mb-3 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#9b7a48]">Accès personnel</p>
-        <h1 className="font-serif text-[clamp(2.8rem,14vw,3.4rem)] leading-none tracking-[-0.035em] text-[#2a211d]">Bon retour</h1>
-        <p className="mt-4 text-sm leading-6 text-[#766a5e]">Retrouvez votre parcours et poursuivez votre préparation.</p>
+        <p className="mb-3 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-[#9b7a48]">
+          Accès personnel
+        </p>
+        <h1 className="font-serif text-[clamp(2.8rem,14vw,3.4rem)] leading-none tracking-[-0.035em] text-[#2a211d]">
+          Bon retour
+        </h1>
+        <p className="mt-4 text-sm leading-6 text-[#766a5e]">
+          Retrouvez vos packs Psychométriques, AMIRNET et YAEL/YAELNET.
+        </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-2">
-          <label htmlFor="email" className={labelClass}>Adresse email</label>
-          <Input id="email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="prenom.nom@exemple.fr" className={inputClass} required />
+          <label htmlFor="email" className={labelClass}>
+            Adresse email
+          </label>
+          <Input
+            id="email"
+            type="email"
+            autoComplete="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder="prenom.nom@exemple.fr"
+            className={inputClass}
+            required
+          />
         </div>
         <div className="space-y-2">
           <div className="flex items-center justify-between gap-4">
-            <label htmlFor="password" className={labelClass}>Mot de passe</label>
-            <Link href="/forgot-password" className="text-xs text-[#766a5e] underline-offset-4 transition-colors hover:text-[#45121d] hover:underline">Mot de passe oublié ?</Link>
+            <label htmlFor="password" className={labelClass}>
+              Mot de passe
+            </label>
+            <Link
+              href="/forgot-password"
+              className="text-xs text-[#766a5e] underline-offset-4 transition-colors hover:text-[#45121d] hover:underline"
+            >
+              Mot de passe oublié ?
+            </Link>
           </div>
           <div className="relative">
-            <Input id="password" type={showPassword ? "text" : "password"} autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Votre mot de passe" className={`${inputClass} pr-12`} required />
-            <button type="button" onClick={() => setShowPassword((value) => !value)} className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8f8274] transition-colors hover:text-[#45121d]" aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}>
-              {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+            <Input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder="Votre mot de passe"
+              className={`${inputClass} pr-12`}
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((value) => !value)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8f8274] transition-colors hover:text-[#45121d]"
+              aria-label={
+                showPassword
+                  ? "Masquer le mot de passe"
+                  : "Afficher le mot de passe"
+              }
+            >
+              {showPassword ? (
+                <EyeOff className="size-4" />
+              ) : (
+                <Eye className="size-4" />
+              )}
             </button>
           </div>
         </div>
@@ -133,21 +196,55 @@ export default function SignIn() {
         />
         <div className="relative">
           {lastLoginMethod === "email" ? <LastUsedBadge /> : null}
-          <Button type="submit" className="h-12 w-full rounded-none bg-[#45121d] text-sm font-semibold tracking-wide text-[#fffaf0] hover:bg-[#591725]" disabled={isLoading || (Boolean(turnstileSiteKey) && !captchaToken)}>
+          <Button
+            type="submit"
+            className="h-12 w-full rounded-sm bg-[#45121d] text-sm font-semibold tracking-wide text-white shadow-none hover:bg-[#280009]"
+            disabled={isLoading || (Boolean(turnstileSiteKey) && !captchaToken)}
+          >
             {isLoading ? "Connexion…" : "Accéder à mon espace"}
           </Button>
         </div>
       </form>
 
-      <div className="my-7 flex items-center gap-4"><span className="h-px flex-1 bg-[#cbbfae]/70" /><span className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[#918477]">Ou continuer avec</span><span className="h-px flex-1 bg-[#cbbfae]/70" /></div>
+      <div className="my-7 flex items-center gap-4">
+        <span className="h-px flex-1 bg-[#cbbfae]/70" />
+        <span className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-[#918477]">
+          Ou continuer avec
+        </span>
+        <span className="h-px flex-1 bg-[#cbbfae]/70" />
+      </div>
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="relative">
           {lastLoginMethod === "google" ? <LastUsedBadge /> : null}
-          <button type="button" onClick={handleGoogle} disabled={isGoogleLoading} className="flex h-12 w-full items-center justify-center gap-3 border border-[#bdb09f] bg-[#fbf8f2]/70 text-sm font-medium transition-colors hover:border-[#75695d] hover:bg-white disabled:opacity-60"><GoogleMark />{isGoogleLoading ? "Redirection…" : "Google"}</button>
+          <button
+            type="button"
+            onClick={handleGoogle}
+            disabled={isGoogleLoading}
+            className="flex h-12 w-full items-center justify-center gap-3 rounded-sm border border-[#bdb09f] bg-white text-sm font-medium transition-colors hover:border-[#45121d] hover:bg-[#f8f3ea] disabled:opacity-60"
+          >
+            <GoogleMark />
+            {isGoogleLoading ? "Redirection…" : "Google"}
+          </button>
         </div>
-        <button type="button" onClick={handlePasskey} disabled={isPasskeyLoading} className="flex h-12 items-center justify-center gap-3 border border-[#bdb09f] bg-[#fbf8f2]/70 text-sm font-medium transition-colors hover:border-[#75695d] hover:bg-white disabled:opacity-60"><Fingerprint className="size-4 text-[#45121d]" />{isPasskeyLoading ? "Vérification…" : "Passkey"}</button>
+        <button
+          type="button"
+          onClick={handlePasskey}
+          disabled={isPasskeyLoading}
+          className="flex h-12 items-center justify-center gap-3 rounded-sm border border-[#bdb09f] bg-white text-sm font-medium transition-colors hover:border-[#45121d] hover:bg-[#f8f3ea] disabled:opacity-60"
+        >
+          <Fingerprint className="size-4 text-[#45121d]" />
+          {isPasskeyLoading ? "Vérification…" : "Passkey"}
+        </button>
       </div>
-      <p className="mt-8 text-center text-sm text-[#766a5e]">Vous débutez ? <Link href="/sign-up" className="font-semibold text-[#45121d] underline-offset-4 hover:underline">Créer un compte</Link></p>
+      <p className="mt-8 text-center text-sm text-[#766a5e]">
+        Vous débutez ?{" "}
+        <Link
+          href="/sign-up"
+          className="font-semibold text-[#45121d] underline-offset-4 hover:underline"
+        >
+          Créer un compte
+        </Link>
+      </p>
     </div>
   );
 }
