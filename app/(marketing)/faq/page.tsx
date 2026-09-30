@@ -73,7 +73,7 @@ const groups: Group[] = [
     items: [
       {
         q: "Comment fonctionne l'abonnement ?",
-        a: "Les packs sont proposés sous forme d'abonnement, mensuel ou annuel. Vous choisissez la durée qui correspond à votre calendrier de préparation au moment de l'achat.",
+        a: "Les tarifs affichés sont mensuels en shekels. La page Tarifs détaille les cinq offres pour choisir la préparation adaptée à votre objectif.",
       },
       {
         q: "Comment contacter l'équipe en cas de question ou de problème ?",

@@ -37,13 +37,13 @@ export function AccueilEpreuveType() {
         <header className="max-w-3xl space-y-3">
           <p className="flex items-center gap-2 text-[0.625rem] font-bold tracking-[0.28em] text-[#45121d] uppercase">
             <span className="h-px w-6 bg-current" aria-hidden="true" />
-            Épreuve type révélée
+            Voir une correction
           </p>
           <h2
             id="epreuve-type-title"
             className="font-serif text-[clamp(2.5rem,4vw,3.75rem)] leading-[1.05] font-normal tracking-[-0.03em] text-[#45121d]"
           >
-            Anatomie d’une Question : La Méthode Directe
+            Une question, du raisonnement à la réponse.
           </h2>
           <p className="max-w-2xl text-base leading-[1.65] text-[#524344]">
             Une question complète, sa représentation et le raisonnement qui
@@ -172,7 +172,7 @@ export function AccueilEpreuveType() {
                     key={reponse.lettre}
                     className={
                       reponse.correcte
-                        ? "flex items-center gap-3 rounded-sm bg-[#d7e2ff] p-3 font-medium text-[#45121d]"
+                        ? "flex items-center gap-3 rounded-sm bg-[#e8d6b7] p-3 font-medium text-[#45121d]"
                         : "flex items-center gap-3 rounded-sm border border-[#d7c1c3]/30 bg-[#fef9f0] p-3"
                     }
                   >

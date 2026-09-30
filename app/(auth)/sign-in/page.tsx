@@ -1,14 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState, useSyncExternalStore } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState, useSyncExternalStore } from "react";
 import { Eye, EyeOff, Fingerprint } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth/auth-client";
+import {
+  getAuthUrl,
+  getPostAuthDestination,
+  parseSelectableOffer,
+  selectableOffers,
+} from "@/lib/offers/selection";
 import {
   TurnstileCaptcha,
   turnstileSiteKey,
@@ -50,8 +56,13 @@ function LastUsedBadge() {
   );
 }
 
-export default function SignIn() {
+function SignInForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const offerKey = parseSelectableOffer(searchParams.get("offer"));
+  const postAuthDestination = getPostAuthDestination(offerKey);
+  const signUpUrl = getAuthUrl("/sign-up", offerKey);
+  const selectedOffer = offerKey ? selectableOffers[offerKey] : null;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -71,7 +82,7 @@ export default function SignIn() {
       setIsGoogleLoading(true);
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/account/home",
+        callbackURL: postAuthDestination,
       });
     } catch {
       toast.error("Erreur avec Google");
@@ -86,7 +97,7 @@ export default function SignIn() {
       const result = await authClient.signIn.passkey();
       if (result?.error) return toast.error(result.error.message);
       toast.success("Connecté !");
-      router.replace("/account/home");
+      router.replace(postAuthDestination);
     } catch {
       toast.error("Erreur avec le passkey");
     } finally {
@@ -107,7 +118,7 @@ export default function SignIn() {
       });
       if (result.error) return toast.error(result.error.message);
       toast.success("Connecté !");
-      setTimeout(() => router.replace("/account/home"), 800);
+      setTimeout(() => router.replace(postAuthDestination), 800);
     } catch {
       toast.error("Une erreur est survenue");
     } finally {
@@ -129,7 +140,9 @@ export default function SignIn() {
           Bon retour
         </h1>
         <p className="mt-4 text-sm leading-6 text-[#766a5e]">
-          Retrouvez vos packs Psychométriques, AMIRNET et YAEL/YAELNET.
+          {selectedOffer
+            ? `Connectez-vous pour poursuivre avec ${selectedOffer.title}.`
+            : "Retrouvez vos packs Psychométriques, AMIRNET et YAEL/YAELNET."}
         </p>
       </div>
 
@@ -239,12 +252,20 @@ export default function SignIn() {
       <p className="mt-8 text-center text-sm text-[#766a5e]">
         Vous débutez ?{" "}
         <Link
-          href="/sign-up"
+          href={signUpUrl}
           className="font-semibold text-[#45121d] underline-offset-4 hover:underline"
         >
           Créer un compte
         </Link>
       </p>
     </div>
+  );
+}
+
+export default function SignIn() {
+  return (
+    <Suspense fallback={<div className="min-h-[34rem]" />}>
+      <SignInForm />
+    </Suspense>
   );
 }

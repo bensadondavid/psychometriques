@@ -1,5 +1,4 @@
 import { AccueilAcces } from "./acces";
-import { AccueilAppelAction } from "./appel-action";
 import { AccueilExamens } from "./examens";
 import { AccueilEpreuveType } from "./epreuve-type";
 import { AccueilFaq } from "./faq";
@@ -15,7 +14,6 @@ export function Accueil() {
       <AccueilPedagogie />
       <AccueilAcces />
       <AccueilFaq />
-      <AccueilAppelAction />
     </main>
   );
 }

@@ -37,38 +37,13 @@ const yael = [
   },
 ];
 
-const steps = [
-  { title: "Le cours pose la notion", text: "Une explication en français, avec un exemple résolu." },
-  { title: "L'exercice l'applique", text: "Des questions classées par compétence, en anglais ou en hébreu." },
-  { title: "La correction détaille la méthode", text: "Raisonnement, raccourci à retenir et pièges des distracteurs." },
-];
-
-const faq = [
-  {
-    q: "L'interface est-elle en français ?",
-    a: "Oui. Les explications, les cours et les corrections sont en français. Seuls les énoncés d'exercice sont en anglais (AMIRNET) ou en hébreu (YAEL/YAELNET).",
-  },
-  {
-    q: "Comment sont affichés les textes en hébreu ?",
-    a: "Les contenus hébreux conservent leur sens de lecture de droite à gauche et une mise en page adaptée, sans casser le reste de l'interface.",
-  },
-  {
-    q: "Dois-je préparer les deux examens ?",
-    a: "Non. Vous pouvez choisir un seul parcours ou réunir les deux dans le pack langues.",
-  },
-  {
-    q: "Puis-je m'entraîner avec un chronomètre ?",
-    a: "Oui. Travaillez d'abord la méthode sans pression, puis activez le chronomètre pour la vitesse de décision.",
-  },
-];
-
 const linkBase =
   "inline-flex items-center justify-center rounded-md px-6 py-3 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2";
 
 export default function LanguesPage() {
   return (
     <main className="bg-background text-foreground">
-      {/* Hero : deux feuilles, deux langues */}
+      {/* Deux exemples de questions, un par langue */}
       <section className="overflow-hidden border-b border-border">
         <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
           <h1 className="max-w-3xl font-serif text-5xl leading-[0.95] tracking-tight md:text-7xl">
@@ -94,32 +69,42 @@ export default function LanguesPage() {
           </div>
 
           <div className="mt-16 grid gap-6 md:grid-cols-2">
-            <figure className="-rotate-1 bg-card p-6 shadow-xl md:p-8">
+            <figure className="border-t-2 border-primary bg-card p-6 md:p-8">
               <figcaption className="text-xs text-muted-foreground">
                 AMIRNET · Sentence completion (exemple)
               </figcaption>
               <p lang="en" className="mt-4 font-serif text-2xl leading-snug">
-                Despite the initial ________, the findings were eventually accepted by the
-                scientific community.
+                Despite the initial ________, the findings were eventually
+                accepted by the scientific community.
               </p>
               <ul lang="en" className="mt-6 grid grid-cols-2 gap-2 text-sm">
                 {["skepticism", "approval", "delay", "funding"].map((o, i) => (
                   <li key={o} className="border border-border px-3 py-2">
-                    <span className="mr-2 text-muted-foreground">{"ABCD"[i]}</span>
+                    <span className="mr-2 text-muted-foreground">
+                      {"ABCD"[i]}
+                    </span>
                     {o}
                   </li>
                 ))}
               </ul>
             </figure>
 
-            <figure className="rotate-1 bg-card p-6 shadow-xl md:mt-10 md:p-8">
+            <figure className="border-t-2 border-primary bg-card p-6 md:p-8">
               <figcaption className="text-xs text-muted-foreground">
                 YAEL · Grammaire (exemple)
               </figcaption>
-              <p dir="rtl" lang="he" className="mt-4 font-serif text-3xl leading-snug">
+              <p
+                dir="rtl"
+                lang="he"
+                className="mt-4 font-serif text-3xl leading-snug"
+              >
                 הילדות ________ בגינה.
               </p>
-              <ul dir="rtl" lang="he" className="mt-6 grid grid-cols-2 gap-2 text-lg">
+              <ul
+                dir="rtl"
+                lang="he"
+                className="mt-6 grid grid-cols-2 gap-2 text-lg"
+              >
                 {["משחקות", "משחק", "משחקים", "משחקת"].map((o) => (
                   <li key={o} className="border border-border px-3 py-2">
                     {o}
@@ -127,8 +112,8 @@ export default function LanguesPage() {
                 ))}
               </ul>
               <p className="mt-4 text-sm text-muted-foreground">
-                Les énoncés hébreux se lisent de droite à gauche ; les consignes restent
-                en français.
+                Les énoncés hébreux se lisent de droite à gauche ; les consignes
+                restent en français.
               </p>
             </figure>
           </div>
@@ -143,8 +128,8 @@ export default function LanguesPage() {
               AMIRNET
             </h2>
             <p className="mt-4 leading-relaxed text-muted-foreground">
-              Anglais académique : trois types de questions, travaillés séparément puis
-              ensemble.
+              Anglais académique : trois types de questions, travaillés
+              séparément puis ensemble.
             </p>
           </div>
           <div className="border-t border-border">
@@ -169,8 +154,8 @@ export default function LanguesPage() {
                 YAEL &amp; YAELNET
               </h2>
               <p className="mt-4 leading-relaxed text-primary-foreground/75">
-                Certification d&apos;hébreu : une progression pas à pas, avec des contenus
-                adaptés à la lecture RTL.
+                Certification d&apos;hébreu : une progression pas à pas, avec
+                des contenus adaptés à la lecture RTL.
               </p>
             </div>
             <div className="border-t border-primary-foreground/20">
@@ -190,22 +175,6 @@ export default function LanguesPage() {
         </div>
       </section>
 
-      {/* Séance */}
-      <section className="mx-auto max-w-6xl px-6 py-20 md:py-28">
-        <h2 className="max-w-2xl font-serif text-4xl leading-tight tracking-tight md:text-5xl">
-          Une séance de travail, en trois temps
-        </h2>
-        <ol className="mt-14 grid gap-10 md:grid-cols-3">
-          {steps.map((s, i) => (
-            <li key={s.title}>
-              <span className="font-serif text-5xl text-primary/30">{i + 1}</span>
-              <h3 className="mt-3 text-lg font-semibold">{s.title}</h3>
-              <p className="mt-2 leading-relaxed text-muted-foreground">{s.text}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
-
       {/* Pack langues */}
       <section className="bg-secondary">
         <div className="mx-auto grid max-w-6xl gap-10 px-6 py-20 md:grid-cols-2 md:items-center md:py-28">
@@ -214,44 +183,29 @@ export default function LanguesPage() {
               Pack langues
             </h2>
             <p className="mt-4 max-w-prose leading-relaxed text-secondary-foreground/75">
-              Réunissez AMIRNET et YAEL/YAELNET dans un seul parcours de travail, depuis
-              le même espace personnel.
+              Réunissez AMIRNET et YAEL/YAELNET dans un seul parcours de
+              travail, depuis le même espace personnel.
             </p>
           </div>
           <div className="bg-card p-8">
             <ul className="space-y-3">
-              <li className="border-l-2 border-accent pl-3">Préparation AMIRNET</li>
-              <li className="border-l-2 border-accent pl-3">Préparation YAEL &amp; YAELNET</li>
-              <li className="border-l-2 border-accent pl-3">Exercices et corrections dédiés</li>
+              <li className="border-l-2 border-accent pl-3">
+                Préparation AMIRNET
+              </li>
+              <li className="border-l-2 border-accent pl-3">
+                Préparation YAEL &amp; YAELNET
+              </li>
+              <li className="border-l-2 border-accent pl-3">
+                Exercices et corrections dédiés
+              </li>
             </ul>
             <Link
-              href="/sign-up"
+              href="/sign-up?offer=langues"
               className={`${linkBase} mt-8 bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:outline-primary`}
             >
               Choisir ce pack
             </Link>
           </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="mx-auto max-w-3xl px-6 py-20 md:py-28">
-        <h2 className="font-serif text-4xl leading-tight tracking-tight">Questions fréquentes</h2>
-        <div className="mt-10 border-t border-border">
-          {faq.map((item) => (
-            <details key={item.q} className="group border-b border-border py-5">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
-                {item.q}
-                <span
-                  aria-hidden
-                  className="font-serif text-2xl text-accent transition-transform group-open:rotate-45"
-                >
-                  +
-                </span>
-              </summary>
-              <p className="mt-3 max-w-prose leading-relaxed text-muted-foreground">{item.a}</p>
-            </details>
-          ))}
         </div>
       </section>
     </main>

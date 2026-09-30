@@ -1,31 +1,23 @@
 const dispositifs = [
   {
-    numero: "01",
-    titre: "Banque raisonnée",
+    titre: "Comprendre",
     texte:
-      "Des questions classées par compétence pour isoler une notion, la comprendre et la travailler avec précision.",
-    legende: "Indexation fine",
+      "Partir d’une notion et voir comment elle s’applique dans une question.",
   },
   {
-    numero: "02",
-    titre: "Simulations chronométrées",
+    titre: "S’exercer",
     texte:
-      "Des séries conçues pour apprendre à décider sous contrainte de temps tout en conservant une méthode fiable.",
-    legende: "Conditions réelles",
+      "Travailler par compétence, puis réunir les acquis dans des séries chronométrées.",
   },
   {
-    numero: "03",
-    titre: "Diagnostic des lacunes",
+    titre: "Corriger",
     texte:
-      "Chaque erreur devient une indication concrète sur la notion à revoir et le réflexe à consolider.",
-    legende: "Bilan personnalisé",
+      "Reprendre le raisonnement, y compris les erreurs qui rendent les autres réponses plausibles.",
   },
   {
-    numero: "04",
-    titre: "Corrections détaillées",
+    titre: "Revenir",
     texte:
-      "Les solutions explicitent le raisonnement, les raccourcis utiles et les pièges qui structurent les distracteurs.",
-    legende: "Méthode reproductible",
+      "Identifier les notions à retravailler avant de poursuivre le parcours.",
   },
 ] as const;
 
@@ -33,49 +25,43 @@ export function AccueilPedagogie() {
   return (
     <section
       id="methode"
-      className="bg-[#f8f3ea] py-20 text-[#1d1c16] lg:py-24"
+      className="scroll-mt-20 bg-[#45121d] py-20 text-[#fef9f0] lg:py-28"
       aria-labelledby="pedagogie-title"
     >
-      <div className="mx-auto w-full max-w-7xl space-y-16 px-6 lg:px-12">
-        <header className="mx-auto max-w-2xl space-y-3 text-center">
-          <p className="flex items-center justify-center gap-2 text-[0.625rem] font-bold tracking-[0.28em] text-[#45121d] uppercase">
-            <span className="h-px w-6 bg-current" aria-hidden="true" />
-            Ingénierie de formation
-            <span className="h-px w-6 bg-current" aria-hidden="true" />
+      <div className="mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24 lg:px-12">
+        <div>
+          <p className="text-xs font-semibold tracking-[0.14em] uppercase text-[#e7c68f]">
+            La méthode
           </p>
           <h2
             id="pedagogie-title"
-            className="font-serif text-[clamp(2.5rem,4vw,3.75rem)] leading-[1.05] font-normal tracking-[-0.03em] text-[#45121d]"
+            className="mt-6 max-w-md font-serif text-[clamp(2.8rem,4.5vw,5rem)] leading-[1.02] tracking-[-0.035em]"
           >
-            Quatre Dispositifs pour l’Excellence
+            Du premier essai à la bonne méthode.
           </h2>
-          <p className="text-base leading-[1.65] text-[#524344]">
-            Chaque composant du parcours relie compréhension, entraînement et
-            analyse pour construire des réflexes durables.
+          <p className="mt-7 max-w-md leading-relaxed text-[#e9ddd6]">
+            Une préparation se construit en revenant sur ce que chaque question
+            révèle, avant de passer à la suivante.
           </p>
-        </header>
-
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {dispositifs.map((dispositif) => (
-            <article
-              key={dispositif.numero}
-              className="space-y-4 rounded-sm bg-white p-6 shadow-[0_4px_20px_rgba(42,33,29,0.08)] transition-shadow hover:shadow-[0_8px_28px_rgba(42,33,29,0.12)]"
+        </div>
+        <ol className="border-t border-white/35">
+          {dispositifs.map((dispositif, index) => (
+            <li
+              key={dispositif.titre}
+              className="grid grid-cols-[2.5rem_1fr] gap-5 border-b border-white/25 py-6 sm:grid-cols-[3rem_1fr_1.2fr] sm:gap-8"
             >
-              <span className="grid size-10 place-items-center rounded-sm bg-[#f2ede4] font-mono text-sm font-bold text-[#45121d]">
-                {dispositif.numero}
+              <span className="pt-1 text-sm text-[#e7c68f]">
+                {String(index + 1).padStart(2, "0")}
               </span>
-              <h3 className="font-serif text-2xl leading-[1.3] font-medium tracking-[-0.01em] text-[#45121d]">
+              <h3 className="font-serif text-2xl sm:text-3xl">
                 {dispositif.titre}
               </h3>
-              <p className="text-sm leading-[1.55] text-[#524344]">
+              <p className="col-start-2 leading-relaxed text-[#e9ddd6] sm:col-start-3">
                 {dispositif.texte}
               </p>
-              <p className="pt-2 font-mono text-xs text-[#4e5e7f] uppercase">
-                {dispositif.legende}
-              </p>
-            </article>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   );

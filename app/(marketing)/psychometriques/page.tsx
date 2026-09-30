@@ -11,17 +11,29 @@ const modules = [
   {
     title: "Réflexion quantitative",
     text: "Algèbre, géométrie, pourcentages, problèmes à énoncé. Vous apprenez à reconnaître la structure d'une question avant de poser le calcul.",
-    focus: ["Raisonnement algébrique", "Géométrie et figures", "Problèmes à énoncé"],
+    focus: [
+      "Raisonnement algébrique",
+      "Géométrie et figures",
+      "Problèmes à énoncé",
+    ],
   },
   {
     title: "Réflexion verbale",
     text: "Vocabulaire, logique des phrases, compréhension de textes. Chaque série travaille la précision de lecture et l'élimination des distracteurs.",
-    focus: ["Vocabulaire en contexte", "Raisonnement verbal", "Compréhension de textes"],
+    focus: [
+      "Vocabulaire en contexte",
+      "Raisonnement verbal",
+      "Compréhension de textes",
+    ],
   },
   {
     title: "Rédaction",
     text: "Construire un texte argumenté dans le temps imparti : poser une thèse, l'appuyer, conclure. Les corrections montrent où le raisonnement se perd.",
-    focus: ["Structure de l'argumentation", "Gestion du temps", "Clarté de l'expression"],
+    focus: [
+      "Structure de l'argumentation",
+      "Gestion du temps",
+      "Clarté de l'expression",
+    ],
   },
 ];
 
@@ -40,25 +52,6 @@ const sessionSteps = [
   },
 ];
 
-const faq = [
-  {
-    q: "Que contient la préparation aux Psychométriques ?",
-    a: "Les trois volets de l'épreuve : réflexion quantitative, réflexion verbale et rédaction argumentative, avec cours, exercices et corrections pour chacun.",
-  },
-  {
-    q: "Puis-je m'entraîner sans chronomètre ?",
-    a: "Oui. Commencez par maîtriser la méthode sans pression, puis activez le chronomètre pour travailler la vitesse de décision.",
-  },
-  {
-    q: "Comment savoir ce que je dois revoir ?",
-    a: "Chaque erreur est rattachée à une notion. Le diagnostic vous indique les compétences à reprendre en priorité.",
-  },
-  {
-    q: "Puis-je ajouter AMIRNET ou YAEL plus tard ?",
-    a: "Oui. Les préparations linguistiques se rejoignent depuis le même compte, sans repartir de zéro.",
-  },
-];
-
 const linkBase =
   "inline-flex items-center justify-center rounded-md px-6 py-3 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2";
 
@@ -73,9 +66,9 @@ export default function PsychometriquesPage() {
               Les Psychométriques, préparées en français.
             </h1>
             <p className="mt-8 max-w-xl text-lg leading-relaxed text-primary-foreground/75">
-              Réflexion quantitative, réflexion verbale et rédaction : un parcours
-              structuré pour les étudiants francophones qui visent l&apos;université en
-              Israël.
+              Réflexion quantitative, réflexion verbale et rédaction : un
+              parcours structuré pour les étudiants francophones qui visent
+              l&apos;université en Israël.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
               <Link
@@ -94,7 +87,7 @@ export default function PsychometriquesPage() {
           </div>
 
           {/* Feuille d'épreuve : une question, sa figure */}
-          <figure className="rotate-1 bg-card p-6 text-card-foreground shadow-2xl md:p-8">
+          <figure className="border border-primary-foreground/25 bg-[#f8f3ea] p-6 text-card-foreground md:p-8">
             <figcaption className="text-xs text-muted-foreground">
               Réflexion quantitative, question 17
             </figcaption>
@@ -113,7 +106,14 @@ export default function PsychometriquesPage() {
                 stroke="currentColor"
                 strokeWidth="1.5"
               />
-              <line x1="120" y1="110" x2="70" y2="23.4" stroke="currentColor" strokeWidth="1.5" />
+              <line
+                x1="120"
+                y1="110"
+                x2="70"
+                y2="23.4"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              />
               <line
                 x1="70"
                 y1="23.4"
@@ -123,19 +123,40 @@ export default function PsychometriquesPage() {
                 strokeWidth="1.5"
                 strokeDasharray="4 3"
               />
-              <path d="M104 110 A16 16 0 0 0 112 96" fill="none" stroke="#9b7a48" strokeWidth="1.5" />
-              <g fill="currentColor" fontSize="11" fontFamily="var(--font-serif)">
-                <text x="8" y="124">A</text>
-                <text x="222" y="124">B</text>
-                <text x="60" y="18">C</text>
-                <text x="66" y="124">D</text>
-                <text x="118" y="124">O</text>
-                <text x="92" y="103" fill="#9b7a48">60°</text>
+              <path
+                d="M104 110 A16 16 0 0 0 112 96"
+                fill="none"
+                stroke="#9b7a48"
+                strokeWidth="1.5"
+              />
+              <g
+                fill="currentColor"
+                fontSize="11"
+                fontFamily="var(--font-serif)"
+              >
+                <text x="8" y="124">
+                  A
+                </text>
+                <text x="222" y="124">
+                  B
+                </text>
+                <text x="60" y="18">
+                  C
+                </text>
+                <text x="66" y="124">
+                  D
+                </text>
+                <text x="118" y="124">
+                  O
+                </text>
+                <text x="92" y="103" fill="#9b7a48">
+                  60°
+                </text>
               </g>
             </svg>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              Reconnaître le triangle rectangle avant de calculer : c&apos;est le réflexe
-              que chaque correction vous fait travailler.
+              Reconnaître le triangle rectangle avant de calculer : c&apos;est
+              le réflexe que chaque correction vous fait travailler.
             </p>
           </figure>
         </div>
@@ -153,7 +174,9 @@ export default function PsychometriquesPage() {
               className="grid gap-6 border-b border-border py-10 md:grid-cols-[1fr_1.4fr_1fr] md:gap-12"
             >
               <h3 className="font-serif text-3xl leading-tight">{m.title}</h3>
-              <p className="max-w-prose leading-relaxed text-muted-foreground">{m.text}</p>
+              <p className="max-w-prose leading-relaxed text-muted-foreground">
+                {m.text}
+              </p>
               <ul className="space-y-2 text-sm">
                 {m.focus.map((f) => (
                   <li key={f} className="border-l-2 border-accent pl-3">
@@ -175,9 +198,13 @@ export default function PsychometriquesPage() {
           <ol className="mt-14 grid gap-10 md:grid-cols-3">
             {sessionSteps.map((s, i) => (
               <li key={s.title}>
-                <span className="font-serif text-5xl text-primary/30">{i + 1}</span>
+                <span className="font-serif text-5xl text-primary/30">
+                  {i + 1}
+                </span>
                 <h3 className="mt-3 text-lg font-semibold">{s.title}</h3>
-                <p className="mt-2 leading-relaxed text-secondary-foreground/75">{s.text}</p>
+                <p className="mt-2 leading-relaxed text-secondary-foreground/75">
+                  {s.text}
+                </p>
               </li>
             ))}
           </ol>
@@ -186,14 +213,15 @@ export default function PsychometriquesPage() {
             <div>
               <h3 className="font-serif text-2xl">Simulations chronométrées</h3>
               <p className="mt-3 max-w-prose leading-relaxed text-secondary-foreground/75">
-                Des séries conçues pour décider sous contrainte de temps sans abandonner
-                votre méthode.
+                Des séries conçues pour décider sous contrainte de temps sans
+                abandonner votre méthode.
               </p>
             </div>
             <div>
               <h3 className="font-serif text-2xl">Diagnostic des lacunes</h3>
               <p className="mt-3 max-w-prose leading-relaxed text-secondary-foreground/75">
-                Vos erreurs sont regroupées par notion pour vous montrer où revenir.
+                Vos erreurs sont regroupées par notion pour vous montrer où
+                revenir.
               </p>
             </div>
           </div>
@@ -217,7 +245,7 @@ export default function PsychometriquesPage() {
               <li>Rédaction argumentative</li>
             </ul>
             <Link
-              href="/sign-up"
+              href="/sign-up?offer=psychometriques"
               className={`${linkBase} mt-8 self-start bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:outline-primary`}
             >
               Choisir ce pack
@@ -234,33 +262,12 @@ export default function PsychometriquesPage() {
               <li>Préparation YAEL &amp; YAELNET</li>
             </ul>
             <Link
-              href="/sign-up"
+              href="/sign-up?offer=complet"
               className={`${linkBase} mt-8 self-start bg-accent text-accent-foreground hover:bg-accent/85 focus-visible:outline-accent`}
             >
               Choisir ce pack
             </Link>
           </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="mx-auto max-w-3xl px-6 pb-20 md:pb-28">
-        <h2 className="font-serif text-4xl leading-tight tracking-tight">Questions fréquentes</h2>
-        <div className="mt-10 border-t border-border">
-          {faq.map((item) => (
-            <details key={item.q} className="group border-b border-border py-5">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
-                {item.q}
-                <span
-                  aria-hidden
-                  className="font-serif text-2xl text-accent transition-transform group-open:rotate-45"
-                >
-                  +
-                </span>
-              </summary>
-              <p className="mt-3 max-w-prose leading-relaxed text-muted-foreground">{item.a}</p>
-            </details>
-          ))}
         </div>
       </section>
 
@@ -271,7 +278,7 @@ export default function PsychometriquesPage() {
             Commencez par une première série, à votre rythme.
           </p>
           <Link
-            href="/sign-up"
+            href="/sign-up?offer=psychometriques"
             className={`${linkBase} bg-accent text-accent-foreground hover:bg-accent/85 focus-visible:outline-accent`}
           >
             Créer mon compte

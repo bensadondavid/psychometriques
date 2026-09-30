@@ -5,9 +5,9 @@ AMIR et YAEL, ainsi que pour apprendre l’hébreu en Oulpan, du niveau Aleph au
 niveau Vav. Elle s’adresse autant aux personnes encore en France qu’à celles
 déjà installées en Israël.
 
-Le développement commence par les psychométriques. AMIR, YAEL et Oulpan seront
-présents dans le catalogue et l’interface, mais resteront indiqués comme
-prochainement disponibles jusqu’à la création de leur contenu.
+Les préparations Psychométriques, AMIRNET et YAELNET sont disponibles dans le
+catalogue. Oulpan reste indiqué comme prochainement disponible jusqu’à la
+création de son contenu.
 
 Ce README est la référence produit et technique du projet : état réel, décisions
 validées, architecture cible, feuille de route et premier résultat attendu.
@@ -45,11 +45,11 @@ Le mot `plan` est évité dans le modèle : `parcours` décrit la pédagogie et
 
 ## Catalogue initial
 
-| Programme       | Parcours initial                              | Lancement          |
+| Programme       | Parcours initial                              | Disponibilité      |
 | --------------- | --------------------------------------------- | ------------------ |
-| Psychométriques | Parcours général puis catégories spécialisées | Actif              |
-| AMIR            | À préciser                                    | Bientôt disponible |
-| YAEL            | À préciser                                    | Bientôt disponible |
+| Psychométriques | Parcours général puis catégories spécialisées | Disponible         |
+| AMIR            | Préparation AMIRNET                           | Disponible         |
+| YAEL            | Préparation YAEL/YAELNET                      | Disponible         |
 | Oulpan          | Aleph, Bet, Gimel, Dalet, He et Vav           | Bientôt disponible |
 
 Les niveaux d’Oulpan seront des données en base, pas un enum Prisma, afin de
@@ -81,7 +81,8 @@ Modèles de la première fondation :
 La banque de questions reste indépendante : une question peut être utilisée
 dans plusieurs exercices et la table de liaison conserve son ordre. Les
 contenus auront un statut explicite (`DRAFT`, `PUBLISHED`, `ARCHIVED` ou
-`COMING_SOON`). Seul Psychométriques sera publié au départ.
+`COMING_SOON`). Psychométriques, AMIR et YAEL sont disponibles ; Oulpan reste
+`COMING_SOON` tant que son contenu n’est pas prêt.
 
 Les chapitres de questions sont séparés par domaine (`VERBAL` ou
 `QUANTITATIVE`) : les identifiants de chapitre provenant des CSV peuvent ainsi
@@ -145,6 +146,14 @@ Déjà présent :
 Le schéma contient seulement `User`, `Session`, `Account`, `Verification` et
 `Passkey`. La vérification d’email est envoyée mais n’est pas encore obligatoire
 pour utiliser le compte ; ce choix sera revu avant l’ouverture commerciale.
+
+Lorsqu’un visiteur choisit un pack, sa clé est conservée dans le paramètre
+`offer` pendant l’inscription ou la connexion, puis transmise à
+`/account/abonnement`. Les seules valeurs acceptées sont `amirnet`,
+`psychometriques`, `yaelnet`, `langues` et `complet`. Une valeur inconnue ne
+peut jamais devenir une URL de redirection. Google revient toujours par le
+callback Better Auth fixe `/api/auth/callback/google` ; la destination interne
+du pack est gérée ensuite par Better Auth.
 
 Workflow Prisma retenu :
 
@@ -312,14 +321,20 @@ Next.js afin de conserver une navigation fluide.
 
 Une **ressource d’examen** explique une réalité externe ; une **page formation**
 présente la préparation proposée par la plateforme. Par exemple,
-`/examens/amir` informe sur AMIR et `/formations/amir` présente notre future
-formation. Les ressources soutiennent la préparation et le référencement, mais
+`/examens/amir` informe sur AMIR et `/formations/amir` présente la préparation
+proposée. Les ressources soutiennent la préparation et le référencement, mais
 ne transforment pas le site en outil d’orientation.
 
 Dans l’état actuel, les ressources officielles ne sont pas encore rédigées :
 les anciennes routes `/examens`, `/ressources` et `/methode` redirigent vers une
 partie utile du site. La route `/tarifs` présente les cinq packs, leur contenu et
 leur tarif mensuel en NIS.
+
+Le parcours de sélection déjà implémenté est
+`/tarifs` → `/sign-up?offer=...` → `/account/abonnement?offer=...`. La page
+d’abonnement affiche pour l’instant le récapitulatif du choix ; elle n’encaisse
+aucun paiement tant que les fournisseurs et les droits d’accès ne sont pas
+intégrés.
 
 Oulpan appartient au même catalogue et au même compte utilisateur, tout en
 conservant un univers identifiable consacré à la langue.
@@ -344,7 +359,7 @@ entrants entre quatre propriétés indépendantes.
 Évolutions prévues :
 
 - accueil présentant les quatre programmes ;
-- Psychométriques actif et les autres marqués `Bientôt disponible` ;
+- Psychométriques, AMIRNET et YAELNET disponibles ; Oulpan marqué `Bientôt disponible` ;
 - niveaux Aleph à Vav visibles sur Oulpan ;
 - tableau de bord centré sur le parcours actuel ;
 - pages de leçons/exercices avec des états vides travaillés ;
@@ -507,10 +522,10 @@ Une migration appliquée ne doit jamais être réécrite.
 - [ ] Ajouter invitations CSV, groupes et attributions de programmes.
 - [ ] Définir le partage des données de progression.
 
-### Phase 9 — Autres programmes
+### Phase 9 — Oulpan et enrichissement des programmes
 
-- [ ] Développer AMIR, YAEL puis Oulpan Aleph à Vav.
-- [ ] N’activer chaque programme que lorsque son contenu est prêt.
+- [ ] Enrichir les contenus AMIRNET et YAELNET.
+- [ ] Développer Oulpan Aleph à Vav et l’activer lorsque son contenu est prêt.
 
 ## Premier résultat attendu
 
@@ -523,16 +538,15 @@ Il est terminé lorsque :
 2. l’authentification fonctionne toujours avec `/sign-in` ;
 3. Prisma contient la structure pédagogique minimale ;
 4. les quatre programmes et les six niveaux Oulpan existent ;
-5. seul Psychométriques peut être commencé ;
+5. Psychométriques, AMIRNET et YAELNET peuvent être commencés ;
 6. l’accueil et le tableau de bord présentent la nouvelle vision ;
-7. les autres programmes affichent un état `Bientôt disponible` ;
+7. Oulpan affiche un état `Bientôt disponible` ;
 8. une leçon et un exercice psychométriques vides sont navigables ;
 9. aucune fausse quantité de contenu ou promesse commerciale n’est affichée ;
 10. le README et `AGENTS.md` décrivent la même architecture.
 
-Cette base permettra ensuite de construire le contenu Psychométriques et son
-import CSV sans refaire l’interface lors de l’ajout d’AMIR, YAEL, Oulpan,
-Stripe, Grow ou des partenaires.
+Cette base permettra ensuite d’enrichir le contenu et les imports CSV sans
+refaire l’interface lors de l’ajout d’Oulpan, Stripe, Grow ou des partenaires.
 
 ## Hors périmètre du premier jalon
 
@@ -541,4 +555,4 @@ Stripe, Grow ou des partenaires.
 - quota mensuel ;
 - statistiques avancées ;
 - espace entreprise complet ;
-- activation d’AMIR, YAEL ou Oulpan.
+- activation d’Oulpan.

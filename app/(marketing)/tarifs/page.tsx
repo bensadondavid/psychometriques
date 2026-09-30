@@ -133,15 +133,15 @@ export default function TarifsPage() {
             </h2>
           </header>
 
-          <div className="mt-14 grid items-stretch gap-6 lg:grid-cols-6">
-            {packs.map((pack, index) => (
+          <div className="mt-14 divide-y divide-[#ded6ca] border-y border-[#ded6ca]">
+            {packs.map((pack) => (
               <article
                 key={pack.id}
                 className={`${
                   pack.featured
-                    ? "bg-[#45121d] text-[#fef9f0] shadow-[0_18px_45px_rgba(69,18,29,0.18)]"
-                    : "border border-[#ded6ca] bg-[#f8f3ea] text-[#1d1c16]"
-                } ${index < 3 ? "lg:col-span-2" : "lg:col-span-3"} flex min-h-[31rem] flex-col rounded-sm p-7 sm:p-9`}
+                    ? "bg-[#45121d] px-6 text-[#fef9f0] sm:px-9"
+                    : "text-[#1d1c16]"
+                } grid gap-8 py-9 md:grid-cols-[minmax(0,1fr)_13rem] md:items-end lg:grid-cols-[minmax(0,1fr)_16rem]`}
               >
                 <div>
                   <p
@@ -209,9 +209,9 @@ export default function TarifsPage() {
                     ))}
                   </ul>
                 </div>
-                <div className="mt-auto pt-8">
+                <div className="md:pb-1">
                   <Link
-                    href="/sign-up"
+                    href={`/sign-up?offer=${pack.id}`}
                     className={`inline-flex h-12 w-full items-center justify-center rounded-sm px-6 pt-0.5 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 ${
                       pack.featured
                         ? "bg-[#ffdea5] text-[#45121d] hover:bg-[#fef9f0] focus-visible:outline-white"

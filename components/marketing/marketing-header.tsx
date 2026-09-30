@@ -40,7 +40,7 @@ export function MarketingHeader() {
       <div className="mx-auto flex h-20 w-full items-center justify-between px-6 lg:px-12">
         <Link
           href="/"
-          className="relative z-10 order-2 transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#45121d]"
+          className="relative z-10 order-2 flex items-center gap-3 transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#45121d]"
           aria-label="Accueil"
         >
           <Image
@@ -135,8 +135,9 @@ export function MarketingHeader() {
                       aria-current={
                         isCurrentPath(pathname, "/sign-in") ? "page" : undefined
                       }
-                      className="mt-6 flex items-center justify-center rounded-sm bg-[#45121d] px-5 py-5 text-white transition-colors hover:bg-[#280009] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#45121d]">
-                        Espace personnel
+                      className="mt-6 flex items-center justify-center rounded-sm bg-[#45121d] px-5 py-5 text-white transition-colors hover:bg-[#280009] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#45121d]"
+                    >
+                      Espace personnel
                     </Link>
                   </SheetClose>
                 </nav>

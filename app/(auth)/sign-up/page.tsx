@@ -1,13 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth/auth-client";
+import {
+  getAuthUrl,
+  getPostAuthDestination,
+  parseSelectableOffer,
+  selectableOffers,
+} from "@/lib/offers/selection";
 import {
   TurnstileCaptcha,
   turnstileSiteKey,
@@ -18,7 +25,13 @@ const inputClass =
 const labelClass =
   "text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-[#766a5e]";
 
-export default function SignUp() {
+function SignUpForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const offerKey = parseSelectableOffer(searchParams.get("offer"));
+  const postAuthDestination = getPostAuthDestination(offerKey);
+  const signInUrl = getAuthUrl("/sign-in", offerKey);
+  const selectedOffer = offerKey ? selectableOffers[offerKey] : null;
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -38,7 +51,7 @@ export default function SignUp() {
       setIsGoogleLoading(true);
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: "/account/home",
+        callbackURL: postAuthDestination,
       });
     } catch {
       toast.error("Erreur avec Google");
@@ -65,16 +78,14 @@ export default function SignUp() {
         email: formData.email,
         password: formData.password,
         name: `${formData.firstName} ${formData.lastName}`.trim(),
+        callbackURL: postAuthDestination,
         fetchOptions: captchaToken
           ? { headers: { "x-captcha-response": captchaToken } }
           : undefined,
       });
       if (result.error) return toast.error(result.error.message);
-      toast.success("Vérifiez votre adresse email", {
-        description:
-          "Le compte existait peut-être déjà, mais n’avait simplement pas encore été vérifié. Un nouveau lien vient de vous être envoyé.",
-        duration: 8000,
-      });
+      toast.success("Votre compte a été créé");
+      router.replace(postAuthDestination);
     } catch {
       toast.error("Une erreur est survenue");
     } finally {
@@ -96,7 +107,9 @@ export default function SignUp() {
           Bienvenue
         </h1>
         <p className="mt-3 text-sm leading-6 text-[#766a5e]">
-          Créez votre espace puis choisissez vos packs de préparation.
+          {selectedOffer
+            ? `Créez votre espace pour poursuivre avec ${selectedOffer.title}.`
+            : "Créez votre espace puis choisissez vos packs de préparation."}
         </p>
       </div>
 
@@ -271,12 +284,20 @@ export default function SignUp() {
       <p className="mt-6 text-center text-sm text-[#766a5e]">
         Déjà membre ?{" "}
         <Link
-          href="/sign-in"
+          href={signInUrl}
           className="font-semibold text-[#45121d] underline-offset-4 hover:underline"
         >
           Se connecter
         </Link>
       </p>
     </div>
+  );
+}
+
+export default function SignUp() {
+  return (
+    <Suspense fallback={<div className="min-h-[34rem]" />}>
+      <SignUpForm />
+    </Suspense>
   );
 }

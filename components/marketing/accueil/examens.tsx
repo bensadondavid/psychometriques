@@ -1,33 +1,26 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
 const formations = [
   {
-    code: "Filière I",
     titre: "Psychométriques",
-    sousTitre: "Épreuve nationale d’admission",
+    objet: "Admission universitaire",
     description:
-      "Une préparation structurée à la réflexion quantitative, à la réflexion verbale et à la rédaction argumentative.",
-    details: ["Réflexion quantitative", "Réflexion verbale", "Rédaction"],
-    action: "Consulter le parcours",
+      "Réflexion quantitative, réflexion verbale et rédaction argumentative.",
+    href: "/psychometriques",
   },
   {
-    code: "Filière II",
-    titre: "Épreuve AMIRNET",
-    sousTitre: "Anglais académique",
+    titre: "AMIRNET",
+    objet: "Anglais",
     description:
-      "Un entraînement méthodique aux phrases à compléter, aux reformulations et à la compréhension de textes en anglais.",
-    details: ["Sentence completions", "Restatements", "Reading comprehension"],
-    action: "Découvrir AMIRNET",
+      "Phrases à compléter, reformulations et compréhension de textes.",
+    href: "/langues#amirnet",
   },
   {
-    code: "Filière III",
     titre: "YAEL & YAELNET",
-    sousTitre: "Certification de langue hébraïque",
-    description:
-      "Un travail progressif sur la compréhension, la grammaire et l’expression écrite, avec des contenus hébreux adaptés au sens de lecture RTL.",
-    details: ["Compréhension", "Grammaire", "Expression écrite"],
-    action: "Découvrir YAEL",
+    objet: "Hébreu",
+    description: "Compréhension, grammaire et expression écrite en hébreu.",
+    href: "/langues#yael",
   },
 ] as const;
 
@@ -35,74 +28,44 @@ export function AccueilExamens() {
   return (
     <section
       id="formations"
-      className="bg-[#f8f3ea] py-20 text-[#1d1c16] lg:py-24"
+      className="scroll-mt-20 bg-[#f8f3ea] py-20 text-[#45121d] lg:py-28"
       aria-labelledby="formations-title"
     >
-      <div className="mx-auto w-full max-w-7xl space-y-12 px-6 lg:px-12">
-        <header className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-          <div className="space-y-3">
-            <p className="flex items-center gap-2 text-[0.625rem] font-bold tracking-[0.28em] text-[#45121d] uppercase">
-              <span className="h-px w-6 bg-current" aria-hidden="true" />
-              Cursus réglementés
-            </p>
-            <h2
-              id="formations-title"
-              className="font-serif text-[clamp(2.5rem,4vw,3.75rem)] leading-[1.05] font-normal tracking-[-0.03em] text-[#45121d]"
-            >
-              Les Trois Piliers Universitaires
-            </h2>
-            <p className="max-w-xl text-base leading-[1.65] text-[#524344]">
-              Trois préparations conçues pour travailler méthodiquement les
-              épreuves d’admission et de langue des universités israéliennes.
-            </p>
-          </div>
-        </header>
-
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+      <div className="mx-auto max-w-7xl px-6 lg:px-12">
+        <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:gap-20">
+          <p className="text-xs font-semibold tracking-[0.14em] uppercase">
+            Les préparations
+          </p>
+          <h2
+            id="formations-title"
+            className="max-w-xl font-serif text-[clamp(2.7rem,4.7vw,5rem)] leading-[1.02] tracking-[-0.035em]"
+          >
+            Une épreuve à la fois.
+          </h2>
+        </div>
+        <div className="mt-14 border-t border-[#bda99b]">
           {formations.map((formation) => (
             <article
               key={formation.titre}
-              className="group relative flex min-h-[31rem] flex-col justify-between rounded-sm bg-white p-8 shadow-[0_4px_20px_rgba(42,33,29,0.08)] transition-shadow hover:shadow-[0_8px_28px_rgba(42,33,29,0.12)]"
+              className="grid gap-5 border-b border-[#d8cbbc] py-8 md:grid-cols-[1fr_1fr_auto] md:items-center md:gap-10 lg:py-10"
             >
-              <div
-                className="absolute top-0 left-0 h-1.5 w-full rounded-t-sm bg-[#45121d]"
-                aria-hidden="true"
-              />
-              <div className="space-y-6 pt-2">
-                <p className="font-mono text-xs tracking-[0.05em] text-[#4e5e7f] uppercase">
-                  {formation.code}
+              <div>
+                <p className="mb-2 text-xs font-semibold tracking-[0.1em] uppercase text-[#74615b]">
+                  {formation.objet}
                 </p>
-                <div>
-                  <h3 className="font-serif text-[2rem] leading-[1.25] font-normal tracking-[-0.015em] text-[#45121d]">
-                    {formation.titre}
-                  </h3>
-                  <p className="mt-1 text-[0.6875rem] font-semibold tracking-[0.22em] text-[#4e5e7f] uppercase">
-                    {formation.sousTitre}
-                  </p>
-                </div>
-                <p className="text-sm leading-[1.65] text-[#524344]">
-                  {formation.description}
-                </p>
-                <dl className="space-y-3 rounded-sm bg-[#f2ede4] p-4">
-                  {formation.details.map((detail, index) => (
-                    <div
-                      key={detail}
-                      className="flex items-center justify-between gap-4 font-mono text-xs text-[#1d1c16]"
-                    >
-                      <dt>Module {String(index + 1).padStart(2, "0")}</dt>
-                      <dd className="text-right font-sans font-semibold">
-                        {detail}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
+                <h3 className="font-serif text-[clamp(2rem,3.2vw,3.5rem)] leading-none">
+                  {formation.titre}
+                </h3>
               </div>
+              <p className="max-w-sm text-base leading-relaxed text-[#524344]">
+                {formation.description}
+              </p>
               <Link
-                href="/sign-in"
-                className="mt-8 inline-flex h-11 w-full items-center justify-between rounded-sm bg-[#fef9f0] px-4 text-sm text-[#45121d] transition-colors hover:bg-[#45121d] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#45121d]"
+                href={formation.href}
+                aria-label={`Découvrir ${formation.titre}`}
+                className="inline-flex size-12 items-center justify-center rounded-full border border-[#aa9488] transition-colors hover:bg-[#45121d] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#45121d]"
               >
-                {formation.action}
-                <ArrowRight className="size-[18px]" aria-hidden="true" />
+                <ArrowUpRight className="size-5" aria-hidden="true" />
               </Link>
             </article>
           ))}

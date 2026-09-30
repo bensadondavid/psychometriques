@@ -32,13 +32,13 @@ export default function MarketingLayout({
                 Cursus préparatoires
               </p>
               <div className="grid gap-2.5 text-sm">
-                <Link href="/#formations" className="hover:text-[#1d1c16]">
+                <Link href="/psychometriques" className="hover:text-[#1d1c16]">
                   Psychométriques
                 </Link>
-                <Link href="/#formations" className="hover:text-[#1d1c16]">
+                <Link href="/langues#amirnet" className="hover:text-[#1d1c16]">
                   AMIRNET
                 </Link>
-                <Link href="/#formations" className="hover:text-[#1d1c16]">
+                <Link href="/langues#yael" className="hover:text-[#1d1c16]">
                   YAEL & YAELNET
                 </Link>
               </div>
