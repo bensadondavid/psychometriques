@@ -12,6 +12,7 @@ import {
   LoaderCircle,
   Upload,
 } from "lucide-react";
+import { captureAnalyticsEvent } from "@/lib/analytics/posthog-client";
 
 import {
   getExpectedHeaders,
@@ -168,6 +169,12 @@ function ImportCard({ definition }: { definition: ImportDefinition }) {
       };
       if (!response.ok || !payload.ok)
         throw new Error(payload.message || "L’import a échoué.");
+      captureAnalyticsEvent("question_import_completed", {
+        import_kind: definition.kind,
+        imported_count: payload.imported ?? 0,
+        created_count: payload.created ?? 0,
+        updated_count: payload.updated ?? 0,
+      });
       setState((current) => ({
         ...current,
         importing: false,
@@ -496,6 +503,11 @@ function FigureImportCard() {
       };
       if (!response.ok || !payload.ok)
         throw new Error(payload.message || "L’import a échoué.");
+      captureAnalyticsEvent("figure_import_completed", {
+        imported_count: payload.imported ?? 0,
+        created_count: payload.created ?? 0,
+        updated_count: payload.updated ?? 0,
+      });
       setState((current) => ({
         ...current,
         importing: false,

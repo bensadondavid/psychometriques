@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState, useSyncExternalStore } from "react";
 import { Eye, EyeOff, Fingerprint } from "lucide-react";
 import { toast } from "sonner";
+import { captureAnalyticsEvent } from "@/lib/analytics/posthog-client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -96,6 +97,7 @@ function SignInForm() {
       setIsPasskeyLoading(true);
       const result = await authClient.signIn.passkey();
       if (result?.error) return toast.error(result.error.message);
+      captureAnalyticsEvent("sign_in_completed", { authentication_method: "passkey" });
       toast.success("Connecté !");
       router.replace(postAuthDestination);
     } catch {
@@ -117,6 +119,7 @@ function SignInForm() {
           : undefined,
       });
       if (result.error) return toast.error(result.error.message);
+      captureAnalyticsEvent("sign_in_completed", { authentication_method: "email" });
       toast.success("Connecté !");
       setTimeout(() => router.replace(postAuthDestination), 800);
     } catch {

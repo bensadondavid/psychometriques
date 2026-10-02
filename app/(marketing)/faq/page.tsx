@@ -141,7 +141,7 @@ export default function FaqPage() {
               <div className="mt-6 border-t border-border">
                 {g.items.map((item) => (
                   <details key={item.q} className="group border-b border-border py-5">
-                    <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
+                    <summary className="flex cursor-pointer font-serif text-xl list-none items-center justify-between gap-4 font-semibold focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
                       {item.q}
                       <span
                         aria-hidden
@@ -150,7 +150,7 @@ export default function FaqPage() {
                         +
                       </span>
                     </summary>
-                    <p className="mt-3 max-w-prose leading-relaxed text-muted-foreground">
+                    <p className="mt-3 leading-relaxed text-muted-foreground font-serif">
                       {item.a}
                     </p>
                   </details>

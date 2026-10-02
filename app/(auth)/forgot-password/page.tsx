@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Check } from "lucide-react";
 import { toast } from "sonner";
+import { captureAnalyticsEvent } from "@/lib/analytics/posthog-client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,6 +36,7 @@ export default function ForgotPassword() {
           : undefined,
       });
       if (result.error) return toast.error(result.error.message);
+      captureAnalyticsEvent("password_reset_requested");
       setSent(true);
     } catch {
       toast.error("Une erreur est survenue");

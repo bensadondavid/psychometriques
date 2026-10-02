@@ -1,4 +1,12 @@
+import { SeverityNumber } from "@opentelemetry/api-logs";
+import { after } from "next/server";
+
+import {
+  emitImportOutcomeLog,
+  flushPostHogLogs,
+} from "@/instrumentation";
 import { requireAdmin } from "@/lib/auth/require-admin";
+import { readAnalyticsConsent } from "@/lib/analytics/consent";
 import { importValidatedFigures } from "@/lib/question-import/import-figures-to-database";
 import {
   validateSvgBatch,
@@ -48,6 +56,8 @@ function parseBody(value: unknown) {
 }
 
 export async function POST(request: Request) {
+  const analyticsAllowed =
+    readAnalyticsConsent(request.headers.get("cookie") ?? "") === "accepted";
   const authorization = await requireAdmin(request);
   if (!authorization.ok) {
     return Response.json(
@@ -93,12 +103,27 @@ export async function POST(request: Request) {
       adminUserId: authorization.userId,
       ...result,
     });
+    if (analyticsAllowed) {
+      emitImportOutcomeLog("question figure import completed", SeverityNumber.INFO, {
+        figure_count: figures.length,
+        outcome: "completed",
+      });
+      after(() => flushPostHogLogs());
+    }
     return Response.json({ ok: true, ...result });
   } catch (error) {
     console.error("question_figure_import_failed", {
       adminUserId: authorization.userId,
       error,
     });
+    if (analyticsAllowed) {
+      emitImportOutcomeLog("question figure import failed", SeverityNumber.ERROR, {
+        figure_count: figures.length,
+        outcome: "failed",
+        failure_stage: "persistence",
+      });
+      after(() => flushPostHogLogs());
+    }
     return Response.json(
       {
         ok: false,

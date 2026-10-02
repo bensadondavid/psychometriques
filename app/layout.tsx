@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { EB_Garamond, Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import { AnalyticsConsentManager } from "@/components/analytics/analytics-consent";
 import "./globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -41,6 +42,7 @@ export default function RootLayout({
       className={`${plusJakarta.variable} ${ebGaramond.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground font-sans">
+        <AnalyticsConsentManager />
         {children}
         <Toaster position="top-center" />
       </body>

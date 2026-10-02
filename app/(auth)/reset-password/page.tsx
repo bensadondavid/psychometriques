@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
+import { captureAnalyticsEvent } from "@/lib/analytics/posthog-client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -63,6 +64,7 @@ function ResetPasswordContent() {
           : undefined,
       });
       if (result.error) return toast.error(result.error.message);
+      captureAnalyticsEvent("password_reset_completed");
       toast.success("Mot de passe mis à jour !");
       setTimeout(() => router.push("/sign-in"), 800);
     } catch {

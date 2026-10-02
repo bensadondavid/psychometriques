@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
+import { captureAnalyticsEvent } from "@/lib/analytics/posthog-client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -84,6 +85,9 @@ function SignUpForm() {
           : undefined,
       });
       if (result.error) return toast.error(result.error.message);
+      captureAnalyticsEvent("sign_up_completed", {
+        selected_offer: offerKey ?? "none",
+      });
       toast.success("Votre compte a été créé");
       router.replace(postAuthDestination);
     } catch {

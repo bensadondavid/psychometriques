@@ -437,6 +437,17 @@ du compte, avec un contrôle serveur supplémentaire du rôle `admin`.
 - Stripe installé mais pas encore intégré
 - pnpm
 
+## Mesure d'audience et consentement
+
+PostHog est activé uniquement après l'accord explicite du visiteur pour les
+statistiques. Le choix est conservé dans un cookie de préférence pendant 180
+jours et peut être modifié depuis « Gestion des cookies » sur chaque page. Un
+refus ou l'absence de choix bloque les événements du navigateur et les logs
+d'import envoyés à PostHog depuis le serveur. Le suivi de session, la capture
+automatique des interactions et celle des exceptions sont désactivés. Les
+utilisateurs connectés ne sont identifiés que par leur identifiant interne,
+sans transmettre leur nom ou adresse email.
+
 Avant de modifier une API Next.js, lire la documentation de la version installée
 dans `node_modules/next/dist/docs`.
 

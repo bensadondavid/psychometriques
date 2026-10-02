@@ -31,6 +31,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useRequireVerifiedEmail } from '@/hooks/use-require-verified-email'
 import { authClient } from '@/lib/auth/auth-client'
+import { captureAnalyticsEvent } from '@/lib/analytics/posthog-client'
 
 type PasskeyToDelete = {
   id: string
@@ -182,6 +183,7 @@ export default function AccountParametersPage() {
       }
 
       await session.refetch()
+      captureAnalyticsEvent('display_name_updated')
       router.refresh()
       setNameDialogOpen(false)
       toast.success('Nom mis à jour')
@@ -208,6 +210,7 @@ export default function AccountParametersPage() {
       }
 
       await passkeys.refetch()
+      captureAnalyticsEvent('passkey_added')
       toast.success('Clé d’accès ajoutée')
     } catch {
       toast.error('Impossible d’ajouter la clé d’accès. Veuillez réessayer.')
@@ -232,6 +235,7 @@ export default function AccountParametersPage() {
       }
 
       await passkeys.refetch()
+      captureAnalyticsEvent('passkey_deleted')
       setPasskeyToDelete(null)
       toast.success('Clé d’accès supprimée')
     } finally {
@@ -275,6 +279,7 @@ export default function AccountParametersPage() {
       setActiveSessions((sessions) =>
         sessions.filter((activeSession) => activeSession.token !== token)
       )
+      captureAnalyticsEvent('session_revoked')
       toast.success('Session déconnectée')
     } catch {
       toast.error('Impossible de fermer cette session.')
@@ -298,6 +303,7 @@ export default function AccountParametersPage() {
           (activeSession) => activeSession.token === currentSessionToken
         )
       )
+      captureAnalyticsEvent('other_sessions_revoked')
       toast.success('Toutes les autres sessions ont été déconnectées')
     } catch {
       toast.error('Impossible de fermer les autres sessions.')
@@ -322,6 +328,7 @@ export default function AccountParametersPage() {
 
       setDeleteDialogOpen(false)
       setDeleteConfirmation('')
+      captureAnalyticsEvent('account_deletion_requested')
       toast.success('Email de confirmation envoyé')
     } catch {
       toast.error('Impossible de demander la suppression du compte.')

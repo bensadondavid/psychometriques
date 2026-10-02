@@ -1,4 +1,12 @@
+import { SeverityNumber } from "@opentelemetry/api-logs";
+import { after } from "next/server";
+
+import {
+  emitImportOutcomeLog,
+  flushPostHogLogs,
+} from "@/instrumentation";
 import { requireAdmin } from "@/lib/auth/require-admin";
+import { readAnalyticsConsent } from "@/lib/analytics/consent";
 import { importValidatedCsvRecords } from "@/lib/question-import/import-to-database";
 import {
   validateVerbalCsvBatch,
@@ -52,6 +60,8 @@ function parseBody(value: unknown) {
 }
 
 export async function POST(request: Request) {
+  const analyticsAllowed =
+    readAnalyticsConsent(request.headers.get("cookie") ?? "") === "accepted";
   const authorization = await requireAdmin(request);
   if (!authorization.ok) {
     return Response.json(
@@ -103,6 +113,14 @@ export async function POST(request: Request) {
       files: input.sources.length,
       ...result,
     });
+    if (analyticsAllowed) {
+      emitImportOutcomeLog("question import completed", SeverityNumber.INFO, {
+        import_kind: input.kind,
+        source_count: input.sources.length,
+        outcome: "completed",
+      });
+      after(() => flushPostHogLogs());
+    }
     return Response.json({ ok: true, ...result });
   } catch (error) {
     const message = error instanceof Error ? error.message : "";
@@ -121,6 +139,14 @@ export async function POST(request: Request) {
       kind: input.kind,
       error,
     });
+    if (analyticsAllowed) {
+      emitImportOutcomeLog("question import failed", SeverityNumber.ERROR, {
+        import_kind: input.kind,
+        outcome: "failed",
+        failure_stage: "persistence",
+      });
+      after(() => flushPostHogLogs());
+    }
     return Response.json(
       {
         ok: false,

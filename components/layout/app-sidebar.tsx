@@ -18,19 +18,8 @@ export function AppSidebar({ user }: AppSidebarProps) {
   return (
     <Sidebar>
       <SidebarHeader className="border-b border-sidebar-border p-4">
-        <Link href="/account/home" className="text-sidebar-foreground transition-opacity hover:opacity-80">
-        </Link>
-      </SidebarHeader>
-      <SidebarContent className="pt-3">
-        <SidebarMenu className="px-3">
-          <NavLink href="/account/home"><House aria-hidden="true" /><span>Accueil</span></NavLink>
-          <NavLink href="/account/programmes"><BookOpen aria-hidden="true" /><span>Mes programmes</span></NavLink>
-          <NavLink href="/account/parametres"><Settings aria-hidden="true" /><span>Paramètres</span></NavLink>
-        </SidebarMenu>
-      </SidebarContent>
-      <SidebarFooter className="border-t border-sidebar-border p-3">
-        <div className="mb-3 flex items-center gap-3 border-b border-sidebar-border px-1 pb-3 pt-2">
-          <Avatar className="size-9">
+        <div className="flex items-center gap-3">
+        <Avatar className="size-9">
             <AvatarFallback className="bg-[#f5f0e7] font-serif text-base font-semibold text-[#45121d]">
               {getUserInitials(user.name)}
             </AvatarFallback>
@@ -44,7 +33,16 @@ export function AppSidebar({ user }: AppSidebarProps) {
               {user.email ?? ""}
             </p>
           </div>
-        </div>
+          </div>
+      </SidebarHeader>
+      <SidebarContent className="">
+        <SidebarMenu className="px-3">
+          <NavLink href="/account/home"><House aria-hidden="true" /><span>Accueil</span></NavLink>
+          <NavLink href="/account/programmes"><BookOpen aria-hidden="true" /><span>Mes programmes</span></NavLink>
+          <NavLink href="/account/parametres"><Settings aria-hidden="true" /><span>Paramètres</span></NavLink>
+        </SidebarMenu>
+      </SidebarContent>
+      <SidebarFooter className="border-t border-sidebar-border p-3">
         <LogOutBtn />
       </SidebarFooter>
     </Sidebar>
