@@ -1,569 +1,258 @@
-# Plateforme de préparation aux examens et à l’hébreu
-
-Plateforme pédagogique francophone pour préparer les examens psychométriques,
-AMIR et YAEL, ainsi que pour apprendre l’hébreu en Oulpan, du niveau Aleph au
-niveau Vav. Elle s’adresse autant aux personnes encore en France qu’à celles
-déjà installées en Israël.
-
-Les préparations Psychométriques, AMIRNET et YAELNET sont disponibles dans le
-catalogue. Oulpan reste indiqué comme prochainement disponible jusqu’à la
-création de son contenu.
-
-Ce README est la référence produit et technique du projet : état réel, décisions
-validées, architecture cible, feuille de route et premier résultat attendu.
-
-## Vision produit
-
-La plateforme n’est pas un service d’orientation : l’utilisateur arrive en
-sachant quelle préparation il recherche. Elle lui permet de :
-
-- accéder directement à la formation correspondant à son objectif ;
-- suivre des leçons organisées dans un ordre pédagogique ;
-- réaliser des exercices composés de questions ;
-- consulter les corrections puis, plus tard, sa progression ;
-- acheter un programme seul ou un pack ;
-- recevoir un accès offert ou financé par une organisation ;
-- proposer des partenariats aux prépas qui souhaitent équiper leurs élèves.
-
-La promesse de marque relie ces usages autour d’un même objectif : avancer dans
-ses études, sa langue et son intégration en Israël. Le nom définitif de la
-marque reste à choisir ; `Examens & Hébreu` est un libellé provisoire.
-
-## Vocabulaire
-
-- **Programme** : Psychométriques, AMIR, YAEL ou Oulpan.
-- **Parcours** : déclinaison d’un programme ; un niveau d’Oulpan est un parcours.
-- **Leçon** : unité pédagogique avec un contenu éditorial optionnel.
-- **Exercice** : activité rattachée à une leçon.
-- **Question** : élément réutilisable de la banque de questions.
-- **Offre** : produit commercial vendu seul ou en pack.
-- **Droit d’accès** : autorisation réelle de consulter un programme/parcours.
-- **Abonnement** : relation de facturation récurrente avec un prestataire.
-
-Le mot `plan` est évité dans le modèle : `parcours` décrit la pédagogie et
-`offre` décrit le commerce.
-
-## Catalogue initial
-
-| Programme       | Parcours initial                              | Disponibilité      |
-| --------------- | --------------------------------------------- | ------------------ |
-| Psychométriques | Parcours général puis catégories spécialisées | Disponible         |
-| AMIR            | Préparation AMIRNET                           | Disponible         |
-| YAEL            | Préparation YAEL/YAELNET                      | Disponible         |
-| Oulpan          | Aleph, Bet, Gimel, Dalet, He et Vav           | Bientôt disponible |
-
-Les niveaux d’Oulpan seront des données en base, pas un enum Prisma, afin de
-pouvoir les réordonner ou les compléter sans modifier le schéma.
-
-## Structure pédagogique cible
-
-```text
-Programme
-└── Parcours
-    └── Leçon
-        └── Exercice
-            └── Questions ordonnées
-```
-
-Modèles de la première fondation :
-
-- `Program`
-- `Course`
-- `Lesson`
-- `Exercise`
-- `Question`
-- `QuestionOption`
-- `ExerciseQuestion`
-- `QuestionChapter`
-- `Passage`
-- `QuestionFigure`
-
-La banque de questions reste indépendante : une question peut être utilisée
-dans plusieurs exercices et la table de liaison conserve son ordre. Les
-contenus auront un statut explicite (`DRAFT`, `PUBLISHED`, `ARCHIVED` ou
-`COMING_SOON`). Psychométriques, AMIR et YAEL sont disponibles ; Oulpan reste
-`COMING_SOON` tant que son contenu n’est pas prêt.
-
-Les chapitres de questions sont séparés par domaine (`VERBAL` ou
-`QUANTITATIVE`) : les identifiants de chapitre provenant des CSV peuvent ainsi
-se chevaucher sans collision. Les identifiants de question et de passage des
-CSV sont conservés dans `externalId` pour rendre les imports idempotents. Les
-quatre réponses sont stockées comme `QuestionOption` ordonnées, et les questions
-de compréhension peuvent référencer un `Passage` sans dupliquer son texte.
-
-Les pages sans contenu doivent afficher un état vide soigné, jamais du faux
-contenu codé en dur. La structure devra accepter le français, l’anglais et
-l’hébreu, avec une direction RTL limitée au contenu qui en a besoin.
-
-## Import CSV des questions
-
-L’import CSV prévoit :
-
-- un identifiant externe stable ;
-- le programme, le parcours et le thème ;
-- le type et la difficulté ;
-- l’énoncé, les réponses, la bonne réponse et l’explication ;
-- le statut de publication ;
-- une prévisualisation avant écriture ;
-- des erreurs précises avec numéros de lignes ;
-- une transaction empêchant un import partiel ;
-- un traitement idempotent évitant les doublons.
-
-L’import alimente la banque. L’affectation aux exercices reste séparée sauf
-si un besoin d’import combiné est confirmé.
-
-Pour la réflexion verbale, la page d’administration reconnaît quatre contrats
-distincts : analogies, compréhension et déduction, passages, et questions liées
-aux passages. Les fichiers de passages et leurs questions peuvent être chargés
-par lots. La page réalise la validation à blanc, la détection des doublons dans
-un lot et la prévisualisation. Après confirmation, une route serveur protégée
-refait les contrôles puis écrit les passages, questions et quatre propositions
-dans une transaction idempotente.
-
-La réflexion quantitative possède un cinquième contrat couvrant les 21
-chapitres. Les séries de questions CSV et les figures SVG utilisent deux imports
-indépendants : les questions conservent leur chemin `image_path`, tandis que les
-figures sont stockées séparément dans `QuestionFigure` et peuvent être ajoutées
-avant ou après les questions.
-
-## État actuel de l’authentification
-
-Better Auth et Prisma constituent actuellement la fondation fonctionnelle de la
-base de données.
-
-Déjà présent :
-
-- email et mot de passe, Google et passkeys ;
-- vérification d’email, réinitialisation du mot de passe et suppression du compte ;
-- sessions et révocation après réinitialisation ;
-- rôles techniques `user` et `admin` ;
-- suspension et usurpation via le plugin administrateur ;
-- réponses Better Auth en français ;
-- Cloudflare Turnstile lorsque ses deux clés sont configurées ;
-- route `/sign-in` à la place de `/login` ;
-- suppression de l’ancienne logique de double authentification.
-
-Le schéma contient seulement `User`, `Session`, `Account`, `Verification` et
-`Passkey`. La vérification d’email est envoyée mais n’est pas encore obligatoire
-pour utiliser le compte ; ce choix sera revu avant l’ouverture commerciale.
-
-Lorsqu’un visiteur choisit un pack, sa clé est conservée dans le paramètre
-`offer` pendant l’inscription ou la connexion, puis transmise à
-`/account/abonnement`. Les seules valeurs acceptées sont `amirnet`,
-`psychometriques`, `yaelnet`, `langues` et `complet`. Une valeur inconnue ne
-peut jamais devenir une URL de redirection. Google revient toujours par le
-callback Better Auth fixe `/api/auth/callback/google` ; la destination interne
-du pack est gérée ensuite par Better Auth.
-
-Workflow Prisma retenu :
-
-```bash
-pnpm prisma format
-pnpm prisma migrate dev
-pnpm prisma generate
-```
-
-## Rôles et droits d’accès
-
-Les rôles restent uniquement `user` et `admin`. Un client, un utilisateur
-gratuit et un élève financé par une prépa restent des utilisateurs ordinaires.
-
-Leur accès sera géré par un droit indépendant, avec notamment ces origines :
-
-```text
-PURCHASE
-COMPLIMENTARY
-ORGANIZATION
-ADMIN
-```
-
-Un droit pourra viser un programme ou un parcours et comporter une expiration.
-Cela remplace proprement le besoin d’un rôle `specialuser`.
-
-## Offres commerciales
-
-Le catalogue commercial pourra proposer :
-
-- un programme seul ;
-- un niveau d’Oulpan précis ;
-- un pack de plusieurs programmes/parcours ;
-- une offre tout compris ;
-- une durée prépayée ;
-- un abonnement mensuel ou annuel ;
-- une offre entreprise par nombre de places ;
-- un accès offert par l’administration.
-
-Une offre accorde un ou plusieurs contenus via `OfferGrant`. Ses prix sont
-séparés afin de gérer plusieurs devises et fournisseurs.
-
-```text
-Offer
-├── OfferGrant
-└── Price
-
-ProviderCustomer
-Order
-Payment
-Subscription
-Entitlement
-```
-
-## Paiements
-
-Deux fournisseurs sont envisagés :
-
-- **Stripe**, rattaché à l’activité d’auto-entrepreneur, pour les paiements
-  internationaux et notamment les prix en euros ;
-- **Grow**, après validation du compte commercial, pour les cartes israéliennes,
-  les prix en shekels et des moyens locaux comme Bit.
-
-```text
-Choix de l’offre
-└── Choix du paiement
-    ├── Stripe : carte internationale / EUR
-    └── Grow : carte israélienne / ILS / Bit
-```
-
-Stripe et Grow encaissent ; la plateforme décide des droits d’accès. Les règles
-obligatoires sont :
-
-- ne jamais accorder un accès grâce à la seule redirection de succès ;
-- vérifier les webhooks et les traiter sans doublons ;
-- activer/prolonger les droits après confirmation serveur ;
-- gérer renouvellements, échecs, annulations et remboursements ;
-- conserver les identifiants externes sans données de carte ;
-- définir explicitement les prix par devise et fournisseur ;
-- prévoir éventuellement une période de grâce.
-
-Grow documente les paiements récurrents par carte, tandis que Bit reste un
-paiement ponctuel. Une offre Bit devra donc probablement être prépayée pour une
-durée définie.
-
-Références : [Stripe Checkout](https://docs.stripe.com/payments/checkout),
-[Grow API](https://developers.grow.business/) et
-[moyens de paiement Grow](https://developers.grow.business/reference/payments).
-
-Les cinq offres publiques sont des abonnements mensuels sans engagement,
-résiliables à tout moment, facturés en NIS :
-
-| Offre           | Prix mensuel |
-| --------------- | ------------ |
-| AMIRNET         | 79 ₪         |
-| YAELNET         | 79 ₪         |
-| Psychométriques | 119 ₪        |
-| Pack langues    | 119 ₪        |
-| Pack complet    | 179 ₪        |
-
-Les obligations de facturation et la configuration exacte du fournisseur de
-paiement restent à valider avant l’intégration en production.
-
-## Quotas de questions
-
-La limitation mensuelle n’est pas décidée et ne bloque pas le MVP. Le modèle
-pourra accueillir plus tard une politique d’utilisation et des compteurs par
-période.
-
-Recommandation initiale : essai gratuit éventuellement limité et abonnements
-payants illimités. Une formule payante avec quota ne sera créée que si les
-données produit la justifient.
-
-## Entreprises et partenariats
-
-Une prépa sera une organisation, jamais un compte partagé.
-
-```text
-Organization
-├── OrganizationMember
-├── OrganizationContract
-├── SeatAllocation
-└── Cohort
-```
-
-À terme, elle pourra acheter des places, inviter ses élèves, former des groupes,
-attribuer des programmes et consulter des données de progression dans un cadre
-à définir. Les premiers contrats pourront être administrés et facturés
-manuellement.
-
-## Interface cible
-
-La direction artistique associe la sobriété institutionnelle du bordeaux et de
-l’ivoire à une mise en scène contemporaine et immersive. Les principes sont :
-
-- une typographie éditoriale forte et une hiérarchie très lisible ;
-- des compositions amples sans pages artificiellement vides ;
-- une progression visuelle inspirée des présentations produit d’Apple ;
-- des aperçus réels de la plateforme plutôt que des illustrations génériques ;
-- des animations sobres et accessibles ;
-- une 3D uniquement lorsqu’elle représente le produit ou la méthode ;
-- aucun langage visuel de SaaS préfabriqué ou de site généré automatiquement.
-
-Le marketing doit lui-même se vivre comme un parcours. L’accueil utilise une
-séquence au scroll où le même objet se transforme successivement en choix de
-formation, leçon, exercice, correction et progression. Cette première version
-utilise une 3D CSS légère, sans dépendance WebGL, et respecte la préférence de
-mouvement réduit.
-
-L’espace `/account` restera volontairement plus simple et fonctionnel. Les pages
-marketing sans contenu spécifique ne doivent pas être remplies de texte
-générique : elles restent hors de la navigation ou redirigent vers une page
-utile jusqu’à ce qu’un vrai contenu puisse être publié.
-
-L’application est séparée selon l’intention et le layout :
-
-```text
-(marketing)  catalogue, méthode, ressources et conversion publiques
-(auth)       inscription, connexion et récupération de compte
-(app)        apprentissage authentifié sous /account
-```
-
-Ces groupes sont invisibles dans les URLs. Ils partagent le même root layout
-Next.js afin de conserver une navigation fluide.
-
-Une **ressource d’examen** explique une réalité externe ; une **page formation**
-présente la préparation proposée par la plateforme. Par exemple,
-`/examens/amir` informe sur AMIR et `/formations/amir` présente la préparation
-proposée. Les ressources soutiennent la préparation et le référencement, mais
-ne transforment pas le site en outil d’orientation.
-
-Dans l’état actuel, les ressources officielles ne sont pas encore rédigées :
-les anciennes routes `/examens`, `/ressources` et `/methode` redirigent vers une
-partie utile du site. La route `/tarifs` présente les cinq packs, leur contenu et
-leur tarif mensuel en NIS.
-
-Le parcours de sélection déjà implémenté est
-`/tarifs` → `/sign-up?offer=...` → `/account/abonnement?offer=...`. La page
-d’abonnement affiche pour l’instant le récapitulatif du choix ; elle n’encaisse
-aucun paiement tant que les fournisseurs et les droits d’accès ne sont pas
-intégrés.
-
-Oulpan appartient au même catalogue et au même compte utilisateur, tout en
-conservant un univers identifiable consacré à la langue.
-
-### Domaines et référencement
-
-Un domaine de marque principal héberge l’intégralité de la plateforme. Des
-domaines descriptifs pourront être achetés pour les principales catégories et
-rediriger en `301` vers leur page canonique :
-
-```text
-psychometriques.fr -> domaine-principal.fr/formations/psychometriques
-oulpan.fr           -> domaine-principal.fr/oulpan
-domaine-amir.fr     -> domaine-principal.fr/formations/amir
-domaine-yael.fr     -> domaine-principal.fr/formations/yael
-```
-
-Ils servent la mémorisation, les campagnes et la protection des noms. Ils ne
-doivent pas héberger des copies du site ni diviser les contenus et les liens
-entrants entre quatre propriétés indépendantes.
-
-Évolutions prévues :
-
-- accueil présentant les quatre programmes ;
-- Psychométriques, AMIRNET et YAELNET disponibles ; Oulpan marqué `Bientôt disponible` ;
-- niveaux Aleph à Vav visibles sur Oulpan ;
-- tableau de bord centré sur le parcours actuel ;
-- pages de leçons/exercices avec des états vides travaillés ;
-- navigation cohérente entre catalogue, apprentissage, compte et administration ;
-- suppression des promesses non vérifiables comme `10 000+ questions`.
-
-Routes envisagées :
-
-```text
-/
-/examens                     redirection provisoire
-/examens/[examSlug]          redirection provisoire
-/oulpan
-/oulpan/[levelSlug]
-/formations
-/formations/[programSlug]
-/methode                     redirection provisoire vers le parcours
-/ressources                  redirection provisoire
-/tarifs                      catalogue des packs et tarifs mensuels en NIS
-/entreprises
-/sign-in
-/sign-up
-
-/account/home
-/account/programmes
-/account/programmes/[programSlug]/parcours/[courseSlug]
-/account/lecons/[lessonSlug]
-/account/exercices/[exerciseId]
-/account/parametres
-/account/abonnement
-
-/account/admin/catalogue
-/account/admin/lecons
-/account/admin/exercices
-/account/admin/questions/import
-/account/admin/organisations
-```
-
-L’administration utilise uniquement `/account/admin` et hérite de la protection
-du compte, avec un contrôle serveur supplémentaire du rôle `admin`.
-
-## État réel du dépôt
-
-### Réalisé
-
-- [x] Next.js App Router, TypeScript et Tailwind CSS.
-- [x] Direction artistique et composants UI de base.
-- [x] PostgreSQL piloté par Prisma.
-- [x] Socle Better Auth coordonné avec Prisma.
-- [x] Connexions email, Google et passkeys.
-- [x] Emails de compte et protection Turnstile conditionnelle.
-- [x] Rôles `user` et `admin`.
-- [x] Renommage en cours de `/login` vers `/sign-in`.
-- [x] Retrait des anciens modèles métier pour repartir de zéro.
-- [x] Premiers layouts du compte et de l’administration.
-- [x] Groupes de routes `(marketing)`, `(auth)` et `(app)` mis en place.
-- [x] Administration déplacée sous `/account/admin`.
-- [x] Premières pages publiques de formations, de ressources et d’Oulpan créées.
-- [x] Ancien import incompatible retiré en attendant le nouveau modèle.
-- [x] Identité générale appliquée au site, à l’authentification et aux emails.
-- [x] Prisma, TypeScript, ESLint, les tests et le build sont validés.
-
-### À nettoyer ou construire
-
-- [ ] Le nouveau domaine pédagogique n’existe pas encore dans Prisma.
-- [ ] Aucun paiement ni droit commercial n’est encore implémenté.
-
-## Technologies
-
-- Next.js 16, React 19 et TypeScript
-- Tailwind CSS 4
-- Better Auth
-- Prisma 7 avec PostgreSQL/Neon
-- Resend et Cloudflare Turnstile
-- Stripe installé mais pas encore intégré
-- pnpm
-
-## Mesure d'audience et consentement
-
-PostHog est activé uniquement après l'accord explicite du visiteur pour les
-statistiques. Le choix est conservé dans un cookie de préférence pendant 180
-jours et peut être modifié depuis « Gestion des cookies » sur chaque page. Un
-refus ou l'absence de choix bloque les événements du navigateur et les logs
-d'import envoyés à PostHog depuis le serveur. Le suivi de session, la capture
-automatique des interactions et celle des exceptions sont désactivés. Les
-utilisateurs connectés ne sont identifiés que par leur identifiant interne,
-sans transmettre leur nom ou adresse email.
-
-Avant de modifier une API Next.js, lire la documentation de la version installée
-dans `node_modules/next/dist/docs`.
-
-```bash
-pnpm dev
-pnpm lint
-pnpm test
-pnpm build
-pnpm prisma format
-pnpm prisma migrate dev
-pnpm prisma generate
-```
-
-Une migration appliquée ne doit jamais être réécrite.
+# Plateforme de préparation aux examens
+
+Ce document décrit le produit à construire, les décisions prises avec le responsable du projet et l'état du dépôt. Il remplace l'ancienne feuille de route. Les éléments marqués « à décider » ne sont pas des fonctionnalités validées.
+
+## Décisions produit
+
+- Le lancement couvre trois préparations distinctes : Psychométriques, AMIRNET et YAELNET. Les Psychométriques constituent le cœur du site, mais les trois parcours doivent être utilisables au lancement.
+- L'Oulpan appartient à un autre projet. Il ne fait pas partie de ce site.
+- Le visiteur peut essayer une courte série de questions sans compte. Chaque examen possède sa propre série découverte, fixe et choisie éditorialement. La même série est présentée à tous les nouveaux visiteurs de cet examen.
+- Le visiteur voit son résultat et ses explications avant toute demande d'inscription. Le compte gratuit lui permet ensuite de conserver ses résultats et de poursuivre.
+- L'organisation principale de l'entraînement est examen → matière → thème. Les séries préparées guident l'élève. La composition libre d'une série est différée ; elle n'est pas requise pour la première version.
+- Deux modes sont prévus : apprentissage, sans chronomètre et avec correction après chaque réponse ; conditions d'examen, chronométré et avec correction à la fin.
+- Une série interrompue doit pouvoir être reprise. L'élève peut retrouver les explications, revoir ses erreurs et recevoir un bilan qui indique les compétences à travailler et une suite concrète.
+- Les leçons sont librement accessibles, progressives et fondées sur la pratique. Elles sont aussi proposées lorsqu'une difficulté apparaît, sans être un préalable obligatoire aux exercices. Le responsable du projet crée leur contenu en parallèle de la reconstruction du site.
+- L'abonnement, les limites du compte gratuit, les prix et une éventuelle séparation des offres par examen restent à décider. Aucun texte ou contrôle d'accès ne doit supposer que ces règles sont déjà fixées.
+
+## Parcours utilisateur cible
+
+### Découverte sans compte
+
+1. Comprendre en quelques instants ce que la plateforme apporte.
+2. Choisir directement Psychométriques, AMIRNET ou YAELNET.
+3. Lire une présentation courte du parcours choisi.
+4. Faire la série découverte fixe de cet examen.
+5. Voir le bilan et les explications.
+6. Créer un compte pour sauvegarder ce résultat et continuer.
+
+Le passage au compte doit conserver le contexte de l'examen et, si la solution technique le permet, le résultat de la découverte. Le mécanisme exact de conservation reste à définir avant l'implémentation.
+
+### Entraînement avec compte
+
+1. Retrouver son examen et sa progression.
+2. Choisir matière, thème et série préparée.
+3. Choisir le mode apprentissage ou conditions d'examen.
+4. Répondre, interrompre puis reprendre si nécessaire.
+5. Consulter le bilan, les explications et les erreurs.
+6. Poursuivre avec une autre série ou une leçon pertinente.
+
+Le niveau de détail du bilan et les règles de sélection des prochaines séries seront définis à partir des banques réelles. Les recommandations automatiques personnalisées sont une évolution ultérieure.
+
+## Structure du site à valider
+
+La structure fonctionnelle proposée comporte cinq espaces :
+
+1. **Accueil public** : valeur de la plateforme, choix immédiat de l'examen, accès à la découverte.
+2. **Présentation par examen** : objectif, matières, méthode et entrée vers la série découverte correspondante.
+3. **Découverte** : série sans compte, résultat complet, puis proposition de sauvegarde.
+4. **Espace élève** : tableau de bord par examen, entraînement, séries en cours, bilans, erreurs et leçons.
+5. **Administration** : audit des banques, import, publication, composition des séries découvertes et préparées, gestion des leçons.
+
+Les URLs et la navigation précise seront arrêtées après validation de cette structure. Il ne faut pas créer de pages de remplissage ou promettre des contenus encore absents.
+
+### Structure interne proposée
+
+Indépendamment du framework retenu, le code devrait séparer les responsabilités suivantes : catalogue des examens, banque et import des questions, composition des séries, tentatives et bilans, leçons, identité et accès, administration. Les pages publiques et privées utilisent ces modules sans contenir elles-mêmes les règles de sélection des questions ou de calcul des résultats.
+
+Cette séparation est une proposition d'architecture, pas un déplacement de fichiers déjà effectué. Les noms de dossiers et les conventions du framework seront décidés avec la stack.
+
+## Contenu et couverture
+
+### Inventaire déclaré, non audité
+
+Le résumé fourni par le responsable du projet le 18 novembre 2026 décrit un dossier source nommé questions_psycho, dans le projet ChatGPT « psychometriques.fr ». Il mentionne 166 fichiers CSV et des figures SVG. Ces fichiers ne sont pas présents dans ce dépôt ; les nombres ci-dessous sont ceux du résumé, pas un comptage effectué ici.
+
+| Banque                                                |               Entrées déclarées |
+| ----------------------------------------------------- | ------------------------------: |
+| Psychométriques — réflexion quantitative              |                           9 400 |
+| Psychométriques — analogies verbales                  |                           1 800 |
+| Psychométriques — compréhension et déduction verbales |                           2 200 |
+| Psychométriques — compréhension de textes             | 240 questions liées à 40 textes |
+| AMIRNET                                               |                           1 495 |
+| YAELNET                                               |                           1 430 |
+| **Total déclaré**                                     |                      **16 565** |
+
+La structure source décrite est :
+
+    questions_psycho/
+    ├── reflexion_quantitative/serie-1/ à serie-4/
+    ├── reflexion_verbale/
+    │   ├── analogies-1800.csv
+    │   ├── questions-reflexion-verbale-comprehension-deduction-2200.csv
+    │   └── textes/
+    ├── amirnet/
+    └── yaelnet/
+
+Cette description ne prouve ni la présence des fichiers dans le dépôt, ni leur qualité, ni leur import en base.
+
+Le résumé déclare des questions dans chacun des 21 chapitres quantitatifs :
+
+|  Nº | Chapitre                            | Entrées déclarées |
+| --: | ----------------------------------- | ----------------: |
+|   1 | Nombres                             |               900 |
+|   2 | Divisibilité                        |               600 |
+|   3 | Fractions                           |               600 |
+|   4 | Pourcentages                        |               500 |
+|   5 | Ratios et proportions               |               400 |
+|   6 | Moyennes                            |               400 |
+|   7 | Puissances et racines               |               400 |
+|   8 | Expressions algébriques             |               400 |
+|   9 | Équations et inégalités             |               400 |
+|  10 | Problèmes algébriques               |               400 |
+|  11 | Vitesse, distance et temps          |               400 |
+|  12 | Travail et débits                   |               400 |
+|  13 | Suites et régularités               |               400 |
+|  14 | Combinatoire                        |               400 |
+|  15 | Probabilités                        |               400 |
+|  16 | Lecture de tableaux et données      |               400 |
+|  17 | Angles et droites                   |               400 |
+|  18 | Triangles                           |               400 |
+|  19 | Quadrilatères et polygones          |               400 |
+|  20 | Cercles                             |               400 |
+|  21 | Géométrie dans l'espace et repérage |               400 |
+
+Ces volumes sont internes à la planification. Ils ne doivent pas devenir des affirmations commerciales avant vérification des fichiers, des doublons et des statuts.
+
+### Audit nécessaire avant publication
+
+Pour chaque banque, vérifier les schémas CSV, les identifiants stables, les doublons, les réponses correctes, les explications, les niveaux de difficulté, les langues, les thèmes, les passages, les figures et les autres médias. Distinguer les questions rédigées, validées, importées et publiées. Vérifier aussi ce qui existe réellement dans la base.
+
+La rédaction des Psychométriques et celle de YAELNET doivent être traitées comme des composantes complètes des parcours. Le résumé ne recense pas leurs sujets et exercices : leur couverture reste à établir. Pour le quantitatif, contrôler particulièrement les graphiques, les identités remarquables et les différents solides. Pour AMIRNET, distinguer les formats principaux des formats expérimentaux et relever ceux qui manquent à la banque.
+
+Conserver les identifiants de la banque existante lors de toute réorganisation et préserver les liens entre questions, textes, explications et figures. Une validation structurelle des CSV ne remplace pas la relecture linguistique et pédagogique.
+
+### Leçons et supports en préparation
+
+Le responsable du projet crée les leçons en parallèle. La structure ci-dessous vient de son résumé : elle sert de base de discussion et ne décrit pas des leçons déjà disponibles ou approuvées.
+
+- **Quantitatif :** une progression à établir à partir des 21 chapitres. Des leçons transversales sont proposées sur le calcul mental, l'estimation, la substitution de valeurs, le test des réponses, l'élimination et la gestion du temps.
+- **Verbal :** méthode des analogies ; familles d'analogies, dont 18 relations signalées dans le résumé ; phrases à compléter et connecteurs ; logique et déduction ; analyse des arguments ; compréhension de textes ; rédaction argumentative.
+- **AMIRNET :** structure de la phrase anglaise ; vocabulaire en contexte ; connecteurs ; phrases à compléter ; reformulations ; compréhension écrite ; préparation distincte aux formats expérimentaux.
+- **YAELNET :** structure de la phrase hébraïque ; verbes et constructions ; vocabulaire ; connecteurs ; phrases à compléter ; reformulations ; compréhension écrite ; rédaction en hébreu avec entraînement au clavier.
+
+Ces rubriques pédagogiques ne correspondent pas nécessairement aux dossiers ou catégories des CSV. Une correspondance explicite devra relier compétence officielle → chapitre ou thème → leçon → support de révision → questions validées.
+
+Le format proposé pour une leçon précise son objectif et ses prérequis, explique les notions progressivement, résout des exemples étape par étape, montre les erreurs fréquentes, puis propose des exercices guidés avec indices et des exercices autonomes issus de la banque. Une courte vérification de maîtrise clôt la leçon. Le format sera éprouvé sur quelques leçons pilotes avant généralisation.
+
+Quatre supports complémentaires sont proposés : fiche de formules, fiche de méthode, fiche de révision et quiz de rappel actif. Les fiches doivent être lisibles sur mobile et imprimables ; une fiche peut couvrir plusieurs leçons. Les interactions envisagées — figures manipulables, choix d'une étape de résolution, comparaison de raisonnements, correction d'erreurs et indices progressifs — ne seront ajoutées que lorsqu'elles améliorent réellement la compréhension.
+
+### Alignement avec les examens officiels
+
+Au 18 novembre 2026, le [NITE annonce](https://www.nite.org.il/news/notice-081026/?lang=en) qu'à partir de la session de décembre 2026 les Psychométriques comprennent la réflexion verbale et quantitative, avec une épreuve de rédaction, tandis que l'anglais est évalué séparément par AMIRNET. Le [format détaillé des Psychométriques](https://www.nite.org.il/two-domain-psychometric-entrance-test/format-2/?lang=en), les [consignes AMIRNET](https://www.nite.org.il/other-tests/amirnet/tips/?lang=en) et les [consignes YAELNET](https://www.nite.org.il/other-tests/yaelnet/tips/?lang=en) servent de références pour la matrice de couverture. Cette vérification des sources ne constitue pas encore un audit de chaque question ou leçon. Recontrôler les pages officielles avant de publier des règles, durées ou formats susceptibles de changer.
+
+## Principes du modèle pédagogique
+
+- Une question conserve une identité stable et peut servir à plusieurs séries.
+- Les séries préparées et les séries découvertes ordonnent des questions validées ; elles ne dupliquent pas le contenu de la banque.
+- L'entraînement et les leçons sont liés à une matière et à un thème, sans rendre une leçon obligatoire pour commencer une série.
+- Une tentative conserve son mode, son état, ses réponses et les données nécessaires à la reprise et au bilan.
+- La publication d'une question, d'une série ou d'une leçon est explicite. Les contenus non relus restent hors de l'expérience publique.
+- Les contenus français, anglais et hébreux doivent être affichés correctement ; la direction droite à gauche s'applique aux blocs hébreux concernés.
+- La série découverte ne révèle jamais de contenu non validé et ne dépend pas d'une sélection aléatoire.
+
+Le schéma précis sera conçu après l'audit des fichiers de questions et des besoins des leçons. Les migrations déjà appliquées ne seront pas réécrites.
+
+## État vérifié du dépôt au 18 novembre 2026
+
+Le dépôt est sur la branche main et ne comportait aucune modification locale au début de cette refonte. Le dernier commit examiné date du 2 octobre 2026.
+
+### Éléments potentiellement réutilisables
+
+- Application Next.js 16, React 19 et TypeScript avec pages publiques, authentification et espace compte.
+- Better Auth, Prisma et PostgreSQL/Neon comme fondation technique existante.
+- Authentification par email, Google et passkeys dans le code.
+- Schéma de banque de questions avec identifiants externes et relations explicites.
+- Écran et routes d'import des questions psychométriques et des figures, avec validation avant écriture.
+- Palette, typographie et composants de base à réévaluer au regard du nouveau parcours.
+
+Le fonctionnement réel des fournisseurs externes n'est pas confirmé par cet inventaire.
+
+### Écarts avec le produit décidé
+
+- Le modèle actuel impose qu'un exercice appartienne à une leçon. Il ne représente pas correctement les séries autonomes de découverte et d'entraînement.
+- Les types de questions et l'import actuel sont centrés sur les Psychométriques ; les banques AMIRNET et YAELNET ne sont pas intégrées à ce dépôt.
+- Le compte ne propose encore ni lecteur de questions, ni deux modes d'entraînement, ni reprise, ni bilan, ni suivi des erreurs.
+- Le catalogue et plusieurs textes publics reflètent l'ancien périmètre, notamment l'Oulpan et des programmes annoncés « bientôt disponibles ».
+- Les cinq packs affichés et leurs prix proviennent d'une hypothèse commerciale antérieure, qui doit être revalidée. Les routes de paiement et de webhook répondent actuellement 501.
+- Le README et les anciennes règles de projet décrivaient plusieurs décisions abandonnées ou contradictoires.
+
+### Dernière vérification locale
+
+- 18 tests réussis ; TypeScript et schéma Prisma valides.
+- ESLint sans erreur, avec un avertissement.
+- Build de production réussi avec Next.js 16.4.6.
+- La base configurée est la branche Neon `production`. Les migrations existantes y sont appliquées ; elle contient quatre comptes sans doublon de `(providerId, accountId)`. La commande locale `prisma migrate status` échoue toujours avec une erreur du moteur de schéma.
+- Les dépendances ont été actualisées sans suppression de paquet direct. L'audit de sécurité `pnpm audit` est passé de 8 alertes critiques, 52 élevées, 62 modérées et 13 faibles à 0 critique, 2 élevées et 1 modérée. Les alertes restantes concernent `picomatch` (aucune version corrigée publiée dans l'avis) et `minimatch` 10 (correctif annoncé en version majeure 11).
+- Better Auth 1.7.25 n'exige plus `account.issuer`. Une migration locale rend cette colonne facultative et ajoute l'unicité de `(providerId, accountId)` tout en conservant les anciennes valeurs. Elle n'est pas encore appliquée à la branche de production.
+
+Ces résultats décrivent le code local, pas un parcours complet testé dans un navigateur ni une application déployée.
+
+## Choix techniques
+
+La stack n'est pas encore reconfirmée. La recommandation provisoire est de conserver Next.js, TypeScript et PostgreSQL tant qu'un besoin concret ne justifie pas une migration : cela permet de réutiliser l'authentification, les imports et le schéma existants. Prisma, Better Auth, l'hébergement, l'email, l'analytique et les fournisseurs de paiement seront évalués chacun sur le parcours cible, leur coût de migration et leur état réel.
+
+Ne pas déplacer massivement les routes, modifier la base ou remplacer la stack pour rendre le dépôt conforme à une architecture encore provisoire. La prochaine décision technique porte d'abord sur les limites entre banque de questions, séries, leçons et tentatives.
+
+### Exécuter le dépôt actuel
+
+Le code existant utilise pnpm. Les commandes disponibles sont :
+
+    pnpm install
+    pnpm dev
+    pnpm test
+    pnpm lint
+    pnpm build
+
+Le fichier .env.example ne documente pas encore toutes les variables requises pour l'authentification, la base et les fournisseurs. Il devra être complété pendant la reprise technique. Aucun état de fonctionnement local ou déployé n'est déduit de ces commandes seules.
 
 ## Feuille de route
 
-### Phase 0 — Assainissement
+### 1. Cadrer le contenu et l'expérience
 
-- [x] Retirer les références aux anciens modèles métier.
-- [x] Unifier les routes administratives sous `/account/admin`.
-- [x] Vérifier toutes les redirections vers `/sign-in`.
-- [x] Valider Prisma, TypeScript, ESLint, tests et build.
-- [x] Mettre `AGENTS.md` en accord avec ce README.
+- [x] Fixer les trois examens du site et exclure l'Oulpan.
+- [x] Définir le chemin accueil → examen → découverte → bilan → compte.
+- [x] Choisir une série découverte fixe par examen et afficher le bilan avant inscription.
+- [x] Définir les deux modes et le principe des leçons libres.
+- [x] Consigner l'inventaire déclaré des banques sans le présenter comme audité.
+- [ ] Rendre les banques de questions accessibles à l'audit.
+- [ ] Établir la matrice compétence officielle → thème → leçon → support → questions validées.
+- [ ] Auditer les CSV, les figures et les passages, puis confirmer les volumes et les statuts.
+- [ ] Examiner quelques leçons pilotes produites en parallèle avant de fixer leur format.
+- [ ] Vérifier la couverture des productions écrites et des formats expérimentaux AMIRNET.
+- [ ] Vérifier la variété et la difficulté des exercices liés à chaque leçon.
+- [ ] Valider l'arborescence, les URLs et le contenu des pages publiques.
 
-### Phase 1 — Fondation pédagogique
+### 2. Choisir la base technique et réorganiser le dépôt
 
-- [x] Ajouter les modèles du catalogue, des leçons, exercices et questions.
-- [x] Créer et relire la migration Prisma.
-- [ ] Initialiser les quatre programmes et Aleph à Vav.
-- [ ] Publier uniquement Psychométriques.
+- [ ] Décider ce qui est conservé du dépôt actuel après examen de la stack.
+- [ ] Définir le modèle des séries, leçons, tentatives, réponses et bilans.
+- [ ] Planifier les migrations sans altérer celles déjà appliquées.
+- [ ] Retirer du produit l'Oulpan et les anciennes promesses commerciales.
+- [ ] Organiser les modules et les routes autour des trois parcours réels.
 
-### Phase 2 — Refonte de l’interface
+### 3. Livrer la découverte
 
-- [x] Généraliser le nom, les métadonnées et les textes.
-- [x] Créer un accueil dense centré sur l’apprentissage et l’intégration.
-- [x] Créer le catalogue `/formations` avec un accès direct par objectif.
-- [x] Dissocier subtilement l’univers Oulpan dans la même plateforme.
-- [x] Créer l’univers public Oulpan sans le séparer de la plateforme.
-- [x] Remplacer l’accueil statique par un parcours marketing au scroll.
-- [x] Faire évoluer l’objet pédagogique avec les étapes de l’apprentissage.
-- [x] Retirer de la navigation les pages secondaires sans contenu propre.
-- [ ] Choisir le nom définitif et remplacer le libellé provisoire.
-- [ ] Valider puis configurer le domaine principal et les domaines descriptifs.
-- [ ] Compléter et sourcer les informations officielles des examens.
-- [ ] Refaire le tableau de bord et les navigations.
-- [ ] Créer les états vides et préparer le contenu RTL.
+- [ ] Composer et relire une série fixe pour chacun des trois examens.
+- [ ] Construire les présentations par examen et le lecteur public.
+- [ ] Afficher le bilan et les explications avant inscription.
+- [ ] Transmettre le contexte de la découverte au compte.
 
-### Phase 3 — Psychométriques
+### 4. Livrer l'entraînement complet
 
-- [ ] Définir ses catégories et thèmes.
-- [ ] Construire le parcours leçons → exercices.
-- [ ] Créer le lecteur, la correction et les explications.
+- [ ] Importer et publier les banques validées.
+- [ ] Construire les séries préparées par examen, matière et thème.
+- [ ] Implémenter les modes apprentissage et conditions d'examen.
+- [ ] Enregistrer les tentatives, la reprise, les réponses et les bilans.
+- [ ] Ajouter le suivi des erreurs et des suites concrètes.
+- [ ] Intégrer les leçons libres et leurs liens vers les thèmes difficiles.
+- [ ] Vérifier les parcours complets des trois examens sur navigateur et base isolée.
 
-### Phase 4 — Import CSV
+### 5. Décider le modèle commercial
 
-- [ ] Documenter le format.
-- [x] Créer prévisualisation, validation et erreurs par ligne.
-- [x] Rendre l’import transactionnel et idempotent.
-- [ ] Permettre l’affectation aux exercices et tester les cas critiques.
+- [ ] Définir ce qui est gratuit sans compte et avec compte.
+- [ ] Valider ou abandonner l'abonnement, les offres et les prix antérieurs.
+- [ ] Implémenter les droits d'accès et les paiements uniquement après ces décisions.
 
-### Phase 5 — Progression
+## Critère de lancement
 
-- [ ] Enregistrer sessions et réponses.
-- [ ] Ajouter avancement, historique, erreurs et statistiques.
-
-### Phase 6 — Accès et offres
-
-- [ ] Ajouter les droits indépendants des rôles.
-- [ ] Ajouter offres, contenus accordés et prix.
-- [ ] Décider si un quota de questions est réellement nécessaire.
-
-### Phase 7 — Paiements
-
-- [ ] Valider les comptes Stripe et Grow et configurer les tarifs retenus.
-- [ ] Intégrer les deux checkouts et leurs webhooks.
-- [ ] Gérer le cycle complet des abonnements et paiements.
-- [ ] Vérifier facturation et comptabilité.
-
-### Phase 8 — Entreprises
-
-- [ ] Ajouter organisations, responsables, contrats et places.
-- [ ] Ajouter invitations CSV, groupes et attributions de programmes.
-- [ ] Définir le partage des données de progression.
-
-### Phase 9 — Oulpan et enrichissement des programmes
-
-- [ ] Enrichir les contenus AMIRNET et YAELNET.
-- [ ] Développer Oulpan Aleph à Vav et l’activer lorsque son contenu est prêt.
-
-## Premier résultat attendu
-
-Le premier jalon ne comprend ni paiement réel, ni statistiques avancées, ni
-contenu complet. Il doit produire une fondation propre et démontrable.
-
-Il est terminé lorsque :
-
-1. Prisma, TypeScript, ESLint, les tests et le build passent ;
-2. l’authentification fonctionne toujours avec `/sign-in` ;
-3. Prisma contient la structure pédagogique minimale ;
-4. les quatre programmes et les six niveaux Oulpan existent ;
-5. Psychométriques, AMIRNET et YAELNET peuvent être commencés ;
-6. l’accueil et le tableau de bord présentent la nouvelle vision ;
-7. Oulpan affiche un état `Bientôt disponible` ;
-8. une leçon et un exercice psychométriques vides sont navigables ;
-9. aucune fausse quantité de contenu ou promesse commerciale n’est affichée ;
-10. le README et `AGENTS.md` décrivent la même architecture.
-
-Cette base permettra ensuite d’enrichir le contenu et les imports CSV sans
-refaire l’interface lors de l’ajout d’Oulpan, Stripe, Grow ou des partenaires.
-
-## Hors périmètre du premier jalon
-
-- contenu pédagogique complet ;
-- intégration des paiements et facturation en production ;
-- quota mensuel ;
-- statistiques avancées ;
-- espace entreprise complet ;
-- activation d’Oulpan.
+Un visiteur doit pouvoir découvrir chacun des trois examens sans compte, recevoir un bilan honnête, créer un compte et poursuivre un entraînement complet dans les deux modes. Les contenus publiés doivent avoir été relus, les séries doivent être reprenables, les erreurs consultables et les leçons disponibles selon le périmètre validé. Le paiement n'est un critère de lancement que si le modèle commercial est explicitement retenu.
