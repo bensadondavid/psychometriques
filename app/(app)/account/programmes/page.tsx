@@ -14,8 +14,7 @@ export default function AccountProgramsPage() {
           Mes programmes
         </h1>
         <p className="mt-4 leading-7 text-muted-foreground">
-          Psychométriques sera le premier parcours disponible. Les autres
-          programmes sont déjà visibles pour préparer la suite.
+          Choisissez l’examen que vous préparez pour retrouver son parcours.
         </p>
       </header>
       <section className="mt-9 grid gap-4 md:grid-cols-2">
@@ -28,15 +27,12 @@ export default function AccountProgramsPage() {
               <h2 className="font-serif text-2xl text-primary">
                 {program.name}
               </h2>
-              <span className="text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-[#9b7a48]">
-                {program.status}
-              </span>
             </div>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
               {program.description}
             </p>
             <Link
-              href={`/formations/${program.slug}`}
+              href={`/examens/${program.slug}`}
               className="mt-6 flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
             >
               Voir la présentation <ArrowRight className="size-4" />

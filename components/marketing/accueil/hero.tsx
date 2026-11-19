@@ -39,20 +39,20 @@ export function AccueilHero() {
             Choisir son épreuve
           </p>
           <Link
-            href="/psychometriques"
+            href="/examens/psychometriques"
             className="flex items-center justify-between border-b border-[#d8cbbc] py-4 font-serif text-2xl hover:text-[#8a3545] focus-visible:outline-2 focus-visible:outline-[#45121d]"
           >
             Psychométriques{" "}
             <ArrowUpRight className="size-4" aria-hidden="true" />
           </Link>
           <Link
-            href="/langues#amirnet"
+            href="/examens/amirnet"
             className="flex items-center justify-between border-b border-[#d8cbbc] py-4 font-serif text-2xl hover:text-[#8a3545] focus-visible:outline-2 focus-visible:outline-[#45121d]"
           >
             AMIRNET <ArrowUpRight className="size-4" aria-hidden="true" />
           </Link>
           <Link
-            href="/langues#yael"
+            href="/examens/yaelnet"
             className="flex items-center justify-between border-b border-[#d8cbbc] py-4 font-serif text-2xl hover:text-[#8a3545] focus-visible:outline-2 focus-visible:outline-[#45121d]"
           >
             YAELNET <ArrowUpRight className="size-4" aria-hidden="true" />

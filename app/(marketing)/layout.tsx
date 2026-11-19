@@ -24,7 +24,7 @@ export default function MarketingLayout({
               />
               <p className="max-w-md pr-6 text-sm leading-[1.55]">
                 Plateforme francophone de préparation aux examens
-                Psychométriques, AMIRNET et YAEL/YAELNET.
+                Psychométriques, AMIRNET et YAELNET.
               </p>
             </div>
             <div>
@@ -32,14 +32,17 @@ export default function MarketingLayout({
                 Cursus préparatoires
               </p>
               <div className="grid gap-2.5 text-sm">
-                <Link href="/psychometriques" className="hover:text-[#1d1c16]">
+                <Link
+                  href="/examens/psychometriques"
+                  className="hover:text-[#1d1c16]"
+                >
                   Psychométriques
                 </Link>
-                <Link href="/langues#amirnet" className="hover:text-[#1d1c16]">
+                <Link href="/examens/amirnet" className="hover:text-[#1d1c16]">
                   AMIRNET
                 </Link>
-                <Link href="/langues#yael" className="hover:text-[#1d1c16]">
-                  YAEL & YAELNET
+                <Link href="/examens/yaelnet" className="hover:text-[#1d1c16]">
+                  YAELNET
                 </Link>
               </div>
             </div>
@@ -54,8 +57,8 @@ export default function MarketingLayout({
                 <Link href="/#methode" className="hover:text-[#1d1c16]">
                   Notre méthode
                 </Link>
-                <Link href="/tarifs" className="hover:text-[#1d1c16]">
-                  Packs & tarifs
+                <Link href="/examens" className="hover:text-[#1d1c16]">
+                  Choisir un examen
                 </Link>
               </div>
             </div>

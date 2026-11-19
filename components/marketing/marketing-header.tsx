@@ -18,10 +18,7 @@ import { cn } from "@/lib/utils";
 
 const navigation = [
   { href: "/", label: "Accueil" },
-  { href: "/psychometriques", label: "Psychométriques" },
-  { href: "/langues", label: "Langues" },
-  { href: "/tarifs", label: "Tarifs" },
-  { href: "/faq", label: "Questions fréquentes" },
+  { href: "/examens", label: "Les examens" },
 ] as const;
 
 function isCurrentPath(pathname: string, href: string) {
@@ -144,7 +141,7 @@ export function MarketingHeader() {
 
                 <div className="mt-auto pt-8">
                   <p className="max-w-xs text-sm leading-6 text-[#2a211d]/52">
-                    Psychométriques, AMIRNET et YAEL/YAELNET réunis dans un même
+                    Psychométriques, AMIRNET et YAELNET réunis dans un même
                     espace de préparation.
                   </p>
                 </div>

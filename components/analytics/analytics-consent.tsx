@@ -124,7 +124,7 @@ export function AnalyticsConsentManager() {
         <button
           type="button"
           onClick={() => setSettingsOpen(true)}
-          className="fixed bottom-3 left-3 z-[99] border border-[#bba99b] bg-[#fffaf2] px-3 py-1.5 text-xs text-[#45121d] shadow-sm transition-colors hover:bg-[#f4e9df] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#45121d]"
+          className="fixed bottom-3 right-3 z-[99] border border-[#bba99b] bg-[#fffaf2] px-3 py-1.5 text-xs text-[#45121d] shadow-sm transition-colors hover:bg-[#f4e9df] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#45121d]"
         >
           Gestion des cookies
         </button>

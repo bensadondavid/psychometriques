@@ -50,6 +50,9 @@ La structure fonctionnelle proposée comporte cinq espaces :
 
 Les URLs et la navigation précise seront arrêtées après validation de cette structure. Il ne faut pas créer de pages de remplissage ou promettre des contenus encore absents.
 
+Une première structure de navigation est maintenant en place : `/examens` et `/examens/{psychometriques,amirnet,yaelnet}`. Ces pages présentent les trois parcours sans annoncer de série déjà disponible. Cette convention d'URL reste à valider avec le responsable du projet avant d'étendre les routes d'entraînement.
+Les anciennes entrées `/psychometriques`, `/langues`, `/tarifs` et `/faq` redirigent provisoirement vers cette nouvelle structure afin de ne plus exposer les anciennes promesses commerciales ou de contenu. Leurs composants restent dans le dépôt pendant la refonte.
+
 ### Structure interne proposée
 
 Indépendamment du framework retenu, le code devrait séparer les responsabilités suivantes : catalogue des examens, banque et import des questions, composition des séries, tentatives et bilans, leçons, identité et accès, administration. Les pages publiques et privées utilisent ces modules sans contenir elles-mêmes les règles de sélection des questions ou de calcul des résultats.
@@ -121,6 +124,18 @@ La rédaction des Psychométriques et celle de YAELNET doivent être traitées c
 
 Conserver les identifiants de la banque existante lors de toute réorganisation et préserver les liens entre questions, textes, explications et figures. Une validation structurelle des CSV ne remplace pas la relecture linguistique et pédagogique.
 
+### Ordre de construction du parcours — décision du responsable
+
+1. Construire d'abord la structure du site et les parcours distincts pour les trois examens, sans inventer de questions ni de leçons.
+2. Définir ensuite le modèle des matières, thèmes, séries préparées, tentatives, réponses et bilans. Une série peut être découverte ou entraînement et ne dépend pas d'une leçon.
+3. Construire le lecteur et les deux modes, avec correction, reprise et bilan, en gardant les contenus non publiés hors des parcours publics.
+4. Créer enfin la page et le pipeline d'import CSV pour verser les banques existantes dans le modèle construit. L'import doit préserver les identifiants et la provenance, valider avant écriture, être transactionnel et répétable, et ne pas publier automatiquement des questions.
+5. Une fois les fichiers importés, composer les séries découvertes fixes et les séries préparées à partir des questions relues, puis vérifier les trois parcours de bout en bout.
+
+Le responsable a déjà contrôlé ses banques et ne demande pas un nouvel audit préalable de leurs fichiers. Leur intégration réelle nécessitera néanmoins des contrôles techniques à l'import et une vérification de ce qui est publiable. Les banques psychométriques sont disponibles localement chez lui, mais ne sont pas encore lisibles dans cet environnement ; celles d'AMIRNET et de YAELNET viendront ensuite.
+
+Le dépôt possède actuellement un import administrateur pour cinq formats psychométriques et les figures SVG. Il n'y a aucun fichier de banque CSV, TSV, XLSX ou ZIP dans le dépôt au 19 novembre 2026. L'import existant reprend le statut indiqué par le CSV, y compris `PUBLISHED`, et une réimportation remplace ce statut, les options et incrémente la version. Avant d'utiliser cet outil sur les nouvelles banques, il faut décider comment séparer statut source, validation éditoriale et publication sur le site. Le modèle actuel limite les domaines à verbal et quantitatif, et les types à quatre formes psychométriques ; il ne représente pas encore AMIRNET et YAELNET.
+
 ### Leçons et supports en préparation
 
 Le responsable du projet crée les leçons en parallèle. La structure ci-dessous vient de son résumé : elle sert de base de discussion et ne décrit pas des leçons déjà disponibles ou approuvées.
@@ -150,7 +165,17 @@ Au 18 novembre 2026, le [NITE annonce](https://www.nite.org.il/news/notice-08102
 - Les contenus français, anglais et hébreux doivent être affichés correctement ; la direction droite à gauche s'applique aux blocs hébreux concernés.
 - La série découverte ne révèle jamais de contenu non validé et ne dépend pas d'une sélection aléatoire.
 
-Le schéma précis sera conçu après l'audit des fichiers de questions et des besoins des leçons. Les migrations déjà appliquées ne seront pas réécrites.
+Le schéma précis sera conçu à partir du parcours cible, puis adapté aux contrats réels des banques au moment de l'import. Les migrations déjà appliquées ne seront pas réécrites.
+
+### Modèle cible à préciser avant migration
+
+- **Examen, matière, thème** : une hiérarchie commune aux trois parcours, avec des catégories propres à chaque examen. Les thèmes peuvent servir au classement des questions et aux bilans sans imposer de leçon.
+- **Question** : contenu, options éventuelles, correction, identifiant source et état de publication. Les passages et figures restent des ressources liées. Les formes de réponse ouverte et de rédaction demandent une décision spécifique sur leur correction.
+- **Série préparée** : examen, objectif, mode autorisé et liste ordonnée de références à des questions publiées. Une seule série découverte publiée par examen, identique pour tous les nouveaux visiteurs.
+- **Tentative et réponse** : série, mode, état, dates, temps, réponses et instantané minimal des éléments nécessaires à une correction stable après une mise à jour de la banque. La reprise et le bilan utilisent ces données, avec association au compte après inscription lorsque le visiteur le souhaite.
+- **Leçon** : contenu libre relié à des thèmes ; elle peut être suggérée après une erreur sans conditionner l'accès aux séries. Son contenu reste sous la responsabilité du responsable du projet.
+
+Cette proposition n'est pas encore une migration. La branche de base configurée est la production Neon : il faut confirmer son état et préparer un environnement isolé avant de modifier le schéma ou de tester des tentatives.
 
 ## État vérifié du dépôt au 18 novembre 2026
 
@@ -176,14 +201,15 @@ Le fonctionnement réel des fournisseurs externes n'est pas confirmé par cet in
 - Les cinq packs affichés et leurs prix proviennent d'une hypothèse commerciale antérieure, qui doit être revalidée. Les routes de paiement et de webhook répondent actuellement 501.
 - Le README et les anciennes règles de projet décrivaient plusieurs décisions abandonnées ou contradictoires.
 
-### Dernière vérification locale
+### Dernière vérification locale et de la base — 19 novembre 2026
 
 - 18 tests réussis ; TypeScript et schéma Prisma valides.
 - ESLint sans erreur, avec un avertissement.
 - Build de production réussi avec Next.js 16.4.6.
-- La base configurée est la branche Neon `production`. Les migrations existantes y sont appliquées ; elle contient quatre comptes sans doublon de `(providerId, accountId)`. La commande locale `prisma migrate status` échoue toujours avec une erreur du moteur de schéma.
-- Les dépendances ont été actualisées sans suppression de paquet direct. L'audit de sécurité `pnpm audit` est passé de 8 alertes critiques, 52 élevées, 62 modérées et 13 faibles à 0 critique, 2 élevées et 1 modérée. Les alertes restantes concernent `picomatch` (aucune version corrigée publiée dans l'avis) et `minimatch` 10 (correctif annoncé en version majeure 11).
-- Better Auth 1.7.25 n'exige plus `account.issuer`. Une migration locale rend cette colonne facultative et ajoute l'unicité de `(providerId, accountId)` tout en conservant les anciennes valeurs. Elle n'est pas encore appliquée à la branche de production.
+- La base configurée est la branche Neon `production`. `prisma migrate status` confirme les 12 migrations appliquées et un schéma à jour. Les quatre comptes ne présentent aucun doublon de `(providerId, accountId)`.
+- Les dépendances ont été actualisées sans suppression de paquet direct. Le dernier `pnpm audit` signale une alerte modérée sur `minimatch`, sans alerte élevée ou critique.
+- Better Auth 1.7.26 n'exige plus `account.issuer`. La migration appliquée en production rend cette colonne facultative et ajoute l'unicité de `(providerId, accountId)` tout en conservant les anciennes valeurs.
+- Un contrôle local sans compte confirme que la session est absente, que l'espace compte redirige vers `/sign-in` même avec un faux cookie et que la route d'import admin répond `401`. Les parcours de création de compte, Google, passkey et emails n'ont pas été testés de bout en bout.
 
 Ces résultats décrivent le code local, pas un parcours complet testé dans un navigateur ni une application déployée.
 
@@ -214,9 +240,9 @@ Le fichier .env.example ne documente pas encore toutes les variables requises po
 - [x] Choisir une série découverte fixe par examen et afficher le bilan avant inscription.
 - [x] Définir les deux modes et le principe des leçons libres.
 - [x] Consigner l'inventaire déclaré des banques sans le présenter comme audité.
-- [ ] Rendre les banques de questions accessibles à l'audit.
+- [ ] Rendre les banques de questions accessibles à l'import, après construction du parcours.
 - [ ] Établir la matrice compétence officielle → thème → leçon → support → questions validées.
-- [ ] Auditer les CSV, les figures et les passages, puis confirmer les volumes et les statuts.
+- [ ] Vérifier les fichiers et leurs liens pendant l'import, puis confirmer les volumes et les statuts en base.
 - [ ] Examiner quelques leçons pilotes produites en parallèle avant de fixer leur format.
 - [ ] Vérifier la couverture des productions écrites et des formats expérimentaux AMIRNET.
 - [ ] Vérifier la variété et la difficulté des exercices liés à chaque leçon.
@@ -229,22 +255,25 @@ Le fichier .env.example ne documente pas encore toutes les variables requises po
 - [ ] Planifier les migrations sans altérer celles déjà appliquées.
 - [ ] Retirer du produit l'Oulpan et les anciennes promesses commerciales.
 - [ ] Organiser les modules et les routes autour des trois parcours réels.
+- [x] Créer les premières pages d'entrée des trois examens et les relier depuis l'accueil.
 
-### 3. Livrer la découverte
+### 3. Construire la découverte et l'entraînement sans contenu réel
 
-- [ ] Composer et relire une série fixe pour chacun des trois examens.
-- [ ] Construire les présentations par examen et le lecteur public.
+- [x] Créer une première présentation distincte pour chacun des trois examens.
+- [ ] Construire le lecteur public sur des séries publiées, sans inventer de questions.
 - [ ] Afficher le bilan et les explications avant inscription.
 - [ ] Transmettre le contexte de la découverte au compte.
-
-### 4. Livrer l'entraînement complet
-
-- [ ] Importer et publier les banques validées.
 - [ ] Construire les séries préparées par examen, matière et thème.
 - [ ] Implémenter les modes apprentissage et conditions d'examen.
 - [ ] Enregistrer les tentatives, la reprise, les réponses et les bilans.
 - [ ] Ajouter le suivi des erreurs et des suites concrètes.
 - [ ] Intégrer les leçons libres et leurs liens vers les thèmes difficiles.
+
+### 4. Importer le contenu puis vérifier les parcours
+
+- [ ] Construire la page d'import CSV adaptée aux trois examens et son pipeline de validation.
+- [ ] Importer les banques et publier les questions relues.
+- [ ] Composer et relire une série découverte fixe pour chacun des trois examens.
 - [ ] Vérifier les parcours complets des trois examens sur navigateur et base isolée.
 
 ### 5. Décider le modèle commercial

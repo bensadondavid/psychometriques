@@ -119,7 +119,9 @@ export const auth = betterAuth({
       bannedUserMessage:
         "Ce compte a été suspendu. Contactez l’assistance si vous pensez qu’il s’agit d’une erreur.",
     }),
-    passkey(),
+    passkey({
+      rpName: "Psychometriques.fr",
+    }),
     i18n({
       translations: { fr: locales.fr },
       detection: ["header"],

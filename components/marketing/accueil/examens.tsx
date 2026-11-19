@@ -1,28 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-
-const formations = [
-  {
-    titre: "Psychométriques",
-    objet: "Admission universitaire",
-    description:
-      "Réflexion quantitative, réflexion verbale et rédaction argumentative.",
-    href: "/psychometriques",
-  },
-  {
-    titre: "AMIRNET",
-    objet: "Anglais",
-    description:
-      "Phrases à compléter, reformulations et compréhension de textes.",
-    href: "/langues#amirnet",
-  },
-  {
-    titre: "YAEL & YAELNET",
-    objet: "Hébreu",
-    description: "Compréhension, grammaire et expression écrite en hébreu.",
-    href: "/langues#yael",
-  },
-] as const;
+import { publicPrograms } from "@/lib/content/catalog";
 
 export function AccueilExamens() {
   return (
@@ -44,25 +22,25 @@ export function AccueilExamens() {
           </h2>
         </div>
         <div className="mt-14 border-t border-[#bda99b]">
-          {formations.map((formation) => (
+          {publicPrograms.map((formation) => (
             <article
-              key={formation.titre}
+              key={formation.slug}
               className="grid gap-5 border-b border-[#d8cbbc] py-8 md:grid-cols-[1fr_1fr_auto] md:items-center md:gap-10 lg:py-10"
             >
               <div>
                 <p className="mb-2 text-xs font-semibold tracking-[0.1em] uppercase text-[#74615b]">
-                  {formation.objet}
+                  {formation.subject}
                 </p>
                 <h3 className="font-serif text-[clamp(2rem,3.2vw,3.5rem)] leading-none">
-                  {formation.titre}
+                  {formation.name}
                 </h3>
               </div>
               <p className="max-w-sm text-base leading-relaxed text-[#524344]">
                 {formation.description}
               </p>
               <Link
-                href={formation.href}
-                aria-label={`Découvrir ${formation.titre}`}
+                href={`/examens/${formation.slug}`}
+                aria-label={`Découvrir ${formation.name}`}
                 className="inline-flex size-12 items-center justify-center rounded-full border border-[#aa9488] transition-colors hover:bg-[#45121d] hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#45121d]"
               >
                 <ArrowUpRight className="size-5" aria-hidden="true" />

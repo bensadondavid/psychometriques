@@ -2,49 +2,28 @@ export const publicPrograms = [
   {
     slug: "psychometriques",
     name: "Psychométriques",
-    description: "Le premier parcours de préparation de la plateforme.",
-    status: "Ouverture prochaine",
-    available: true,
-  },
-  {
-    slug: "amir",
-    name: "AMIR",
+    subject: "Réflexion verbale, quantitative et rédaction",
     description:
-      "Un futur parcours consacré à la préparation de l’examen d’anglais.",
-    status: "Bientôt disponible",
-    available: false,
+      "Un parcours de préparation organisé par matière et par thème, avec des séries pour apprendre et s'entraîner.",
   },
   {
-    slug: "yael",
-    name: "YAEL",
+    slug: "amirnet",
+    name: "AMIRNET",
+    subject: "Anglais",
     description:
-      "Un futur parcours consacré à la préparation de l’examen d’hébreu.",
-    status: "Bientôt disponible",
-    available: false,
+      "Un parcours distinct pour travailler l'anglais à travers des questions, des corrections et un suivi de progression.",
   },
   {
-    slug: "oulpan",
-    name: "Oulpan",
-    description: "Des parcours progressifs du niveau Aleph au niveau Vav.",
-    status: "Bientôt disponible",
-    available: false,
+    slug: "yaelnet",
+    name: "YAELNET",
+    subject: "Hébreu",
+    description:
+      "Un parcours distinct pour travailler l'hébreu à travers des questions, des corrections et un suivi de progression.",
   },
 ] as const;
 
-export const oulpanLevels = [
-  "aleph",
-  "bet",
-  "gimel",
-  "dalet",
-  "he",
-  "vav",
-] as const;
+export type ProgramSlug = (typeof publicPrograms)[number]["slug"];
 
-export const oulpanLevelNames: Record<(typeof oulpanLevels)[number], string> = {
-  aleph: "Aleph",
-  bet: "Bet",
-  gimel: "Gimel",
-  dalet: "Dalet",
-  he: "He",
-  vav: "Vav",
-};
+export function getPublicProgram(slug: string) {
+  return publicPrograms.find((program) => program.slug === slug);
+}
