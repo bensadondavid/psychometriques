@@ -244,6 +244,8 @@ export type ProgramWhereInput = {
   chapters?: Prisma.QuestionChapterListRelationFilter
   passages?: Prisma.PassageListRelationFilter
   figures?: Prisma.QuestionFigureListRelationFilter
+  accesses?: Prisma.ProgramAccessListRelationFilter
+  exercises?: Prisma.ExerciseListRelationFilter
 }
 
 export type ProgramOrderByWithRelationInput = {
@@ -259,6 +261,8 @@ export type ProgramOrderByWithRelationInput = {
   chapters?: Prisma.QuestionChapterOrderByRelationAggregateInput
   passages?: Prisma.PassageOrderByRelationAggregateInput
   figures?: Prisma.QuestionFigureOrderByRelationAggregateInput
+  accesses?: Prisma.ProgramAccessOrderByRelationAggregateInput
+  exercises?: Prisma.ExerciseOrderByRelationAggregateInput
 }
 
 export type ProgramWhereUniqueInput = Prisma.AtLeast<{
@@ -277,6 +281,8 @@ export type ProgramWhereUniqueInput = Prisma.AtLeast<{
   chapters?: Prisma.QuestionChapterListRelationFilter
   passages?: Prisma.PassageListRelationFilter
   figures?: Prisma.QuestionFigureListRelationFilter
+  accesses?: Prisma.ProgramAccessListRelationFilter
+  exercises?: Prisma.ExerciseListRelationFilter
 }, "id" | "slug">
 
 export type ProgramOrderByWithAggregationInput = {
@@ -322,6 +328,8 @@ export type ProgramCreateInput = {
   chapters?: Prisma.QuestionChapterCreateNestedManyWithoutProgramInput
   passages?: Prisma.PassageCreateNestedManyWithoutProgramInput
   figures?: Prisma.QuestionFigureCreateNestedManyWithoutProgramInput
+  accesses?: Prisma.ProgramAccessCreateNestedManyWithoutProgramInput
+  exercises?: Prisma.ExerciseCreateNestedManyWithoutProgramInput
 }
 
 export type ProgramUncheckedCreateInput = {
@@ -337,6 +345,8 @@ export type ProgramUncheckedCreateInput = {
   chapters?: Prisma.QuestionChapterUncheckedCreateNestedManyWithoutProgramInput
   passages?: Prisma.PassageUncheckedCreateNestedManyWithoutProgramInput
   figures?: Prisma.QuestionFigureUncheckedCreateNestedManyWithoutProgramInput
+  accesses?: Prisma.ProgramAccessUncheckedCreateNestedManyWithoutProgramInput
+  exercises?: Prisma.ExerciseUncheckedCreateNestedManyWithoutProgramInput
 }
 
 export type ProgramUpdateInput = {
@@ -352,6 +362,8 @@ export type ProgramUpdateInput = {
   chapters?: Prisma.QuestionChapterUpdateManyWithoutProgramNestedInput
   passages?: Prisma.PassageUpdateManyWithoutProgramNestedInput
   figures?: Prisma.QuestionFigureUpdateManyWithoutProgramNestedInput
+  accesses?: Prisma.ProgramAccessUpdateManyWithoutProgramNestedInput
+  exercises?: Prisma.ExerciseUpdateManyWithoutProgramNestedInput
 }
 
 export type ProgramUncheckedUpdateInput = {
@@ -367,6 +379,8 @@ export type ProgramUncheckedUpdateInput = {
   chapters?: Prisma.QuestionChapterUncheckedUpdateManyWithoutProgramNestedInput
   passages?: Prisma.PassageUncheckedUpdateManyWithoutProgramNestedInput
   figures?: Prisma.QuestionFigureUncheckedUpdateManyWithoutProgramNestedInput
+  accesses?: Prisma.ProgramAccessUncheckedUpdateManyWithoutProgramNestedInput
+  exercises?: Prisma.ExerciseUncheckedUpdateManyWithoutProgramNestedInput
 }
 
 export type ProgramCreateManyInput = {
@@ -466,6 +480,34 @@ export type ProgramUpdateOneRequiredWithoutCoursesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProgramUpdateToOneWithWhereWithoutCoursesInput, Prisma.ProgramUpdateWithoutCoursesInput>, Prisma.ProgramUncheckedUpdateWithoutCoursesInput>
 }
 
+export type ProgramCreateNestedOneWithoutAccessesInput = {
+  create?: Prisma.XOR<Prisma.ProgramCreateWithoutAccessesInput, Prisma.ProgramUncheckedCreateWithoutAccessesInput>
+  connectOrCreate?: Prisma.ProgramCreateOrConnectWithoutAccessesInput
+  connect?: Prisma.ProgramWhereUniqueInput
+}
+
+export type ProgramUpdateOneRequiredWithoutAccessesNestedInput = {
+  create?: Prisma.XOR<Prisma.ProgramCreateWithoutAccessesInput, Prisma.ProgramUncheckedCreateWithoutAccessesInput>
+  connectOrCreate?: Prisma.ProgramCreateOrConnectWithoutAccessesInput
+  upsert?: Prisma.ProgramUpsertWithoutAccessesInput
+  connect?: Prisma.ProgramWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProgramUpdateToOneWithWhereWithoutAccessesInput, Prisma.ProgramUpdateWithoutAccessesInput>, Prisma.ProgramUncheckedUpdateWithoutAccessesInput>
+}
+
+export type ProgramCreateNestedOneWithoutExercisesInput = {
+  create?: Prisma.XOR<Prisma.ProgramCreateWithoutExercisesInput, Prisma.ProgramUncheckedCreateWithoutExercisesInput>
+  connectOrCreate?: Prisma.ProgramCreateOrConnectWithoutExercisesInput
+  connect?: Prisma.ProgramWhereUniqueInput
+}
+
+export type ProgramUpdateOneRequiredWithoutExercisesNestedInput = {
+  create?: Prisma.XOR<Prisma.ProgramCreateWithoutExercisesInput, Prisma.ProgramUncheckedCreateWithoutExercisesInput>
+  connectOrCreate?: Prisma.ProgramCreateOrConnectWithoutExercisesInput
+  upsert?: Prisma.ProgramUpsertWithoutExercisesInput
+  connect?: Prisma.ProgramWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProgramUpdateToOneWithWhereWithoutExercisesInput, Prisma.ProgramUpdateWithoutExercisesInput>, Prisma.ProgramUncheckedUpdateWithoutExercisesInput>
+}
+
 export type ProgramCreateNestedOneWithoutChaptersInput = {
   create?: Prisma.XOR<Prisma.ProgramCreateWithoutChaptersInput, Prisma.ProgramUncheckedCreateWithoutChaptersInput>
   connectOrCreate?: Prisma.ProgramCreateOrConnectWithoutChaptersInput
@@ -520,6 +562,8 @@ export type ProgramCreateWithoutCoursesInput = {
   chapters?: Prisma.QuestionChapterCreateNestedManyWithoutProgramInput
   passages?: Prisma.PassageCreateNestedManyWithoutProgramInput
   figures?: Prisma.QuestionFigureCreateNestedManyWithoutProgramInput
+  accesses?: Prisma.ProgramAccessCreateNestedManyWithoutProgramInput
+  exercises?: Prisma.ExerciseCreateNestedManyWithoutProgramInput
 }
 
 export type ProgramUncheckedCreateWithoutCoursesInput = {
@@ -534,6 +578,8 @@ export type ProgramUncheckedCreateWithoutCoursesInput = {
   chapters?: Prisma.QuestionChapterUncheckedCreateNestedManyWithoutProgramInput
   passages?: Prisma.PassageUncheckedCreateNestedManyWithoutProgramInput
   figures?: Prisma.QuestionFigureUncheckedCreateNestedManyWithoutProgramInput
+  accesses?: Prisma.ProgramAccessUncheckedCreateNestedManyWithoutProgramInput
+  exercises?: Prisma.ExerciseUncheckedCreateNestedManyWithoutProgramInput
 }
 
 export type ProgramCreateOrConnectWithoutCoursesInput = {
@@ -564,6 +610,8 @@ export type ProgramUpdateWithoutCoursesInput = {
   chapters?: Prisma.QuestionChapterUpdateManyWithoutProgramNestedInput
   passages?: Prisma.PassageUpdateManyWithoutProgramNestedInput
   figures?: Prisma.QuestionFigureUpdateManyWithoutProgramNestedInput
+  accesses?: Prisma.ProgramAccessUpdateManyWithoutProgramNestedInput
+  exercises?: Prisma.ExerciseUpdateManyWithoutProgramNestedInput
 }
 
 export type ProgramUncheckedUpdateWithoutCoursesInput = {
@@ -578,6 +626,168 @@ export type ProgramUncheckedUpdateWithoutCoursesInput = {
   chapters?: Prisma.QuestionChapterUncheckedUpdateManyWithoutProgramNestedInput
   passages?: Prisma.PassageUncheckedUpdateManyWithoutProgramNestedInput
   figures?: Prisma.QuestionFigureUncheckedUpdateManyWithoutProgramNestedInput
+  accesses?: Prisma.ProgramAccessUncheckedUpdateManyWithoutProgramNestedInput
+  exercises?: Prisma.ExerciseUncheckedUpdateManyWithoutProgramNestedInput
+}
+
+export type ProgramCreateWithoutAccessesInput = {
+  id?: string
+  slug: string
+  name: string
+  description?: string | null
+  status?: $Enums.ContentStatus
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  courses?: Prisma.CourseCreateNestedManyWithoutProgramInput
+  chapters?: Prisma.QuestionChapterCreateNestedManyWithoutProgramInput
+  passages?: Prisma.PassageCreateNestedManyWithoutProgramInput
+  figures?: Prisma.QuestionFigureCreateNestedManyWithoutProgramInput
+  exercises?: Prisma.ExerciseCreateNestedManyWithoutProgramInput
+}
+
+export type ProgramUncheckedCreateWithoutAccessesInput = {
+  id?: string
+  slug: string
+  name: string
+  description?: string | null
+  status?: $Enums.ContentStatus
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  courses?: Prisma.CourseUncheckedCreateNestedManyWithoutProgramInput
+  chapters?: Prisma.QuestionChapterUncheckedCreateNestedManyWithoutProgramInput
+  passages?: Prisma.PassageUncheckedCreateNestedManyWithoutProgramInput
+  figures?: Prisma.QuestionFigureUncheckedCreateNestedManyWithoutProgramInput
+  exercises?: Prisma.ExerciseUncheckedCreateNestedManyWithoutProgramInput
+}
+
+export type ProgramCreateOrConnectWithoutAccessesInput = {
+  where: Prisma.ProgramWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProgramCreateWithoutAccessesInput, Prisma.ProgramUncheckedCreateWithoutAccessesInput>
+}
+
+export type ProgramUpsertWithoutAccessesInput = {
+  update: Prisma.XOR<Prisma.ProgramUpdateWithoutAccessesInput, Prisma.ProgramUncheckedUpdateWithoutAccessesInput>
+  create: Prisma.XOR<Prisma.ProgramCreateWithoutAccessesInput, Prisma.ProgramUncheckedCreateWithoutAccessesInput>
+  where?: Prisma.ProgramWhereInput
+}
+
+export type ProgramUpdateToOneWithWhereWithoutAccessesInput = {
+  where?: Prisma.ProgramWhereInput
+  data: Prisma.XOR<Prisma.ProgramUpdateWithoutAccessesInput, Prisma.ProgramUncheckedUpdateWithoutAccessesInput>
+}
+
+export type ProgramUpdateWithoutAccessesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  courses?: Prisma.CourseUpdateManyWithoutProgramNestedInput
+  chapters?: Prisma.QuestionChapterUpdateManyWithoutProgramNestedInput
+  passages?: Prisma.PassageUpdateManyWithoutProgramNestedInput
+  figures?: Prisma.QuestionFigureUpdateManyWithoutProgramNestedInput
+  exercises?: Prisma.ExerciseUpdateManyWithoutProgramNestedInput
+}
+
+export type ProgramUncheckedUpdateWithoutAccessesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  courses?: Prisma.CourseUncheckedUpdateManyWithoutProgramNestedInput
+  chapters?: Prisma.QuestionChapterUncheckedUpdateManyWithoutProgramNestedInput
+  passages?: Prisma.PassageUncheckedUpdateManyWithoutProgramNestedInput
+  figures?: Prisma.QuestionFigureUncheckedUpdateManyWithoutProgramNestedInput
+  exercises?: Prisma.ExerciseUncheckedUpdateManyWithoutProgramNestedInput
+}
+
+export type ProgramCreateWithoutExercisesInput = {
+  id?: string
+  slug: string
+  name: string
+  description?: string | null
+  status?: $Enums.ContentStatus
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  courses?: Prisma.CourseCreateNestedManyWithoutProgramInput
+  chapters?: Prisma.QuestionChapterCreateNestedManyWithoutProgramInput
+  passages?: Prisma.PassageCreateNestedManyWithoutProgramInput
+  figures?: Prisma.QuestionFigureCreateNestedManyWithoutProgramInput
+  accesses?: Prisma.ProgramAccessCreateNestedManyWithoutProgramInput
+}
+
+export type ProgramUncheckedCreateWithoutExercisesInput = {
+  id?: string
+  slug: string
+  name: string
+  description?: string | null
+  status?: $Enums.ContentStatus
+  sortOrder?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  courses?: Prisma.CourseUncheckedCreateNestedManyWithoutProgramInput
+  chapters?: Prisma.QuestionChapterUncheckedCreateNestedManyWithoutProgramInput
+  passages?: Prisma.PassageUncheckedCreateNestedManyWithoutProgramInput
+  figures?: Prisma.QuestionFigureUncheckedCreateNestedManyWithoutProgramInput
+  accesses?: Prisma.ProgramAccessUncheckedCreateNestedManyWithoutProgramInput
+}
+
+export type ProgramCreateOrConnectWithoutExercisesInput = {
+  where: Prisma.ProgramWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProgramCreateWithoutExercisesInput, Prisma.ProgramUncheckedCreateWithoutExercisesInput>
+}
+
+export type ProgramUpsertWithoutExercisesInput = {
+  update: Prisma.XOR<Prisma.ProgramUpdateWithoutExercisesInput, Prisma.ProgramUncheckedUpdateWithoutExercisesInput>
+  create: Prisma.XOR<Prisma.ProgramCreateWithoutExercisesInput, Prisma.ProgramUncheckedCreateWithoutExercisesInput>
+  where?: Prisma.ProgramWhereInput
+}
+
+export type ProgramUpdateToOneWithWhereWithoutExercisesInput = {
+  where?: Prisma.ProgramWhereInput
+  data: Prisma.XOR<Prisma.ProgramUpdateWithoutExercisesInput, Prisma.ProgramUncheckedUpdateWithoutExercisesInput>
+}
+
+export type ProgramUpdateWithoutExercisesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  courses?: Prisma.CourseUpdateManyWithoutProgramNestedInput
+  chapters?: Prisma.QuestionChapterUpdateManyWithoutProgramNestedInput
+  passages?: Prisma.PassageUpdateManyWithoutProgramNestedInput
+  figures?: Prisma.QuestionFigureUpdateManyWithoutProgramNestedInput
+  accesses?: Prisma.ProgramAccessUpdateManyWithoutProgramNestedInput
+}
+
+export type ProgramUncheckedUpdateWithoutExercisesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  courses?: Prisma.CourseUncheckedUpdateManyWithoutProgramNestedInput
+  chapters?: Prisma.QuestionChapterUncheckedUpdateManyWithoutProgramNestedInput
+  passages?: Prisma.PassageUncheckedUpdateManyWithoutProgramNestedInput
+  figures?: Prisma.QuestionFigureUncheckedUpdateManyWithoutProgramNestedInput
+  accesses?: Prisma.ProgramAccessUncheckedUpdateManyWithoutProgramNestedInput
 }
 
 export type ProgramCreateWithoutChaptersInput = {
@@ -592,6 +802,8 @@ export type ProgramCreateWithoutChaptersInput = {
   courses?: Prisma.CourseCreateNestedManyWithoutProgramInput
   passages?: Prisma.PassageCreateNestedManyWithoutProgramInput
   figures?: Prisma.QuestionFigureCreateNestedManyWithoutProgramInput
+  accesses?: Prisma.ProgramAccessCreateNestedManyWithoutProgramInput
+  exercises?: Prisma.ExerciseCreateNestedManyWithoutProgramInput
 }
 
 export type ProgramUncheckedCreateWithoutChaptersInput = {
@@ -606,6 +818,8 @@ export type ProgramUncheckedCreateWithoutChaptersInput = {
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutProgramInput
   passages?: Prisma.PassageUncheckedCreateNestedManyWithoutProgramInput
   figures?: Prisma.QuestionFigureUncheckedCreateNestedManyWithoutProgramInput
+  accesses?: Prisma.ProgramAccessUncheckedCreateNestedManyWithoutProgramInput
+  exercises?: Prisma.ExerciseUncheckedCreateNestedManyWithoutProgramInput
 }
 
 export type ProgramCreateOrConnectWithoutChaptersInput = {
@@ -636,6 +850,8 @@ export type ProgramUpdateWithoutChaptersInput = {
   courses?: Prisma.CourseUpdateManyWithoutProgramNestedInput
   passages?: Prisma.PassageUpdateManyWithoutProgramNestedInput
   figures?: Prisma.QuestionFigureUpdateManyWithoutProgramNestedInput
+  accesses?: Prisma.ProgramAccessUpdateManyWithoutProgramNestedInput
+  exercises?: Prisma.ExerciseUpdateManyWithoutProgramNestedInput
 }
 
 export type ProgramUncheckedUpdateWithoutChaptersInput = {
@@ -650,6 +866,8 @@ export type ProgramUncheckedUpdateWithoutChaptersInput = {
   courses?: Prisma.CourseUncheckedUpdateManyWithoutProgramNestedInput
   passages?: Prisma.PassageUncheckedUpdateManyWithoutProgramNestedInput
   figures?: Prisma.QuestionFigureUncheckedUpdateManyWithoutProgramNestedInput
+  accesses?: Prisma.ProgramAccessUncheckedUpdateManyWithoutProgramNestedInput
+  exercises?: Prisma.ExerciseUncheckedUpdateManyWithoutProgramNestedInput
 }
 
 export type ProgramCreateWithoutPassagesInput = {
@@ -664,6 +882,8 @@ export type ProgramCreateWithoutPassagesInput = {
   courses?: Prisma.CourseCreateNestedManyWithoutProgramInput
   chapters?: Prisma.QuestionChapterCreateNestedManyWithoutProgramInput
   figures?: Prisma.QuestionFigureCreateNestedManyWithoutProgramInput
+  accesses?: Prisma.ProgramAccessCreateNestedManyWithoutProgramInput
+  exercises?: Prisma.ExerciseCreateNestedManyWithoutProgramInput
 }
 
 export type ProgramUncheckedCreateWithoutPassagesInput = {
@@ -678,6 +898,8 @@ export type ProgramUncheckedCreateWithoutPassagesInput = {
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutProgramInput
   chapters?: Prisma.QuestionChapterUncheckedCreateNestedManyWithoutProgramInput
   figures?: Prisma.QuestionFigureUncheckedCreateNestedManyWithoutProgramInput
+  accesses?: Prisma.ProgramAccessUncheckedCreateNestedManyWithoutProgramInput
+  exercises?: Prisma.ExerciseUncheckedCreateNestedManyWithoutProgramInput
 }
 
 export type ProgramCreateOrConnectWithoutPassagesInput = {
@@ -708,6 +930,8 @@ export type ProgramUpdateWithoutPassagesInput = {
   courses?: Prisma.CourseUpdateManyWithoutProgramNestedInput
   chapters?: Prisma.QuestionChapterUpdateManyWithoutProgramNestedInput
   figures?: Prisma.QuestionFigureUpdateManyWithoutProgramNestedInput
+  accesses?: Prisma.ProgramAccessUpdateManyWithoutProgramNestedInput
+  exercises?: Prisma.ExerciseUpdateManyWithoutProgramNestedInput
 }
 
 export type ProgramUncheckedUpdateWithoutPassagesInput = {
@@ -722,6 +946,8 @@ export type ProgramUncheckedUpdateWithoutPassagesInput = {
   courses?: Prisma.CourseUncheckedUpdateManyWithoutProgramNestedInput
   chapters?: Prisma.QuestionChapterUncheckedUpdateManyWithoutProgramNestedInput
   figures?: Prisma.QuestionFigureUncheckedUpdateManyWithoutProgramNestedInput
+  accesses?: Prisma.ProgramAccessUncheckedUpdateManyWithoutProgramNestedInput
+  exercises?: Prisma.ExerciseUncheckedUpdateManyWithoutProgramNestedInput
 }
 
 export type ProgramCreateWithoutFiguresInput = {
@@ -736,6 +962,8 @@ export type ProgramCreateWithoutFiguresInput = {
   courses?: Prisma.CourseCreateNestedManyWithoutProgramInput
   chapters?: Prisma.QuestionChapterCreateNestedManyWithoutProgramInput
   passages?: Prisma.PassageCreateNestedManyWithoutProgramInput
+  accesses?: Prisma.ProgramAccessCreateNestedManyWithoutProgramInput
+  exercises?: Prisma.ExerciseCreateNestedManyWithoutProgramInput
 }
 
 export type ProgramUncheckedCreateWithoutFiguresInput = {
@@ -750,6 +978,8 @@ export type ProgramUncheckedCreateWithoutFiguresInput = {
   courses?: Prisma.CourseUncheckedCreateNestedManyWithoutProgramInput
   chapters?: Prisma.QuestionChapterUncheckedCreateNestedManyWithoutProgramInput
   passages?: Prisma.PassageUncheckedCreateNestedManyWithoutProgramInput
+  accesses?: Prisma.ProgramAccessUncheckedCreateNestedManyWithoutProgramInput
+  exercises?: Prisma.ExerciseUncheckedCreateNestedManyWithoutProgramInput
 }
 
 export type ProgramCreateOrConnectWithoutFiguresInput = {
@@ -780,6 +1010,8 @@ export type ProgramUpdateWithoutFiguresInput = {
   courses?: Prisma.CourseUpdateManyWithoutProgramNestedInput
   chapters?: Prisma.QuestionChapterUpdateManyWithoutProgramNestedInput
   passages?: Prisma.PassageUpdateManyWithoutProgramNestedInput
+  accesses?: Prisma.ProgramAccessUpdateManyWithoutProgramNestedInput
+  exercises?: Prisma.ExerciseUpdateManyWithoutProgramNestedInput
 }
 
 export type ProgramUncheckedUpdateWithoutFiguresInput = {
@@ -794,6 +1026,8 @@ export type ProgramUncheckedUpdateWithoutFiguresInput = {
   courses?: Prisma.CourseUncheckedUpdateManyWithoutProgramNestedInput
   chapters?: Prisma.QuestionChapterUncheckedUpdateManyWithoutProgramNestedInput
   passages?: Prisma.PassageUncheckedUpdateManyWithoutProgramNestedInput
+  accesses?: Prisma.ProgramAccessUncheckedUpdateManyWithoutProgramNestedInput
+  exercises?: Prisma.ExerciseUncheckedUpdateManyWithoutProgramNestedInput
 }
 
 
@@ -806,6 +1040,8 @@ export type ProgramCountOutputType = {
   chapters: number
   passages: number
   figures: number
+  accesses: number
+  exercises: number
 }
 
 export type ProgramCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -813,6 +1049,8 @@ export type ProgramCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   chapters?: boolean | ProgramCountOutputTypeCountChaptersArgs
   passages?: boolean | ProgramCountOutputTypeCountPassagesArgs
   figures?: boolean | ProgramCountOutputTypeCountFiguresArgs
+  accesses?: boolean | ProgramCountOutputTypeCountAccessesArgs
+  exercises?: boolean | ProgramCountOutputTypeCountExercisesArgs
 }
 
 /**
@@ -853,6 +1091,20 @@ export type ProgramCountOutputTypeCountFiguresArgs<ExtArgs extends runtime.Types
   where?: Prisma.QuestionFigureWhereInput
 }
 
+/**
+ * ProgramCountOutputType without action
+ */
+export type ProgramCountOutputTypeCountAccessesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProgramAccessWhereInput
+}
+
+/**
+ * ProgramCountOutputType without action
+ */
+export type ProgramCountOutputTypeCountExercisesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExerciseWhereInput
+}
+
 
 export type ProgramSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -867,6 +1119,8 @@ export type ProgramSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   chapters?: boolean | Prisma.Program$chaptersArgs<ExtArgs>
   passages?: boolean | Prisma.Program$passagesArgs<ExtArgs>
   figures?: boolean | Prisma.Program$figuresArgs<ExtArgs>
+  accesses?: boolean | Prisma.Program$accessesArgs<ExtArgs>
+  exercises?: boolean | Prisma.Program$exercisesArgs<ExtArgs>
   _count?: boolean | Prisma.ProgramCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["program"]>
 
@@ -909,6 +1163,8 @@ export type ProgramInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   chapters?: boolean | Prisma.Program$chaptersArgs<ExtArgs>
   passages?: boolean | Prisma.Program$passagesArgs<ExtArgs>
   figures?: boolean | Prisma.Program$figuresArgs<ExtArgs>
+  accesses?: boolean | Prisma.Program$accessesArgs<ExtArgs>
+  exercises?: boolean | Prisma.Program$exercisesArgs<ExtArgs>
   _count?: boolean | Prisma.ProgramCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProgramIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -921,6 +1177,8 @@ export type $ProgramPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     chapters: Prisma.$QuestionChapterPayload<ExtArgs>[]
     passages: Prisma.$PassagePayload<ExtArgs>[]
     figures: Prisma.$QuestionFigurePayload<ExtArgs>[]
+    accesses: Prisma.$ProgramAccessPayload<ExtArgs>[]
+    exercises: Prisma.$ExercisePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1329,6 +1587,8 @@ export interface Prisma__ProgramClient<T, Null = never, ExtArgs extends runtime.
   chapters<T extends Prisma.Program$chaptersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Program$chaptersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuestionChapterPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   passages<T extends Prisma.Program$passagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Program$passagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PassagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   figures<T extends Prisma.Program$figuresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Program$figuresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuestionFigurePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  accesses<T extends Prisma.Program$accessesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Program$accessesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProgramAccessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  exercises<T extends Prisma.Program$exercisesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Program$exercisesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExercisePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1852,6 +2112,54 @@ export type Program$figuresArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.QuestionFigureScalarFieldEnum | Prisma.QuestionFigureScalarFieldEnum[]
+}
+
+/**
+ * Program.accesses
+ */
+export type Program$accessesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProgramAccess
+   */
+  select?: Prisma.ProgramAccessSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProgramAccess
+   */
+  omit?: Prisma.ProgramAccessOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProgramAccessInclude<ExtArgs> | null
+  where?: Prisma.ProgramAccessWhereInput
+  orderBy?: Prisma.ProgramAccessOrderByWithRelationInput | Prisma.ProgramAccessOrderByWithRelationInput[]
+  cursor?: Prisma.ProgramAccessWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProgramAccessScalarFieldEnum | Prisma.ProgramAccessScalarFieldEnum[]
+}
+
+/**
+ * Program.exercises
+ */
+export type Program$exercisesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Exercise
+   */
+  select?: Prisma.ExerciseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Exercise
+   */
+  omit?: Prisma.ExerciseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExerciseInclude<ExtArgs> | null
+  where?: Prisma.ExerciseWhereInput
+  orderBy?: Prisma.ExerciseOrderByWithRelationInput | Prisma.ExerciseOrderByWithRelationInput[]
+  cursor?: Prisma.ExerciseWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExerciseScalarFieldEnum | Prisma.ExerciseScalarFieldEnum[]
 }
 
 /**

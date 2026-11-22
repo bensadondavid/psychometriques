@@ -59,13 +59,18 @@ export const ModelName = {
   Program: 'Program',
   Course: 'Course',
   Lesson: 'Lesson',
+  ProgramAccess: 'ProgramAccess',
   Exercise: 'Exercise',
+  LessonChapter: 'LessonChapter',
   QuestionChapter: 'QuestionChapter',
   Passage: 'Passage',
   Question: 'Question',
   QuestionOption: 'QuestionOption',
   QuestionFigure: 'QuestionFigure',
-  ExerciseQuestion: 'ExerciseQuestion'
+  ExerciseQuestion: 'ExerciseQuestion',
+  Attempt: 'Attempt',
+  AttemptQuestion: 'AttemptQuestion',
+  AttemptAnswer: 'AttemptAnswer'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -196,11 +201,14 @@ export type CourseScalarFieldEnum = (typeof CourseScalarFieldEnum)[keyof typeof 
 
 export const LessonScalarFieldEnum = {
   id: 'id',
+  programId: 'programId',
   courseId: 'courseId',
+  sourceId: 'sourceId',
   slug: 'slug',
   title: 'title',
   content: 'content',
   status: 'status',
+  contentVersion: 'contentVersion',
   sortOrder: 'sortOrder',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -209,14 +217,33 @@ export const LessonScalarFieldEnum = {
 export type LessonScalarFieldEnum = (typeof LessonScalarFieldEnum)[keyof typeof LessonScalarFieldEnum]
 
 
+export const ProgramAccessScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  programId: 'programId',
+  verifiedSubscriptionKey: 'verifiedSubscriptionKey',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  revokedAt: 'revokedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProgramAccessScalarFieldEnum = (typeof ProgramAccessScalarFieldEnum)[keyof typeof ProgramAccessScalarFieldEnum]
+
+
 export const ExerciseScalarFieldEnum = {
   id: 'id',
+  programId: 'programId',
   lessonId: 'lessonId',
+  chapterId: 'chapterId',
+  kind: 'kind',
   slug: 'slug',
   title: 'title',
   instructions: 'instructions',
   status: 'status',
   sortOrder: 'sortOrder',
+  timeLimitSeconds: 'timeLimitSeconds',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -224,9 +251,19 @@ export const ExerciseScalarFieldEnum = {
 export type ExerciseScalarFieldEnum = (typeof ExerciseScalarFieldEnum)[keyof typeof ExerciseScalarFieldEnum]
 
 
+export const LessonChapterScalarFieldEnum = {
+  lessonId: 'lessonId',
+  chapterId: 'chapterId',
+  courseId: 'courseId'
+} as const
+
+export type LessonChapterScalarFieldEnum = (typeof LessonChapterScalarFieldEnum)[keyof typeof LessonChapterScalarFieldEnum]
+
+
 export const QuestionChapterScalarFieldEnum = {
   id: 'id',
   programId: 'programId',
+  courseId: 'courseId',
   domain: 'domain',
   externalId: 'externalId',
   slug: 'slug',
@@ -250,6 +287,8 @@ export const PassageScalarFieldEnum = {
   estimatedLines: 'estimatedLines',
   language: 'language',
   status: 'status',
+  sourceStatus: 'sourceStatus',
+  editorialReviewedAt: 'editorialReviewedAt',
   sourceCreatedAt: 'sourceCreatedAt',
   sourceUpdatedAt: 'sourceUpdatedAt',
   sourceFile: 'sourceFile',
@@ -275,6 +314,8 @@ export const QuestionScalarFieldEnum = {
   explanation: 'explanation',
   language: 'language',
   status: 'status',
+  sourceStatus: 'sourceStatus',
+  editorialReviewedAt: 'editorialReviewedAt',
   imagePath: 'imagePath',
   imageAlt: 'imageAlt',
   sourceCreatedAt: 'sourceCreatedAt',
@@ -319,6 +360,7 @@ export type QuestionFigureScalarFieldEnum = (typeof QuestionFigureScalarFieldEnu
 export const ExerciseQuestionScalarFieldEnum = {
   id: 'id',
   exerciseId: 'exerciseId',
+  programId: 'programId',
   questionId: 'questionId',
   position: 'position',
   createdAt: 'createdAt',
@@ -328,12 +370,60 @@ export const ExerciseQuestionScalarFieldEnum = {
 export type ExerciseQuestionScalarFieldEnum = (typeof ExerciseQuestionScalarFieldEnum)[keyof typeof ExerciseQuestionScalarFieldEnum]
 
 
+export const AttemptScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  exerciseId: 'exerciseId',
+  mode: 'mode',
+  status: 'status',
+  claimTokenHash: 'claimTokenHash',
+  claimExpiresAt: 'claimExpiresAt',
+  startedAt: 'startedAt',
+  deadlineAt: 'deadlineAt',
+  completedAt: 'completedAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AttemptScalarFieldEnum = (typeof AttemptScalarFieldEnum)[keyof typeof AttemptScalarFieldEnum]
+
+
+export const AttemptQuestionScalarFieldEnum = {
+  id: 'id',
+  attemptId: 'attemptId',
+  questionId: 'questionId',
+  position: 'position',
+  questionVersion: 'questionVersion',
+  snapshot: 'snapshot'
+} as const
+
+export type AttemptQuestionScalarFieldEnum = (typeof AttemptQuestionScalarFieldEnum)[keyof typeof AttemptQuestionScalarFieldEnum]
+
+
+export const AttemptAnswerScalarFieldEnum = {
+  id: 'id',
+  attemptQuestionId: 'attemptQuestionId',
+  value: 'value',
+  isCorrect: 'isCorrect',
+  answeredAt: 'answeredAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AttemptAnswerScalarFieldEnum = (typeof AttemptAnswerScalarFieldEnum)[keyof typeof AttemptAnswerScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -350,4 +440,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

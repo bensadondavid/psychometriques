@@ -82,11 +82,23 @@ export async function importValidatedCsvRecords(
             programId: program.id,
             externalId: { in: passages.map((record) => record.externalId) },
           },
-          select: { externalId: true },
+          select: {
+            externalId: true, title: true, theme: true, text: true,
+            wordCount: true, estimatedLines: true,
+          },
         });
         const existingIds = new Set(
           existing.map((record) => record.externalId),
         );
+        const passageById = new Map(existing.map((record) => [record.externalId, record]));
+        const changedPassageIds = new Set(passages.filter((record) => {
+          const previous = passageById.get(record.externalId);
+          return previous && (
+            previous.title !== record.title || previous.theme !== record.theme ||
+            previous.text !== record.text || previous.wordCount !== record.wordCount ||
+            previous.estimatedLines !== record.estimatedLines
+          );
+        }).map((record) => record.externalId));
 
         for (const batch of chunks(passages, 500)) {
           const rows = batch.map((record) => ({
@@ -97,12 +109,12 @@ export async function importValidatedCsvRecords(
             `
               INSERT INTO "passage" (
                 "id", "programId", "externalId", "title", "theme", "text",
-                "wordCount", "estimatedLines", "language", "status",
+                "wordCount", "estimatedLines", "language", "status", "sourceStatus",
                 "sourceCreatedAt", "sourceUpdatedAt", "sourceFile", "createdAt", "updatedAt"
               )
               SELECT
                 x.id, $2, x.external_id, x.title, x.theme, x.body,
-                x.word_count, x.estimated_lines, 'fr', x.status::"ContentStatus",
+                x.word_count, x.estimated_lines, 'fr', 'DRAFT'::"ContentStatus", x.status::"ContentStatus",
                 x.source_created_at::timestamptz, x.source_updated_at::timestamptz,
                 x.source_file, now(), now()
               FROM jsonb_to_recordset($1::jsonb) AS x(
@@ -116,7 +128,15 @@ export async function importValidatedCsvRecords(
                 "text" = EXCLUDED."text",
                 "wordCount" = EXCLUDED."wordCount",
                 "estimatedLines" = EXCLUDED."estimatedLines",
-                "status" = EXCLUDED."status",
+                "sourceStatus" = EXCLUDED."sourceStatus",
+                "status" = CASE WHEN EXISTS (
+                  SELECT 1 FROM jsonb_array_elements_text($3::jsonb) changed(id)
+                  WHERE changed.id = "passage"."externalId"
+                ) THEN 'DRAFT'::"ContentStatus" ELSE "passage"."status" END,
+                "editorialReviewedAt" = CASE WHEN EXISTS (
+                  SELECT 1 FROM jsonb_array_elements_text($3::jsonb) changed(id)
+                  WHERE changed.id = "passage"."externalId"
+                ) THEN NULL ELSE "passage"."editorialReviewedAt" END,
                 "sourceCreatedAt" = EXCLUDED."sourceCreatedAt",
                 "sourceUpdatedAt" = EXCLUDED."sourceUpdatedAt",
                 "sourceFile" = EXCLUDED."sourceFile",
@@ -138,6 +158,7 @@ export async function importValidatedCsvRecords(
               })),
             ),
             program.id,
+            JSON.stringify(batch.map((record) => record.externalId).filter((id) => changedPassageIds.has(id))),
           );
         }
 
@@ -205,9 +226,31 @@ export async function importValidatedCsvRecords(
           programId: program.id,
           externalId: { in: questions.map((record) => record.externalId) },
         },
-        select: { externalId: true },
+        select: {
+          externalId: true, domain: true, type: true,
+          chapter: { select: { externalId: true } },
+          passage: { select: { externalId: true } }, subTheme: true,
+          difficulty: true, difficultyLabel: true, statement: true,
+          explanation: true, imagePath: true, imageAlt: true,
+          options: { orderBy: { position: "asc" }, select: { text: true, isCorrect: true } },
+        },
       });
       const existingIds = new Set(existing.map((record) => record.externalId));
+      const questionById = new Map(existing.map((record) => [record.externalId, record]));
+      const changedQuestionIds = new Set(questions.filter((record) => {
+        const previous = questionById.get(record.externalId);
+        if (!previous) return false;
+        return previous.domain !== configuration.domain || previous.type !== configuration.type ||
+          previous.chapter.externalId !== record.chapterExternalId ||
+          previous.passage?.externalId !== (record.passageExternalId ?? undefined) ||
+          previous.subTheme !== record.subTheme || previous.difficulty !== record.difficulty ||
+          previous.difficultyLabel !== record.difficultyLabel ||
+          previous.statement !== record.statement || previous.explanation !== record.explanation ||
+          previous.imagePath !== record.imagePath || previous.imageAlt !== record.imageAlt ||
+          previous.options.length !== record.choices.length ||
+          previous.options.some((option, index) =>
+            option.text !== record.choices[index] || option.isCorrect !== (index + 1 === record.correctChoice));
+      }).map((record) => record.externalId));
 
       for (const batch of chunks(questions, 500)) {
         const rows = batch.map((record) => ({
@@ -219,13 +262,13 @@ export async function importValidatedCsvRecords(
             INSERT INTO "question" (
               "id", "programId", "chapterId", "passageId", "externalId", "domain", "type",
               "subTheme", "difficulty", "difficultyLabel", "statement", "explanation", "language",
-              "status", "imagePath", "imageAlt", "sourceCreatedAt", "sourceUpdatedAt", "sourceFile",
+              "status", "sourceStatus", "imagePath", "imageAlt", "sourceCreatedAt", "sourceUpdatedAt", "sourceFile",
               "version", "createdAt", "updatedAt"
             )
             SELECT
               x.id, $2, chapter.id, passage.id, x.external_id,
               $3::"QuestionDomain", $4::"QuestionType", x.sub_theme, x.difficulty,
-              x.difficulty_label, x.statement, x.explanation, 'fr', x.status::"QuestionStatus",
+              x.difficulty_label, x.statement, x.explanation, 'fr', 'DRAFT'::"QuestionStatus", x.status::"QuestionStatus",
               x.image_path, x.image_alt, x.source_created_at::timestamptz,
               x.source_updated_at::timestamptz, x.source_file, 1, now(), now()
             FROM jsonb_to_recordset($1::jsonb) AS x(
@@ -251,13 +294,24 @@ export async function importValidatedCsvRecords(
               "difficultyLabel" = EXCLUDED."difficultyLabel",
               "statement" = EXCLUDED."statement",
               "explanation" = EXCLUDED."explanation",
-              "status" = EXCLUDED."status",
+              "sourceStatus" = EXCLUDED."sourceStatus",
+              "status" = CASE WHEN EXISTS (
+                SELECT 1 FROM jsonb_array_elements_text($5::jsonb) changed(id)
+                WHERE changed.id = "question"."externalId"
+              ) THEN 'DRAFT'::"QuestionStatus" ELSE "question"."status" END,
+              "editorialReviewedAt" = CASE WHEN EXISTS (
+                SELECT 1 FROM jsonb_array_elements_text($5::jsonb) changed(id)
+                WHERE changed.id = "question"."externalId"
+              ) THEN NULL ELSE "question"."editorialReviewedAt" END,
               "imagePath" = EXCLUDED."imagePath",
               "imageAlt" = EXCLUDED."imageAlt",
               "sourceCreatedAt" = EXCLUDED."sourceCreatedAt",
               "sourceUpdatedAt" = EXCLUDED."sourceUpdatedAt",
               "sourceFile" = EXCLUDED."sourceFile",
-              "version" = "question"."version" + 1,
+              "version" = CASE WHEN EXISTS (
+                SELECT 1 FROM jsonb_array_elements_text($5::jsonb) changed(id)
+                WHERE changed.id = "question"."externalId"
+              ) THEN "question"."version" + 1 ELSE "question"."version" END,
               "updatedAt" = now()
           `,
           JSON.stringify(
@@ -282,6 +336,7 @@ export async function importValidatedCsvRecords(
           program.id,
           configuration.domain,
           configuration.type,
+          JSON.stringify(batch.map((record) => record.externalId).filter((id) => changedQuestionIds.has(id))),
         );
       }
 
@@ -292,18 +347,22 @@ export async function importValidatedCsvRecords(
         },
         select: { id: true, externalId: true },
       });
-      const questionIds = importedQuestions.map((question) => question.id);
+      const refreshedQuestionIds = importedQuestions
+        .filter((question) => !existingIds.has(question.externalId) || changedQuestionIds.has(question.externalId))
+        .map((question) => question.id);
       const idByExternalId = new Map(
         importedQuestions.map((question) => [question.externalId, question.id]),
       );
 
-      for (const batch of chunks(questionIds, 500)) {
+      for (const batch of chunks(refreshedQuestionIds, 500)) {
         await transaction.questionOption.deleteMany({
           where: { questionId: { in: batch } },
         });
       }
 
-      const questionOptions = questions.flatMap((record) => {
+      const questionOptions = questions.filter((record) =>
+        !existingIds.has(record.externalId) || changedQuestionIds.has(record.externalId)
+      ).flatMap((record) => {
         const questionId = idByExternalId.get(record.externalId);
         if (!questionId)
           throw new Error(`QUESTION_NOT_IMPORTED:${record.externalId}`);

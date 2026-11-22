@@ -7,7 +7,7 @@ const dispositifs = [
   {
     titre: "S’exercer",
     texte:
-      "Travailler par compétence, puis réunir les acquis dans des séries chronométrées.",
+      "Travailler par compétence, puis réunir les acquis dans des séries préparées.",
   },
   {
     titre: "Corriger",
@@ -31,7 +31,7 @@ export function AccueilPedagogie() {
       <div className="mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24 lg:px-12">
         <div>
           <p className="text-xs font-semibold tracking-[0.14em] uppercase text-[#e7c68f]">
-            La méthode
+            La méthode prévue
           </p>
           <h2
             id="pedagogie-title"

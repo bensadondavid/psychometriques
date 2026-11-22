@@ -13,7 +13,7 @@ export function AccueilFaq() {
             Une question avant de commencer ?
           </h2>
           <p className="mt-2 text-sm text-[#524344]">
-            Organisation des parcours, compte et paiement : les réponses sont
+            Organisation des parcours, leçons et compte : les réponses sont
             réunies au même endroit.
           </p>
         </div>

@@ -19,6 +19,10 @@ import { cn } from "@/lib/utils";
 const navigation = [
   { href: "/", label: "Accueil" },
   { href: "/examens", label: "Les examens" },
+  { href: "/psychometriques", label: "Psychométriques" },
+  { href: "/langues", label: "AMIRNET & YAELNET" },
+  { href: "/tarifs", label: "Tarifs" },
+  { href: "/faq", label: "Questions fréquentes" },
 ] as const;
 
 function isCurrentPath(pathname: string, href: string) {

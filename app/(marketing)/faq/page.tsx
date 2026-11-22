@@ -4,11 +4,8 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Questions fréquentes | Psychometriques.fr",
   description:
-    "Réponses sur les préparations Psychométriques, AMIRNET et YAEL/YAELNET : organisation des séances, contenus en hébreu, chronomètre, packs et compte.",
+    "Réponses sur les parcours Psychométriques, AMIRNET et YAELNET, les leçons, le compte et les fonctionnalités en préparation.",
 };
-
-// À remplacer par ton adresse de support réelle.
-const CONTACT_EMAIL = "contact@psychometriques.fr";
 
 type Group = { id: string; title: string; items: { q: string; a: string }[] };
 
@@ -18,16 +15,16 @@ const groups: Group[] = [
     title: "Les préparations",
     items: [
       {
-        q: "Quelles préparations sont accessibles sur la plateforme ?",
-        a: "Les préparations Psychométriques, AMIRNET et YAEL/YAELNET sont accessibles depuis le même espace. Vous pouvez rejoindre directement le parcours correspondant à votre objectif.",
+        q: "Quels examens sont présentés sur la plateforme ?",
+        a: "Le site présente trois parcours distincts : Psychométriques, AMIRNET et YAELNET. Leurs séries de découverte et d'entraînement sont encore en préparation.",
       },
       {
         q: "Puis-je préparer plusieurs examens depuis le même compte ?",
-        a: "Oui. Les packs permettent de réunir Psychométriques, AMIRNET et YAEL/YAELNET dans le même espace personnel, selon la formule choisie.",
+        a: "Oui. Un même compte donne accès à l'espace personnel. Les règles d'accès aux futures séries et aux éventuelles offres restent à définir.",
       },
       {
-        q: "Dois-je préparer tous les examens ?",
-        a: "Non. Vous pouvez choisir un seul parcours, le pack langues (AMIRNET et YAELNET) ou la préparation complète.",
+        q: "Une leçon est-elle déjà disponible ?",
+        a: "La première leçon de réflexion quantitative, « Les nombres », est réservée aux comptes disposant d'un accès Psychométriques actif. Ses ateliers proposent des indices et des corrigés ; les réponses ne sont pas encore enregistrées.",
       },
     ],
   },
@@ -37,19 +34,19 @@ const groups: Group[] = [
     items: [
       {
         q: "Comment s'organise une séance de travail ?",
-        a: "La progression suit trois temps : un cours pose la notion, un exercice permet de l'appliquer et la correction détaille la méthode utile.",
+        a: "Le parcours prévu permet d'essayer une courte série sans compte, de voir le résultat et les explications, puis de créer un compte pour sauvegarder et continuer. Cette série découverte n'est pas encore disponible.",
       },
       {
         q: "Puis-je avancer à mon propre rythme ?",
-        a: "Oui. Vous pouvez organiser votre travail par notion, poursuivre un parcours complet ou revenir sur une compétence qui demande davantage d'entraînement.",
+        a: "La leçon disponible peut être lue librement. La reprise des séries interrompues et le suivi des erreurs font partie du parcours à construire.",
       },
       {
         q: "Que contient une correction détaillée ?",
-        a: "La correction présente le raisonnement utile, les étapes de résolution, le raccourci à retenir et les erreurs qui conduisent aux principaux distracteurs.",
+        a: "Dans la leçon « Les nombres », les ateliers proposent des indices et des raisonnements repliables. Les corrections des futures séries seront conçues avec les questions validées.",
       },
       {
         q: "Comment utiliser les entraînements chronométrés ?",
-        a: "Commencez par maîtriser la méthode sans pression, puis activez progressivement le chronomètre pour travailler la vitesse de décision et la gestion du temps.",
+        a: "Le mode chronométré est prévu pour les futures séries d'entraînement ; il n'est pas encore actif.",
       },
     ],
   },
@@ -59,25 +56,25 @@ const groups: Group[] = [
     items: [
       {
         q: "Comment sont présentées les questions en hébreu ?",
-        a: "L'interface reste francophone tandis que les contenus en hébreu conservent leur sens de lecture de droite à gauche (RTL) et une mise en page adaptée.",
+        a: "L'interface est en français. Les futurs blocs de contenu en hébreu seront affichés de droite à gauche, sans inverser toute l'interface.",
       },
       {
         q: "Les explications sont-elles en français pour AMIRNET et YAEL ?",
-        a: "Oui. Les cours et les corrections sont en français. Seuls les énoncés d'exercice sont en anglais (AMIRNET) ou en hébreu (YAEL/YAELNET).",
+        a: "Les explications sont prévues en français ; les contenus de question en anglais ou en hébreu devront être vérifiés avant publication.",
       },
     ],
   },
   {
     id: "compte-paiement",
-    title: "Compte et paiement",
+    title: "Compte et tarifs",
     items: [
       {
-        q: "Comment fonctionne l'abonnement ?",
-        a: "Les tarifs affichés sont mensuels en shekels. La page Tarifs détaille les cinq offres pour choisir la préparation adaptée à votre objectif.",
+        q: "Les prix et le paiement sont-ils déjà fixés ?",
+        a: "L'accès aux leçons Psychométriques nécessitera un abonnement Psychométriques actif. Le fournisseur de paiement, les prix et le regroupement éventuel des offres restent à décider. Aucun paiement n'est disponible actuellement.",
       },
       {
-        q: "Comment contacter l'équipe en cas de question ou de problème ?",
-        a: `Écrivez-nous par e-mail à ${CONTACT_EMAIL}. Indiquez l'adresse de votre compte et décrivez votre demande pour accélérer la réponse.`,
+        q: "Faut-il un compte pour consulter une leçon ?",
+        a: "La leçon se trouve dans l'espace compte, mais une simple connexion ne suffit pas : un accès Psychométriques actif est requis.",
       },
     ],
   },
@@ -164,21 +161,15 @@ export default function FaqPage() {
       <section className="bg-primary text-primary-foreground">
         <div className="mx-auto flex max-w-6xl flex-col items-start gap-8 px-6 py-16 md:flex-row md:items-center md:justify-between">
           <p className="max-w-xl font-serif text-3xl leading-tight md:text-4xl">
-            Prêt à commencer votre préparation ?
+            Vous souhaitez découvrir les parcours ?
           </p>
           <div className="flex flex-col items-start gap-4">
             <Link
-              href="/sign-up"
+              href="/examens"
               className={`${linkBase} bg-accent text-accent-foreground hover:bg-accent/85 focus-visible:outline-accent`}
             >
-              Créer mon compte
+              Voir les examens
             </Link>
-            <a
-              href={`mailto:${CONTACT_EMAIL}`}
-              className="text-sm text-primary-foreground/75 underline underline-offset-4 hover:text-primary-foreground focus-visible:outline-2 focus-visible:outline-accent"
-            >
-              Une question ? {CONTACT_EMAIL}
-            </a>
           </div>
         </div>
       </section>

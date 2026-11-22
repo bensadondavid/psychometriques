@@ -47,6 +47,8 @@ export type PassageMinAggregateOutputType = {
   estimatedLines: number | null
   language: string | null
   status: $Enums.ContentStatus | null
+  sourceStatus: $Enums.ContentStatus | null
+  editorialReviewedAt: Date | null
   sourceCreatedAt: Date | null
   sourceUpdatedAt: Date | null
   sourceFile: string | null
@@ -65,6 +67,8 @@ export type PassageMaxAggregateOutputType = {
   estimatedLines: number | null
   language: string | null
   status: $Enums.ContentStatus | null
+  sourceStatus: $Enums.ContentStatus | null
+  editorialReviewedAt: Date | null
   sourceCreatedAt: Date | null
   sourceUpdatedAt: Date | null
   sourceFile: string | null
@@ -83,6 +87,8 @@ export type PassageCountAggregateOutputType = {
   estimatedLines: number
   language: number
   status: number
+  sourceStatus: number
+  editorialReviewedAt: number
   sourceCreatedAt: number
   sourceUpdatedAt: number
   sourceFile: number
@@ -113,6 +119,8 @@ export type PassageMinAggregateInputType = {
   estimatedLines?: true
   language?: true
   status?: true
+  sourceStatus?: true
+  editorialReviewedAt?: true
   sourceCreatedAt?: true
   sourceUpdatedAt?: true
   sourceFile?: true
@@ -131,6 +139,8 @@ export type PassageMaxAggregateInputType = {
   estimatedLines?: true
   language?: true
   status?: true
+  sourceStatus?: true
+  editorialReviewedAt?: true
   sourceCreatedAt?: true
   sourceUpdatedAt?: true
   sourceFile?: true
@@ -149,6 +159,8 @@ export type PassageCountAggregateInputType = {
   estimatedLines?: true
   language?: true
   status?: true
+  sourceStatus?: true
+  editorialReviewedAt?: true
   sourceCreatedAt?: true
   sourceUpdatedAt?: true
   sourceFile?: true
@@ -254,6 +266,8 @@ export type PassageGroupByOutputType = {
   estimatedLines: number
   language: string
   status: $Enums.ContentStatus
+  sourceStatus: $Enums.ContentStatus
+  editorialReviewedAt: Date | null
   sourceCreatedAt: Date
   sourceUpdatedAt: Date
   sourceFile: string | null
@@ -295,6 +309,8 @@ export type PassageWhereInput = {
   estimatedLines?: Prisma.IntFilter<"Passage"> | number
   language?: Prisma.StringFilter<"Passage"> | string
   status?: Prisma.EnumContentStatusFilter<"Passage"> | $Enums.ContentStatus
+  sourceStatus?: Prisma.EnumContentStatusFilter<"Passage"> | $Enums.ContentStatus
+  editorialReviewedAt?: Prisma.DateTimeNullableFilter<"Passage"> | Date | string | null
   sourceCreatedAt?: Prisma.DateTimeFilter<"Passage"> | Date | string
   sourceUpdatedAt?: Prisma.DateTimeFilter<"Passage"> | Date | string
   sourceFile?: Prisma.StringNullableFilter<"Passage"> | string | null
@@ -315,6 +331,8 @@ export type PassageOrderByWithRelationInput = {
   estimatedLines?: Prisma.SortOrder
   language?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  sourceStatus?: Prisma.SortOrder
+  editorialReviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceCreatedAt?: Prisma.SortOrder
   sourceUpdatedAt?: Prisma.SortOrder
   sourceFile?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -340,6 +358,8 @@ export type PassageWhereUniqueInput = Prisma.AtLeast<{
   estimatedLines?: Prisma.IntFilter<"Passage"> | number
   language?: Prisma.StringFilter<"Passage"> | string
   status?: Prisma.EnumContentStatusFilter<"Passage"> | $Enums.ContentStatus
+  sourceStatus?: Prisma.EnumContentStatusFilter<"Passage"> | $Enums.ContentStatus
+  editorialReviewedAt?: Prisma.DateTimeNullableFilter<"Passage"> | Date | string | null
   sourceCreatedAt?: Prisma.DateTimeFilter<"Passage"> | Date | string
   sourceUpdatedAt?: Prisma.DateTimeFilter<"Passage"> | Date | string
   sourceFile?: Prisma.StringNullableFilter<"Passage"> | string | null
@@ -360,6 +380,8 @@ export type PassageOrderByWithAggregationInput = {
   estimatedLines?: Prisma.SortOrder
   language?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  sourceStatus?: Prisma.SortOrder
+  editorialReviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceCreatedAt?: Prisma.SortOrder
   sourceUpdatedAt?: Prisma.SortOrder
   sourceFile?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -386,6 +408,8 @@ export type PassageScalarWhereWithAggregatesInput = {
   estimatedLines?: Prisma.IntWithAggregatesFilter<"Passage"> | number
   language?: Prisma.StringWithAggregatesFilter<"Passage"> | string
   status?: Prisma.EnumContentStatusWithAggregatesFilter<"Passage"> | $Enums.ContentStatus
+  sourceStatus?: Prisma.EnumContentStatusWithAggregatesFilter<"Passage"> | $Enums.ContentStatus
+  editorialReviewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Passage"> | Date | string | null
   sourceCreatedAt?: Prisma.DateTimeWithAggregatesFilter<"Passage"> | Date | string
   sourceUpdatedAt?: Prisma.DateTimeWithAggregatesFilter<"Passage"> | Date | string
   sourceFile?: Prisma.StringNullableWithAggregatesFilter<"Passage"> | string | null
@@ -403,6 +427,8 @@ export type PassageCreateInput = {
   estimatedLines: number
   language?: string
   status?: $Enums.ContentStatus
+  sourceStatus?: $Enums.ContentStatus
+  editorialReviewedAt?: Date | string | null
   sourceCreatedAt: Date | string
   sourceUpdatedAt: Date | string
   sourceFile?: string | null
@@ -423,6 +449,8 @@ export type PassageUncheckedCreateInput = {
   estimatedLines: number
   language?: string
   status?: $Enums.ContentStatus
+  sourceStatus?: $Enums.ContentStatus
+  editorialReviewedAt?: Date | string | null
   sourceCreatedAt: Date | string
   sourceUpdatedAt: Date | string
   sourceFile?: string | null
@@ -441,6 +469,8 @@ export type PassageUpdateInput = {
   estimatedLines?: Prisma.IntFieldUpdateOperationsInput | number
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sourceStatus?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceUpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -461,6 +491,8 @@ export type PassageUncheckedUpdateInput = {
   estimatedLines?: Prisma.IntFieldUpdateOperationsInput | number
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sourceStatus?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceUpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -480,6 +512,8 @@ export type PassageCreateManyInput = {
   estimatedLines: number
   language?: string
   status?: $Enums.ContentStatus
+  sourceStatus?: $Enums.ContentStatus
+  editorialReviewedAt?: Date | string | null
   sourceCreatedAt: Date | string
   sourceUpdatedAt: Date | string
   sourceFile?: string | null
@@ -497,6 +531,8 @@ export type PassageUpdateManyMutationInput = {
   estimatedLines?: Prisma.IntFieldUpdateOperationsInput | number
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sourceStatus?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceUpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -515,6 +551,8 @@ export type PassageUncheckedUpdateManyInput = {
   estimatedLines?: Prisma.IntFieldUpdateOperationsInput | number
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sourceStatus?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceUpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -553,6 +591,8 @@ export type PassageCountOrderByAggregateInput = {
   estimatedLines?: Prisma.SortOrder
   language?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  sourceStatus?: Prisma.SortOrder
+  editorialReviewedAt?: Prisma.SortOrder
   sourceCreatedAt?: Prisma.SortOrder
   sourceUpdatedAt?: Prisma.SortOrder
   sourceFile?: Prisma.SortOrder
@@ -576,6 +616,8 @@ export type PassageMaxOrderByAggregateInput = {
   estimatedLines?: Prisma.SortOrder
   language?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  sourceStatus?: Prisma.SortOrder
+  editorialReviewedAt?: Prisma.SortOrder
   sourceCreatedAt?: Prisma.SortOrder
   sourceUpdatedAt?: Prisma.SortOrder
   sourceFile?: Prisma.SortOrder
@@ -594,6 +636,8 @@ export type PassageMinOrderByAggregateInput = {
   estimatedLines?: Prisma.SortOrder
   language?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  sourceStatus?: Prisma.SortOrder
+  editorialReviewedAt?: Prisma.SortOrder
   sourceCreatedAt?: Prisma.SortOrder
   sourceUpdatedAt?: Prisma.SortOrder
   sourceFile?: Prisma.SortOrder
@@ -679,6 +723,8 @@ export type PassageCreateWithoutProgramInput = {
   estimatedLines: number
   language?: string
   status?: $Enums.ContentStatus
+  sourceStatus?: $Enums.ContentStatus
+  editorialReviewedAt?: Date | string | null
   sourceCreatedAt: Date | string
   sourceUpdatedAt: Date | string
   sourceFile?: string | null
@@ -697,6 +743,8 @@ export type PassageUncheckedCreateWithoutProgramInput = {
   estimatedLines: number
   language?: string
   status?: $Enums.ContentStatus
+  sourceStatus?: $Enums.ContentStatus
+  editorialReviewedAt?: Date | string | null
   sourceCreatedAt: Date | string
   sourceUpdatedAt: Date | string
   sourceFile?: string | null
@@ -745,6 +793,8 @@ export type PassageScalarWhereInput = {
   estimatedLines?: Prisma.IntFilter<"Passage"> | number
   language?: Prisma.StringFilter<"Passage"> | string
   status?: Prisma.EnumContentStatusFilter<"Passage"> | $Enums.ContentStatus
+  sourceStatus?: Prisma.EnumContentStatusFilter<"Passage"> | $Enums.ContentStatus
+  editorialReviewedAt?: Prisma.DateTimeNullableFilter<"Passage"> | Date | string | null
   sourceCreatedAt?: Prisma.DateTimeFilter<"Passage"> | Date | string
   sourceUpdatedAt?: Prisma.DateTimeFilter<"Passage"> | Date | string
   sourceFile?: Prisma.StringNullableFilter<"Passage"> | string | null
@@ -762,6 +812,8 @@ export type PassageCreateWithoutQuestionsInput = {
   estimatedLines: number
   language?: string
   status?: $Enums.ContentStatus
+  sourceStatus?: $Enums.ContentStatus
+  editorialReviewedAt?: Date | string | null
   sourceCreatedAt: Date | string
   sourceUpdatedAt: Date | string
   sourceFile?: string | null
@@ -781,6 +833,8 @@ export type PassageUncheckedCreateWithoutQuestionsInput = {
   estimatedLines: number
   language?: string
   status?: $Enums.ContentStatus
+  sourceStatus?: $Enums.ContentStatus
+  editorialReviewedAt?: Date | string | null
   sourceCreatedAt: Date | string
   sourceUpdatedAt: Date | string
   sourceFile?: string | null
@@ -814,6 +868,8 @@ export type PassageUpdateWithoutQuestionsInput = {
   estimatedLines?: Prisma.IntFieldUpdateOperationsInput | number
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sourceStatus?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceUpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -833,6 +889,8 @@ export type PassageUncheckedUpdateWithoutQuestionsInput = {
   estimatedLines?: Prisma.IntFieldUpdateOperationsInput | number
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sourceStatus?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceUpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -850,6 +908,8 @@ export type PassageCreateManyProgramInput = {
   estimatedLines: number
   language?: string
   status?: $Enums.ContentStatus
+  sourceStatus?: $Enums.ContentStatus
+  editorialReviewedAt?: Date | string | null
   sourceCreatedAt: Date | string
   sourceUpdatedAt: Date | string
   sourceFile?: string | null
@@ -867,6 +927,8 @@ export type PassageUpdateWithoutProgramInput = {
   estimatedLines?: Prisma.IntFieldUpdateOperationsInput | number
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sourceStatus?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceUpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -885,6 +947,8 @@ export type PassageUncheckedUpdateWithoutProgramInput = {
   estimatedLines?: Prisma.IntFieldUpdateOperationsInput | number
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sourceStatus?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceUpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -903,6 +967,8 @@ export type PassageUncheckedUpdateManyWithoutProgramInput = {
   estimatedLines?: Prisma.IntFieldUpdateOperationsInput | number
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sourceStatus?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceUpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -952,6 +1018,8 @@ export type PassageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   estimatedLines?: boolean
   language?: boolean
   status?: boolean
+  sourceStatus?: boolean
+  editorialReviewedAt?: boolean
   sourceCreatedAt?: boolean
   sourceUpdatedAt?: boolean
   sourceFile?: boolean
@@ -973,6 +1041,8 @@ export type PassageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   estimatedLines?: boolean
   language?: boolean
   status?: boolean
+  sourceStatus?: boolean
+  editorialReviewedAt?: boolean
   sourceCreatedAt?: boolean
   sourceUpdatedAt?: boolean
   sourceFile?: boolean
@@ -992,6 +1062,8 @@ export type PassageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   estimatedLines?: boolean
   language?: boolean
   status?: boolean
+  sourceStatus?: boolean
+  editorialReviewedAt?: boolean
   sourceCreatedAt?: boolean
   sourceUpdatedAt?: boolean
   sourceFile?: boolean
@@ -1011,6 +1083,8 @@ export type PassageSelectScalar = {
   estimatedLines?: boolean
   language?: boolean
   status?: boolean
+  sourceStatus?: boolean
+  editorialReviewedAt?: boolean
   sourceCreatedAt?: boolean
   sourceUpdatedAt?: boolean
   sourceFile?: boolean
@@ -1018,7 +1092,7 @@ export type PassageSelectScalar = {
   updatedAt?: boolean
 }
 
-export type PassageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "programId" | "externalId" | "title" | "theme" | "text" | "wordCount" | "estimatedLines" | "language" | "status" | "sourceCreatedAt" | "sourceUpdatedAt" | "sourceFile" | "createdAt" | "updatedAt", ExtArgs["result"]["passage"]>
+export type PassageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "programId" | "externalId" | "title" | "theme" | "text" | "wordCount" | "estimatedLines" | "language" | "status" | "sourceStatus" | "editorialReviewedAt" | "sourceCreatedAt" | "sourceUpdatedAt" | "sourceFile" | "createdAt" | "updatedAt", ExtArgs["result"]["passage"]>
 export type PassageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   program?: boolean | Prisma.ProgramDefaultArgs<ExtArgs>
   questions?: boolean | Prisma.Passage$questionsArgs<ExtArgs>
@@ -1048,6 +1122,8 @@ export type $PassagePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     estimatedLines: number
     language: string
     status: $Enums.ContentStatus
+    sourceStatus: $Enums.ContentStatus
+    editorialReviewedAt: Date | null
     sourceCreatedAt: Date
     sourceUpdatedAt: Date
     sourceFile: string | null
@@ -1488,6 +1564,8 @@ export interface PassageFieldRefs {
   readonly estimatedLines: Prisma.FieldRef<"Passage", 'Int'>
   readonly language: Prisma.FieldRef<"Passage", 'String'>
   readonly status: Prisma.FieldRef<"Passage", 'ContentStatus'>
+  readonly sourceStatus: Prisma.FieldRef<"Passage", 'ContentStatus'>
+  readonly editorialReviewedAt: Prisma.FieldRef<"Passage", 'DateTime'>
   readonly sourceCreatedAt: Prisma.FieldRef<"Passage", 'DateTime'>
   readonly sourceUpdatedAt: Prisma.FieldRef<"Passage", 'DateTime'>
   readonly sourceFile: Prisma.FieldRef<"Passage", 'String'>

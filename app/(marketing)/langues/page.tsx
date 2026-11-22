@@ -4,36 +4,36 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Préparer AMIRNET et YAEL/YAELNET | Psychometriques.fr",
   description:
-    "Préparez l'anglais académique (AMIRNET) et la certification d'hébreu (YAEL/YAELNET) depuis une interface francophone, avec contenus hébreux en lecture RTL.",
+    "Découvrez les parcours distincts AMIRNET et YAELNET, présentés en français avec des exemples de questions en anglais et en hébreu.",
 };
 
 const amirnet = [
   {
     title: "Sentence completions",
-    text: "Choisir le mot qui complète la phrase. Vous apprenez à lire les indices de sens et de construction avant de regarder les propositions.",
+    text: "Choisir le mot qui complète la phrase, en lisant les indices de sens et de construction avant les propositions.",
   },
   {
     title: "Restatements",
-    text: "Repérer la reformulation fidèle d'une phrase. Les corrections expliquent pourquoi chaque distracteur change subtilement le sens.",
+    text: "Repérer la reformulation fidèle d'une phrase et comprendre comment un distracteur peut changer le sens.",
   },
   {
     title: "Reading comprehension",
-    text: "Lire un texte académique, situer l'information, justifier la réponse. Chaque série travaille la rapidité sans sacrifier la précision.",
+    text: "Lire un texte académique, situer l'information et justifier la réponse.",
   },
 ];
 
 const yael = [
   {
     title: "Compréhension",
-    text: "Textes hébreux et questions de lecture, présentés dans leur sens naturel, de droite à gauche.",
+    text: "Les futurs textes hébreux et questions de lecture devront être présentés de droite à gauche.",
   },
   {
     title: "Grammaire",
-    text: "Conjugaison, accords, structures de phrase : chaque règle est expliquée en français, puis appliquée en hébreu.",
+    text: "Conjugaison, accords et structures de phrase : des thèmes prévus pour le parcours en hébreu.",
   },
   {
     title: "Expression écrite",
-    text: "Rédiger un texte clair en hébreu, avec des corrections qui montrent comment reformuler.",
+    text: "La rédaction en hébreu est prévue ; son mode de correction reste à définir.",
   },
 ];
 
@@ -50,15 +50,15 @@ export default function LanguesPage() {
             Deux langues, une seule méthode.
           </h1>
           <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground">
-            Préparez AMIRNET pour l&apos;anglais académique et YAEL/YAELNET pour
-            l&apos;hébreu, avec des explications en français du début à la fin.
+            Découvrez deux parcours distincts : AMIRNET pour l&apos;anglais et
+            YAELNET pour l&apos;hébreu. Les séries et leurs corrections sont en préparation.
           </p>
           <div className="mt-10 flex flex-wrap gap-3">
             <Link
-              href="/sign-up"
+              href="/examens"
               className={`${linkBase} bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:outline-primary`}
             >
-              Créer mon compte
+              Choisir un examen
             </Link>
             <Link
               href="#amirnet"
@@ -71,7 +71,7 @@ export default function LanguesPage() {
           <div className="mt-16 grid gap-6 md:grid-cols-2">
             <figure className="border-t-2 border-primary bg-card p-6 md:p-8">
               <figcaption className="text-xs text-muted-foreground">
-                AMIRNET · Sentence completion (exemple)
+                AMIRNET · Exemple illustratif
               </figcaption>
               <p lang="en" className="mt-4 font-serif text-2xl leading-snug">
                 Despite the initial ________, the findings were eventually
@@ -91,7 +91,7 @@ export default function LanguesPage() {
 
             <figure className="border-t-2 border-primary bg-card p-6 md:p-8">
               <figcaption className="text-xs text-muted-foreground">
-                YAEL · Grammaire (exemple)
+                YAELNET · Exemple illustratif
               </figcaption>
               <p
                 dir="rtl"
@@ -128,8 +128,8 @@ export default function LanguesPage() {
               AMIRNET
             </h2>
             <p className="mt-4 leading-relaxed text-muted-foreground">
-              Anglais académique : trois types de questions, travaillés
-              séparément puis ensemble.
+              Anglais académique : trois types de questions à travailler
+              séparément puis ensemble dans le parcours prévu.
             </p>
           </div>
           <div className="border-t border-border">
@@ -154,8 +154,8 @@ export default function LanguesPage() {
                 YAEL &amp; YAELNET
               </h2>
               <p className="mt-4 leading-relaxed text-primary-foreground/75">
-                Certification d&apos;hébreu : une progression pas à pas, avec
-                des contenus adaptés à la lecture RTL.
+                Hébreu : une progression pas à pas est prévue, avec des contenus
+                adaptés à la lecture de droite à gauche.
               </p>
             </div>
             <div className="border-t border-primary-foreground/20">
@@ -175,16 +175,16 @@ export default function LanguesPage() {
         </div>
       </section>
 
-      {/* Pack langues */}
+      {/* Parcours distincts */}
       <section className="bg-secondary">
         <div className="mx-auto grid max-w-6xl gap-10 px-6 py-20 md:grid-cols-2 md:items-center md:py-28">
           <div>
             <h2 className="font-serif text-4xl leading-tight tracking-tight md:text-5xl">
-              Pack langues
+              Deux parcours distincts
             </h2>
             <p className="mt-4 max-w-prose leading-relaxed text-secondary-foreground/75">
-              Réunissez AMIRNET et YAEL/YAELNET dans un seul parcours de
-              travail, depuis le même espace personnel.
+              AMIRNET et YAELNET disposent chacun d&apos;une présentation. Leurs
+              futures séries de découverte seront propres à chaque examen.
             </p>
           </div>
           <div className="bg-card p-8">
@@ -195,15 +195,13 @@ export default function LanguesPage() {
               <li className="border-l-2 border-accent pl-3">
                 Préparation YAEL &amp; YAELNET
               </li>
-              <li className="border-l-2 border-accent pl-3">
-                Exercices et corrections dédiés
-              </li>
+              <li className="border-l-2 border-accent pl-3">Séries en préparation</li>
             </ul>
             <Link
-              href="/sign-up?offer=langues"
+              href="/examens"
               className={`${linkBase} mt-8 bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:outline-primary`}
             >
-              Choisir ce pack
+              Voir les examens
             </Link>
           </div>
         </div>

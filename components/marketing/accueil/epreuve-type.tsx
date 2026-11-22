@@ -46,16 +46,16 @@ export function AccueilEpreuveType() {
             Une question, du raisonnement à la réponse.
           </h2>
           <p className="max-w-2xl text-base leading-[1.65] text-[#524344]">
-            Une question complète, sa représentation et le raisonnement qui
-            permet d’arriver à la réponse sans détour.
+            Un exemple illustratif, sa représentation et le raisonnement qui
+            permet d’arriver à la réponse. Il ne fait pas partie d’une série publiée.
           </p>
         </header>
 
         <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-12">
           <article className="space-y-6 rounded-sm bg-white p-6 shadow-[0_4px_20px_rgba(42,33,29,0.08)] sm:p-8 lg:col-span-7">
             <div className="flex flex-col justify-between gap-2 border-b border-[#e7e2d9] pb-4 font-mono text-xs tracking-[0.05em] text-[#4e5e7f] uppercase sm:flex-row">
-              <span>Section II · Réflexion quantitative</span>
-              <span className="text-[#45121d]">Question n° 17</span>
+              <span>Réflexion quantitative · Exemple</span>
+              <span className="text-[#45121d]">Démonstration de méthode</span>
             </div>
 
             <div className="space-y-4">
@@ -72,7 +72,7 @@ export function AccueilEpreuveType() {
 
             <figure className="rounded-sm bg-[#f8f3ea] p-5 sm:p-6">
               <figcaption className="mb-3 text-center text-[0.6875rem] font-semibold tracking-[0.22em] text-[#4e5e7f] uppercase">
-                Figure 17.1 — Représentation euclidienne
+                Figure illustrative — Représentation euclidienne
               </figcaption>
               <svg
                 className="mx-auto block h-auto w-full max-w-sm text-[#45121d]"

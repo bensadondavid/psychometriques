@@ -38,6 +38,23 @@ enum QuestionType {
   QUANTITATIVE
 }
 
+enum ExerciseKind {
+  DISCOVERY
+  PREPARED
+  LESSON_PRACTICE
+}
+
+enum AttemptMode {
+  LEARNING
+  EXAM
+}
+
+enum AttemptStatus {
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+}
+
 model User {
   id            String    @id
   name          String
@@ -53,6 +70,8 @@ model User {
   sessions      Session[]
   accounts      Account[]
   passkeys      Passkey[]
+  programAccesses ProgramAccess[]
+  attempts      Attempt[]
 
   @@unique([email])
   @@map("user")
@@ -142,6 +161,8 @@ model Program {
   chapters    QuestionChapter[]
   passages    Passage[]
   figures     QuestionFigure[]
+  accesses    ProgramAccess[]
+  exercises   Exercise[]
 
   @@index([status, sortOrder])
   @@map("program")
@@ -159,52 +180,104 @@ model Course {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   lessons     Lesson[]
+  chapters    QuestionChapter[]
 
   @@unique([programId, slug])
+  @@unique([id, programId])
   @@index([programId, status, sortOrder])
   @@map("course")
 }
 
 model Lesson {
   id        String        @id @default(cuid())
+  programId String
   courseId  String
-  course    Course        @relation(fields: [courseId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  course    Course        @relation(fields: [courseId, programId], references: [id, programId], onDelete: Restrict, onUpdate: NoAction)
+  sourceId  String?       @unique
   slug      String
   title     String
   content   String?
   status    ContentStatus @default(DRAFT)
+  contentVersion Int      @default(1)
   sortOrder Int           @default(0)
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
   exercises Exercise[]
+  chapters  LessonChapter[]
 
   @@unique([courseId, slug])
+  @@unique([id, courseId])
+  @@unique([id, programId])
   @@index([courseId, status, sortOrder])
   @@map("lesson")
 }
 
+// Effective access, created only after a subscription has been verified server-side.
+// Billing records and provider events remain separate from this authorization state.
+model ProgramAccess {
+  id                      String   @id @default(cuid())
+  userId                  String
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  programId               String
+  program                 Program  @relation(fields: [programId], references: [id], onDelete: Restrict)
+  verifiedSubscriptionKey String   @unique
+  startsAt                DateTime
+  endsAt                  DateTime
+  revokedAt               DateTime?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  @@unique([userId, programId])
+  @@index([programId, endsAt])
+  @@map("program_access")
+}
+
 model Exercise {
   id           String             @id @default(cuid())
-  lessonId     String
-  lesson       Lesson             @relation(fields: [lessonId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  programId    String
+  program      Program            @relation(fields: [programId], references: [id], onDelete: Restrict)
+  lessonId     String?
+  lesson       Lesson?            @relation(fields: [lessonId, programId], references: [id, programId], onDelete: Restrict, onUpdate: NoAction)
+  chapterId    String?
+  chapter      QuestionChapter?  @relation(fields: [chapterId, programId], references: [id, programId], onDelete: Restrict, onUpdate: NoAction)
+  kind         ExerciseKind       @default(PREPARED)
   slug         String
   title        String
   instructions String?
   status       ContentStatus      @default(DRAFT)
   sortOrder    Int                @default(0)
+  timeLimitSeconds Int?
   createdAt    DateTime           @default(now())
   updatedAt    DateTime           @updatedAt
   questions    ExerciseQuestion[]
+  attempts     Attempt[]
 
-  @@unique([lessonId, slug])
-  @@index([lessonId, status, sortOrder])
+  @@unique([programId, slug])
+  @@unique([id, programId])
+  @@index([programId, kind, status, sortOrder])
+  @@index([chapterId, programId])
+  @@index([lessonId])
   @@map("exercise")
+}
+
+model LessonChapter {
+  lessonId String
+  chapterId String
+  courseId String
+  lesson   Lesson @relation(fields: [lessonId, courseId], references: [id, courseId], onDelete: Cascade, onUpdate: NoAction)
+  chapter  QuestionChapter @relation(fields: [chapterId, courseId], references: [id, courseId], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([lessonId, chapterId])
+  @@index([chapterId, courseId])
+  @@map("lesson_chapter")
 }
 
 model QuestionChapter {
   id         String         @id @default(cuid())
   programId  String
   program    Program        @relation(fields: [programId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  courseId   String?
+  course     Course?        @relation(fields: [courseId, programId], references: [id, programId], onDelete: Restrict, onUpdate: NoAction)
   domain     QuestionDomain
   externalId Int
   slug       String
@@ -213,11 +286,16 @@ model QuestionChapter {
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
   questions  Question[]
+  lessons    LessonChapter[]
+  exercises  Exercise[]
 
   @@unique([programId, domain, externalId])
   @@unique([programId, domain, slug])
   @@unique([id, programId, domain])
+  @@unique([id, programId])
+  @@unique([id, courseId])
   @@index([programId, domain, sortOrder])
+  @@index([courseId, sortOrder])
   @@map("question_chapter")
 }
 
@@ -233,6 +311,8 @@ model Passage {
   estimatedLines  Int
   language        String        @default("fr")
   status          ContentStatus @default(DRAFT)
+  sourceStatus    ContentStatus @default(DRAFT)
+  editorialReviewedAt DateTime?
   sourceCreatedAt DateTime
   sourceUpdatedAt DateTime
   sourceFile      String?
@@ -264,6 +344,8 @@ model Question {
   explanation     String
   language        String             @default("fr")
   status          QuestionStatus     @default(DRAFT)
+  sourceStatus    QuestionStatus     @default(DRAFT)
+  editorialReviewedAt DateTime?
   imagePath       String?
   imageAlt        String?
   sourceCreatedAt DateTime
@@ -274,8 +356,10 @@ model Question {
   updatedAt       DateTime           @updatedAt
   options         QuestionOption[]
   exercises       ExerciseQuestion[]
+  attemptQuestions AttemptQuestion[]
 
   @@unique([programId, externalId])
+  @@unique([id, programId])
   @@index([programId, domain, status])
   @@index([chapterId, difficulty])
   @@index([passageId])
@@ -319,9 +403,10 @@ model QuestionFigure {
 model ExerciseQuestion {
   id         String   @id @default(cuid())
   exerciseId String
-  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  programId  String
+  exercise   Exercise @relation(fields: [exerciseId, programId], references: [id, programId], onDelete: Cascade, onUpdate: NoAction)
   questionId String
-  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  question   Question @relation(fields: [questionId, programId], references: [id, programId], onDelete: Restrict, onUpdate: NoAction)
   position   Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -329,5 +414,57 @@ model ExerciseQuestion {
   @@unique([exerciseId, questionId])
   @@unique([exerciseId, position])
   @@index([questionId])
+  @@index([questionId, programId])
   @@map("exercise_question")
+}
+
+model Attempt {
+  id               String        @id @default(cuid())
+  userId           String?
+  user             User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exerciseId       String
+  exercise         Exercise      @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+  mode             AttemptMode
+  status           AttemptStatus @default(IN_PROGRESS)
+  claimTokenHash   String?       @unique
+  claimExpiresAt   DateTime?
+  startedAt        DateTime      @default(now())
+  deadlineAt       DateTime?
+  completedAt      DateTime?
+  updatedAt        DateTime      @updatedAt
+  questions        AttemptQuestion[]
+
+  @@index([userId, startedAt])
+  @@index([exerciseId, status])
+  @@index([claimExpiresAt])
+  @@map("attempt")
+}
+
+model AttemptQuestion {
+  id              String   @id @default(cuid())
+  attemptId       String
+  attempt         Attempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  questionId      String
+  question        Question @relation(fields: [questionId], references: [id], onDelete: Restrict)
+  position        Int
+  questionVersion Int
+  snapshot        Json
+  answer          AttemptAnswer?
+
+  @@unique([attemptId, position])
+  @@unique([attemptId, questionId])
+  @@index([questionId])
+  @@map("attempt_question")
+}
+
+model AttemptAnswer {
+  id                String          @id @default(cuid())
+  attemptQuestionId String          @unique
+  attemptQuestion   AttemptQuestion @relation(fields: [attemptQuestionId], references: [id], onDelete: Cascade)
+  value             Json
+  isCorrect         Boolean?
+  answeredAt        DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@map("attempt_answer")
 }

@@ -14,9 +14,9 @@ export default async function AdminLayout({
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { role: true },
+    select: { role: true, banned: true },
   });
-  if (user?.role !== "admin") redirect("/account/home");
+  if (user?.role !== "admin" || user.banned) redirect("/account/home");
 
   return <>
     <nav aria-label="Administration" className="flex flex-wrap items-center gap-5 border-b bg-card px-6 py-3 text-sm">

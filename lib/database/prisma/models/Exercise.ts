@@ -28,44 +28,58 @@ export type AggregateExercise = {
 
 export type ExerciseAvgAggregateOutputType = {
   sortOrder: number | null
+  timeLimitSeconds: number | null
 }
 
 export type ExerciseSumAggregateOutputType = {
   sortOrder: number | null
+  timeLimitSeconds: number | null
 }
 
 export type ExerciseMinAggregateOutputType = {
   id: string | null
+  programId: string | null
   lessonId: string | null
+  chapterId: string | null
+  kind: $Enums.ExerciseKind | null
   slug: string | null
   title: string | null
   instructions: string | null
   status: $Enums.ContentStatus | null
   sortOrder: number | null
+  timeLimitSeconds: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type ExerciseMaxAggregateOutputType = {
   id: string | null
+  programId: string | null
   lessonId: string | null
+  chapterId: string | null
+  kind: $Enums.ExerciseKind | null
   slug: string | null
   title: string | null
   instructions: string | null
   status: $Enums.ContentStatus | null
   sortOrder: number | null
+  timeLimitSeconds: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type ExerciseCountAggregateOutputType = {
   id: number
+  programId: number
   lessonId: number
+  chapterId: number
+  kind: number
   slug: number
   title: number
   instructions: number
   status: number
   sortOrder: number
+  timeLimitSeconds: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -74,44 +88,58 @@ export type ExerciseCountAggregateOutputType = {
 
 export type ExerciseAvgAggregateInputType = {
   sortOrder?: true
+  timeLimitSeconds?: true
 }
 
 export type ExerciseSumAggregateInputType = {
   sortOrder?: true
+  timeLimitSeconds?: true
 }
 
 export type ExerciseMinAggregateInputType = {
   id?: true
+  programId?: true
   lessonId?: true
+  chapterId?: true
+  kind?: true
   slug?: true
   title?: true
   instructions?: true
   status?: true
   sortOrder?: true
+  timeLimitSeconds?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type ExerciseMaxAggregateInputType = {
   id?: true
+  programId?: true
   lessonId?: true
+  chapterId?: true
+  kind?: true
   slug?: true
   title?: true
   instructions?: true
   status?: true
   sortOrder?: true
+  timeLimitSeconds?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type ExerciseCountAggregateInputType = {
   id?: true
+  programId?: true
   lessonId?: true
+  chapterId?: true
+  kind?: true
   slug?: true
   title?: true
   instructions?: true
   status?: true
   sortOrder?: true
+  timeLimitSeconds?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -205,12 +233,16 @@ export type ExerciseGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 
 export type ExerciseGroupByOutputType = {
   id: string
-  lessonId: string
+  programId: string
+  lessonId: string | null
+  chapterId: string | null
+  kind: $Enums.ExerciseKind
   slug: string
   title: string
   instructions: string | null
   status: $Enums.ContentStatus
   sortOrder: number
+  timeLimitSeconds: number | null
   createdAt: Date
   updatedAt: Date
   _count: ExerciseCountAggregateOutputType | null
@@ -240,58 +272,84 @@ export type ExerciseWhereInput = {
   OR?: Prisma.ExerciseWhereInput[]
   NOT?: Prisma.ExerciseWhereInput | Prisma.ExerciseWhereInput[]
   id?: Prisma.StringFilter<"Exercise"> | string
-  lessonId?: Prisma.StringFilter<"Exercise"> | string
+  programId?: Prisma.StringFilter<"Exercise"> | string
+  lessonId?: Prisma.StringNullableFilter<"Exercise"> | string | null
+  chapterId?: Prisma.StringNullableFilter<"Exercise"> | string | null
+  kind?: Prisma.EnumExerciseKindFilter<"Exercise"> | $Enums.ExerciseKind
   slug?: Prisma.StringFilter<"Exercise"> | string
   title?: Prisma.StringFilter<"Exercise"> | string
   instructions?: Prisma.StringNullableFilter<"Exercise"> | string | null
   status?: Prisma.EnumContentStatusFilter<"Exercise"> | $Enums.ContentStatus
   sortOrder?: Prisma.IntFilter<"Exercise"> | number
+  timeLimitSeconds?: Prisma.IntNullableFilter<"Exercise"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Exercise"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Exercise"> | Date | string
-  lesson?: Prisma.XOR<Prisma.LessonScalarRelationFilter, Prisma.LessonWhereInput>
+  program?: Prisma.XOR<Prisma.ProgramScalarRelationFilter, Prisma.ProgramWhereInput>
+  lesson?: Prisma.XOR<Prisma.LessonNullableScalarRelationFilter, Prisma.LessonWhereInput> | null
+  chapter?: Prisma.XOR<Prisma.QuestionChapterNullableScalarRelationFilter, Prisma.QuestionChapterWhereInput> | null
   questions?: Prisma.ExerciseQuestionListRelationFilter
+  attempts?: Prisma.AttemptListRelationFilter
 }
 
 export type ExerciseOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  lessonId?: Prisma.SortOrder
+  programId?: Prisma.SortOrder
+  lessonId?: Prisma.SortOrderInput | Prisma.SortOrder
+  chapterId?: Prisma.SortOrderInput | Prisma.SortOrder
+  kind?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   instructions?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
+  timeLimitSeconds?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  program?: Prisma.ProgramOrderByWithRelationInput
   lesson?: Prisma.LessonOrderByWithRelationInput
+  chapter?: Prisma.QuestionChapterOrderByWithRelationInput
   questions?: Prisma.ExerciseQuestionOrderByRelationAggregateInput
+  attempts?: Prisma.AttemptOrderByRelationAggregateInput
 }
 
 export type ExerciseWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  lessonId_slug?: Prisma.ExerciseLessonIdSlugCompoundUniqueInput
+  programId_slug?: Prisma.ExerciseProgramIdSlugCompoundUniqueInput
+  id_programId?: Prisma.ExerciseIdProgramIdCompoundUniqueInput
   AND?: Prisma.ExerciseWhereInput | Prisma.ExerciseWhereInput[]
   OR?: Prisma.ExerciseWhereInput[]
   NOT?: Prisma.ExerciseWhereInput | Prisma.ExerciseWhereInput[]
-  lessonId?: Prisma.StringFilter<"Exercise"> | string
+  programId?: Prisma.StringFilter<"Exercise"> | string
+  lessonId?: Prisma.StringNullableFilter<"Exercise"> | string | null
+  chapterId?: Prisma.StringNullableFilter<"Exercise"> | string | null
+  kind?: Prisma.EnumExerciseKindFilter<"Exercise"> | $Enums.ExerciseKind
   slug?: Prisma.StringFilter<"Exercise"> | string
   title?: Prisma.StringFilter<"Exercise"> | string
   instructions?: Prisma.StringNullableFilter<"Exercise"> | string | null
   status?: Prisma.EnumContentStatusFilter<"Exercise"> | $Enums.ContentStatus
   sortOrder?: Prisma.IntFilter<"Exercise"> | number
+  timeLimitSeconds?: Prisma.IntNullableFilter<"Exercise"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Exercise"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Exercise"> | Date | string
-  lesson?: Prisma.XOR<Prisma.LessonScalarRelationFilter, Prisma.LessonWhereInput>
+  program?: Prisma.XOR<Prisma.ProgramScalarRelationFilter, Prisma.ProgramWhereInput>
+  lesson?: Prisma.XOR<Prisma.LessonNullableScalarRelationFilter, Prisma.LessonWhereInput> | null
+  chapter?: Prisma.XOR<Prisma.QuestionChapterNullableScalarRelationFilter, Prisma.QuestionChapterWhereInput> | null
   questions?: Prisma.ExerciseQuestionListRelationFilter
-}, "id" | "lessonId_slug">
+  attempts?: Prisma.AttemptListRelationFilter
+}, "id" | "programId_slug" | "id_programId">
 
 export type ExerciseOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  lessonId?: Prisma.SortOrder
+  programId?: Prisma.SortOrder
+  lessonId?: Prisma.SortOrderInput | Prisma.SortOrder
+  chapterId?: Prisma.SortOrderInput | Prisma.SortOrder
+  kind?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   instructions?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
+  timeLimitSeconds?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ExerciseCountOrderByAggregateInput
@@ -306,99 +364,133 @@ export type ExerciseScalarWhereWithAggregatesInput = {
   OR?: Prisma.ExerciseScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ExerciseScalarWhereWithAggregatesInput | Prisma.ExerciseScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Exercise"> | string
-  lessonId?: Prisma.StringWithAggregatesFilter<"Exercise"> | string
+  programId?: Prisma.StringWithAggregatesFilter<"Exercise"> | string
+  lessonId?: Prisma.StringNullableWithAggregatesFilter<"Exercise"> | string | null
+  chapterId?: Prisma.StringNullableWithAggregatesFilter<"Exercise"> | string | null
+  kind?: Prisma.EnumExerciseKindWithAggregatesFilter<"Exercise"> | $Enums.ExerciseKind
   slug?: Prisma.StringWithAggregatesFilter<"Exercise"> | string
   title?: Prisma.StringWithAggregatesFilter<"Exercise"> | string
   instructions?: Prisma.StringNullableWithAggregatesFilter<"Exercise"> | string | null
   status?: Prisma.EnumContentStatusWithAggregatesFilter<"Exercise"> | $Enums.ContentStatus
   sortOrder?: Prisma.IntWithAggregatesFilter<"Exercise"> | number
+  timeLimitSeconds?: Prisma.IntNullableWithAggregatesFilter<"Exercise"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Exercise"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Exercise"> | Date | string
 }
 
 export type ExerciseCreateInput = {
   id?: string
+  kind?: $Enums.ExerciseKind
   slug: string
   title: string
   instructions?: string | null
   status?: $Enums.ContentStatus
   sortOrder?: number
+  timeLimitSeconds?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  lesson: Prisma.LessonCreateNestedOneWithoutExercisesInput
+  program: Prisma.ProgramCreateNestedOneWithoutExercisesInput
+  lesson?: Prisma.LessonCreateNestedOneWithoutExercisesInput
+  chapter?: Prisma.QuestionChapterCreateNestedOneWithoutExercisesInput
   questions?: Prisma.ExerciseQuestionCreateNestedManyWithoutExerciseInput
+  attempts?: Prisma.AttemptCreateNestedManyWithoutExerciseInput
 }
 
 export type ExerciseUncheckedCreateInput = {
   id?: string
-  lessonId: string
+  programId: string
+  lessonId?: string | null
+  chapterId?: string | null
+  kind?: $Enums.ExerciseKind
   slug: string
   title: string
   instructions?: string | null
   status?: $Enums.ContentStatus
   sortOrder?: number
+  timeLimitSeconds?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   questions?: Prisma.ExerciseQuestionUncheckedCreateNestedManyWithoutExerciseInput
+  attempts?: Prisma.AttemptUncheckedCreateNestedManyWithoutExerciseInput
 }
 
 export type ExerciseUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumExerciseKindFieldUpdateOperationsInput | $Enums.ExerciseKind
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  timeLimitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lesson?: Prisma.LessonUpdateOneRequiredWithoutExercisesNestedInput
+  program?: Prisma.ProgramUpdateOneRequiredWithoutExercisesNestedInput
+  lesson?: Prisma.LessonUpdateOneWithoutExercisesNestedInput
+  chapter?: Prisma.QuestionChapterUpdateOneWithoutExercisesNestedInput
   questions?: Prisma.ExerciseQuestionUpdateManyWithoutExerciseNestedInput
+  attempts?: Prisma.AttemptUpdateManyWithoutExerciseNestedInput
 }
 
 export type ExerciseUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  lessonId?: Prisma.StringFieldUpdateOperationsInput | string
+  programId?: Prisma.StringFieldUpdateOperationsInput | string
+  lessonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumExerciseKindFieldUpdateOperationsInput | $Enums.ExerciseKind
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  timeLimitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   questions?: Prisma.ExerciseQuestionUncheckedUpdateManyWithoutExerciseNestedInput
+  attempts?: Prisma.AttemptUncheckedUpdateManyWithoutExerciseNestedInput
 }
 
 export type ExerciseCreateManyInput = {
   id?: string
-  lessonId: string
+  programId: string
+  lessonId?: string | null
+  chapterId?: string | null
+  kind?: $Enums.ExerciseKind
   slug: string
   title: string
   instructions?: string | null
   status?: $Enums.ContentStatus
   sortOrder?: number
+  timeLimitSeconds?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type ExerciseUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumExerciseKindFieldUpdateOperationsInput | $Enums.ExerciseKind
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  timeLimitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ExerciseUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  lessonId?: Prisma.StringFieldUpdateOperationsInput | string
+  programId?: Prisma.StringFieldUpdateOperationsInput | string
+  lessonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumExerciseKindFieldUpdateOperationsInput | $Enums.ExerciseKind
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  timeLimitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -413,58 +505,119 @@ export type ExerciseOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type ExerciseLessonIdSlugCompoundUniqueInput = {
-  lessonId: string
+export type ExerciseProgramIdSlugCompoundUniqueInput = {
+  programId: string
   slug: string
+}
+
+export type ExerciseIdProgramIdCompoundUniqueInput = {
+  id: string
+  programId: string
 }
 
 export type ExerciseCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  programId?: Prisma.SortOrder
   lessonId?: Prisma.SortOrder
+  chapterId?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   instructions?: Prisma.SortOrder
   status?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
+  timeLimitSeconds?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type ExerciseAvgOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
+  timeLimitSeconds?: Prisma.SortOrder
 }
 
 export type ExerciseMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  programId?: Prisma.SortOrder
   lessonId?: Prisma.SortOrder
+  chapterId?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   instructions?: Prisma.SortOrder
   status?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
+  timeLimitSeconds?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type ExerciseMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  programId?: Prisma.SortOrder
   lessonId?: Prisma.SortOrder
+  chapterId?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   slug?: Prisma.SortOrder
   title?: Prisma.SortOrder
   instructions?: Prisma.SortOrder
   status?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
+  timeLimitSeconds?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type ExerciseSumOrderByAggregateInput = {
   sortOrder?: Prisma.SortOrder
+  timeLimitSeconds?: Prisma.SortOrder
 }
 
 export type ExerciseScalarRelationFilter = {
   is?: Prisma.ExerciseWhereInput
   isNot?: Prisma.ExerciseWhereInput
+}
+
+export type ExerciseCreateNestedManyWithoutProgramInput = {
+  create?: Prisma.XOR<Prisma.ExerciseCreateWithoutProgramInput, Prisma.ExerciseUncheckedCreateWithoutProgramInput> | Prisma.ExerciseCreateWithoutProgramInput[] | Prisma.ExerciseUncheckedCreateWithoutProgramInput[]
+  connectOrCreate?: Prisma.ExerciseCreateOrConnectWithoutProgramInput | Prisma.ExerciseCreateOrConnectWithoutProgramInput[]
+  createMany?: Prisma.ExerciseCreateManyProgramInputEnvelope
+  connect?: Prisma.ExerciseWhereUniqueInput | Prisma.ExerciseWhereUniqueInput[]
+}
+
+export type ExerciseUncheckedCreateNestedManyWithoutProgramInput = {
+  create?: Prisma.XOR<Prisma.ExerciseCreateWithoutProgramInput, Prisma.ExerciseUncheckedCreateWithoutProgramInput> | Prisma.ExerciseCreateWithoutProgramInput[] | Prisma.ExerciseUncheckedCreateWithoutProgramInput[]
+  connectOrCreate?: Prisma.ExerciseCreateOrConnectWithoutProgramInput | Prisma.ExerciseCreateOrConnectWithoutProgramInput[]
+  createMany?: Prisma.ExerciseCreateManyProgramInputEnvelope
+  connect?: Prisma.ExerciseWhereUniqueInput | Prisma.ExerciseWhereUniqueInput[]
+}
+
+export type ExerciseUpdateManyWithoutProgramNestedInput = {
+  create?: Prisma.XOR<Prisma.ExerciseCreateWithoutProgramInput, Prisma.ExerciseUncheckedCreateWithoutProgramInput> | Prisma.ExerciseCreateWithoutProgramInput[] | Prisma.ExerciseUncheckedCreateWithoutProgramInput[]
+  connectOrCreate?: Prisma.ExerciseCreateOrConnectWithoutProgramInput | Prisma.ExerciseCreateOrConnectWithoutProgramInput[]
+  upsert?: Prisma.ExerciseUpsertWithWhereUniqueWithoutProgramInput | Prisma.ExerciseUpsertWithWhereUniqueWithoutProgramInput[]
+  createMany?: Prisma.ExerciseCreateManyProgramInputEnvelope
+  set?: Prisma.ExerciseWhereUniqueInput | Prisma.ExerciseWhereUniqueInput[]
+  disconnect?: Prisma.ExerciseWhereUniqueInput | Prisma.ExerciseWhereUniqueInput[]
+  delete?: Prisma.ExerciseWhereUniqueInput | Prisma.ExerciseWhereUniqueInput[]
+  connect?: Prisma.ExerciseWhereUniqueInput | Prisma.ExerciseWhereUniqueInput[]
+  update?: Prisma.ExerciseUpdateWithWhereUniqueWithoutProgramInput | Prisma.ExerciseUpdateWithWhereUniqueWithoutProgramInput[]
+  updateMany?: Prisma.ExerciseUpdateManyWithWhereWithoutProgramInput | Prisma.ExerciseUpdateManyWithWhereWithoutProgramInput[]
+  deleteMany?: Prisma.ExerciseScalarWhereInput | Prisma.ExerciseScalarWhereInput[]
+}
+
+export type ExerciseUncheckedUpdateManyWithoutProgramNestedInput = {
+  create?: Prisma.XOR<Prisma.ExerciseCreateWithoutProgramInput, Prisma.ExerciseUncheckedCreateWithoutProgramInput> | Prisma.ExerciseCreateWithoutProgramInput[] | Prisma.ExerciseUncheckedCreateWithoutProgramInput[]
+  connectOrCreate?: Prisma.ExerciseCreateOrConnectWithoutProgramInput | Prisma.ExerciseCreateOrConnectWithoutProgramInput[]
+  upsert?: Prisma.ExerciseUpsertWithWhereUniqueWithoutProgramInput | Prisma.ExerciseUpsertWithWhereUniqueWithoutProgramInput[]
+  createMany?: Prisma.ExerciseCreateManyProgramInputEnvelope
+  set?: Prisma.ExerciseWhereUniqueInput | Prisma.ExerciseWhereUniqueInput[]
+  disconnect?: Prisma.ExerciseWhereUniqueInput | Prisma.ExerciseWhereUniqueInput[]
+  delete?: Prisma.ExerciseWhereUniqueInput | Prisma.ExerciseWhereUniqueInput[]
+  connect?: Prisma.ExerciseWhereUniqueInput | Prisma.ExerciseWhereUniqueInput[]
+  update?: Prisma.ExerciseUpdateWithWhereUniqueWithoutProgramInput | Prisma.ExerciseUpdateWithWhereUniqueWithoutProgramInput[]
+  updateMany?: Prisma.ExerciseUpdateManyWithWhereWithoutProgramInput | Prisma.ExerciseUpdateManyWithWhereWithoutProgramInput[]
+  deleteMany?: Prisma.ExerciseScalarWhereInput | Prisma.ExerciseScalarWhereInput[]
 }
 
 export type ExerciseCreateNestedManyWithoutLessonInput = {
@@ -509,6 +662,60 @@ export type ExerciseUncheckedUpdateManyWithoutLessonNestedInput = {
   deleteMany?: Prisma.ExerciseScalarWhereInput | Prisma.ExerciseScalarWhereInput[]
 }
 
+export type EnumExerciseKindFieldUpdateOperationsInput = {
+  set?: $Enums.ExerciseKind
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type ExerciseCreateNestedManyWithoutChapterInput = {
+  create?: Prisma.XOR<Prisma.ExerciseCreateWithoutChapterInput, Prisma.ExerciseUncheckedCreateWithoutChapterInput> | Prisma.ExerciseCreateWithoutChapterInput[] | Prisma.ExerciseUncheckedCreateWithoutChapterInput[]
+  connectOrCreate?: Prisma.ExerciseCreateOrConnectWithoutChapterInput | Prisma.ExerciseCreateOrConnectWithoutChapterInput[]
+  createMany?: Prisma.ExerciseCreateManyChapterInputEnvelope
+  connect?: Prisma.ExerciseWhereUniqueInput | Prisma.ExerciseWhereUniqueInput[]
+}
+
+export type ExerciseUncheckedCreateNestedManyWithoutChapterInput = {
+  create?: Prisma.XOR<Prisma.ExerciseCreateWithoutChapterInput, Prisma.ExerciseUncheckedCreateWithoutChapterInput> | Prisma.ExerciseCreateWithoutChapterInput[] | Prisma.ExerciseUncheckedCreateWithoutChapterInput[]
+  connectOrCreate?: Prisma.ExerciseCreateOrConnectWithoutChapterInput | Prisma.ExerciseCreateOrConnectWithoutChapterInput[]
+  createMany?: Prisma.ExerciseCreateManyChapterInputEnvelope
+  connect?: Prisma.ExerciseWhereUniqueInput | Prisma.ExerciseWhereUniqueInput[]
+}
+
+export type ExerciseUpdateManyWithoutChapterNestedInput = {
+  create?: Prisma.XOR<Prisma.ExerciseCreateWithoutChapterInput, Prisma.ExerciseUncheckedCreateWithoutChapterInput> | Prisma.ExerciseCreateWithoutChapterInput[] | Prisma.ExerciseUncheckedCreateWithoutChapterInput[]
+  connectOrCreate?: Prisma.ExerciseCreateOrConnectWithoutChapterInput | Prisma.ExerciseCreateOrConnectWithoutChapterInput[]
+  upsert?: Prisma.ExerciseUpsertWithWhereUniqueWithoutChapterInput | Prisma.ExerciseUpsertWithWhereUniqueWithoutChapterInput[]
+  createMany?: Prisma.ExerciseCreateManyChapterInputEnvelope
+  set?: Prisma.ExerciseWhereUniqueInput | Prisma.ExerciseWhereUniqueInput[]
+  disconnect?: Prisma.ExerciseWhereUniqueInput | Prisma.ExerciseWhereUniqueInput[]
+  delete?: Prisma.ExerciseWhereUniqueInput | Prisma.ExerciseWhereUniqueInput[]
+  connect?: Prisma.ExerciseWhereUniqueInput | Prisma.ExerciseWhereUniqueInput[]
+  update?: Prisma.ExerciseUpdateWithWhereUniqueWithoutChapterInput | Prisma.ExerciseUpdateWithWhereUniqueWithoutChapterInput[]
+  updateMany?: Prisma.ExerciseUpdateManyWithWhereWithoutChapterInput | Prisma.ExerciseUpdateManyWithWhereWithoutChapterInput[]
+  deleteMany?: Prisma.ExerciseScalarWhereInput | Prisma.ExerciseScalarWhereInput[]
+}
+
+export type ExerciseUncheckedUpdateManyWithoutChapterNestedInput = {
+  create?: Prisma.XOR<Prisma.ExerciseCreateWithoutChapterInput, Prisma.ExerciseUncheckedCreateWithoutChapterInput> | Prisma.ExerciseCreateWithoutChapterInput[] | Prisma.ExerciseUncheckedCreateWithoutChapterInput[]
+  connectOrCreate?: Prisma.ExerciseCreateOrConnectWithoutChapterInput | Prisma.ExerciseCreateOrConnectWithoutChapterInput[]
+  upsert?: Prisma.ExerciseUpsertWithWhereUniqueWithoutChapterInput | Prisma.ExerciseUpsertWithWhereUniqueWithoutChapterInput[]
+  createMany?: Prisma.ExerciseCreateManyChapterInputEnvelope
+  set?: Prisma.ExerciseWhereUniqueInput | Prisma.ExerciseWhereUniqueInput[]
+  disconnect?: Prisma.ExerciseWhereUniqueInput | Prisma.ExerciseWhereUniqueInput[]
+  delete?: Prisma.ExerciseWhereUniqueInput | Prisma.ExerciseWhereUniqueInput[]
+  connect?: Prisma.ExerciseWhereUniqueInput | Prisma.ExerciseWhereUniqueInput[]
+  update?: Prisma.ExerciseUpdateWithWhereUniqueWithoutChapterInput | Prisma.ExerciseUpdateWithWhereUniqueWithoutChapterInput[]
+  updateMany?: Prisma.ExerciseUpdateManyWithWhereWithoutChapterInput | Prisma.ExerciseUpdateManyWithWhereWithoutChapterInput[]
+  deleteMany?: Prisma.ExerciseScalarWhereInput | Prisma.ExerciseScalarWhereInput[]
+}
+
 export type ExerciseCreateNestedOneWithoutQuestionsInput = {
   create?: Prisma.XOR<Prisma.ExerciseCreateWithoutQuestionsInput, Prisma.ExerciseUncheckedCreateWithoutQuestionsInput>
   connectOrCreate?: Prisma.ExerciseCreateOrConnectWithoutQuestionsInput
@@ -523,28 +730,130 @@ export type ExerciseUpdateOneRequiredWithoutQuestionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ExerciseUpdateToOneWithWhereWithoutQuestionsInput, Prisma.ExerciseUpdateWithoutQuestionsInput>, Prisma.ExerciseUncheckedUpdateWithoutQuestionsInput>
 }
 
-export type ExerciseCreateWithoutLessonInput = {
+export type ExerciseCreateNestedOneWithoutAttemptsInput = {
+  create?: Prisma.XOR<Prisma.ExerciseCreateWithoutAttemptsInput, Prisma.ExerciseUncheckedCreateWithoutAttemptsInput>
+  connectOrCreate?: Prisma.ExerciseCreateOrConnectWithoutAttemptsInput
+  connect?: Prisma.ExerciseWhereUniqueInput
+}
+
+export type ExerciseUpdateOneRequiredWithoutAttemptsNestedInput = {
+  create?: Prisma.XOR<Prisma.ExerciseCreateWithoutAttemptsInput, Prisma.ExerciseUncheckedCreateWithoutAttemptsInput>
+  connectOrCreate?: Prisma.ExerciseCreateOrConnectWithoutAttemptsInput
+  upsert?: Prisma.ExerciseUpsertWithoutAttemptsInput
+  connect?: Prisma.ExerciseWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ExerciseUpdateToOneWithWhereWithoutAttemptsInput, Prisma.ExerciseUpdateWithoutAttemptsInput>, Prisma.ExerciseUncheckedUpdateWithoutAttemptsInput>
+}
+
+export type ExerciseCreateWithoutProgramInput = {
   id?: string
+  kind?: $Enums.ExerciseKind
   slug: string
   title: string
   instructions?: string | null
   status?: $Enums.ContentStatus
   sortOrder?: number
+  timeLimitSeconds?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  lesson?: Prisma.LessonCreateNestedOneWithoutExercisesInput
+  chapter?: Prisma.QuestionChapterCreateNestedOneWithoutExercisesInput
   questions?: Prisma.ExerciseQuestionCreateNestedManyWithoutExerciseInput
+  attempts?: Prisma.AttemptCreateNestedManyWithoutExerciseInput
+}
+
+export type ExerciseUncheckedCreateWithoutProgramInput = {
+  id?: string
+  lessonId?: string | null
+  chapterId?: string | null
+  kind?: $Enums.ExerciseKind
+  slug: string
+  title: string
+  instructions?: string | null
+  status?: $Enums.ContentStatus
+  sortOrder?: number
+  timeLimitSeconds?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  questions?: Prisma.ExerciseQuestionUncheckedCreateNestedManyWithoutExerciseInput
+  attempts?: Prisma.AttemptUncheckedCreateNestedManyWithoutExerciseInput
+}
+
+export type ExerciseCreateOrConnectWithoutProgramInput = {
+  where: Prisma.ExerciseWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExerciseCreateWithoutProgramInput, Prisma.ExerciseUncheckedCreateWithoutProgramInput>
+}
+
+export type ExerciseCreateManyProgramInputEnvelope = {
+  data: Prisma.ExerciseCreateManyProgramInput | Prisma.ExerciseCreateManyProgramInput[]
+  skipDuplicates?: boolean
+}
+
+export type ExerciseUpsertWithWhereUniqueWithoutProgramInput = {
+  where: Prisma.ExerciseWhereUniqueInput
+  update: Prisma.XOR<Prisma.ExerciseUpdateWithoutProgramInput, Prisma.ExerciseUncheckedUpdateWithoutProgramInput>
+  create: Prisma.XOR<Prisma.ExerciseCreateWithoutProgramInput, Prisma.ExerciseUncheckedCreateWithoutProgramInput>
+}
+
+export type ExerciseUpdateWithWhereUniqueWithoutProgramInput = {
+  where: Prisma.ExerciseWhereUniqueInput
+  data: Prisma.XOR<Prisma.ExerciseUpdateWithoutProgramInput, Prisma.ExerciseUncheckedUpdateWithoutProgramInput>
+}
+
+export type ExerciseUpdateManyWithWhereWithoutProgramInput = {
+  where: Prisma.ExerciseScalarWhereInput
+  data: Prisma.XOR<Prisma.ExerciseUpdateManyMutationInput, Prisma.ExerciseUncheckedUpdateManyWithoutProgramInput>
+}
+
+export type ExerciseScalarWhereInput = {
+  AND?: Prisma.ExerciseScalarWhereInput | Prisma.ExerciseScalarWhereInput[]
+  OR?: Prisma.ExerciseScalarWhereInput[]
+  NOT?: Prisma.ExerciseScalarWhereInput | Prisma.ExerciseScalarWhereInput[]
+  id?: Prisma.StringFilter<"Exercise"> | string
+  programId?: Prisma.StringFilter<"Exercise"> | string
+  lessonId?: Prisma.StringNullableFilter<"Exercise"> | string | null
+  chapterId?: Prisma.StringNullableFilter<"Exercise"> | string | null
+  kind?: Prisma.EnumExerciseKindFilter<"Exercise"> | $Enums.ExerciseKind
+  slug?: Prisma.StringFilter<"Exercise"> | string
+  title?: Prisma.StringFilter<"Exercise"> | string
+  instructions?: Prisma.StringNullableFilter<"Exercise"> | string | null
+  status?: Prisma.EnumContentStatusFilter<"Exercise"> | $Enums.ContentStatus
+  sortOrder?: Prisma.IntFilter<"Exercise"> | number
+  timeLimitSeconds?: Prisma.IntNullableFilter<"Exercise"> | number | null
+  createdAt?: Prisma.DateTimeFilter<"Exercise"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Exercise"> | Date | string
+}
+
+export type ExerciseCreateWithoutLessonInput = {
+  id?: string
+  kind?: $Enums.ExerciseKind
+  slug: string
+  title: string
+  instructions?: string | null
+  status?: $Enums.ContentStatus
+  sortOrder?: number
+  timeLimitSeconds?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  program: Prisma.ProgramCreateNestedOneWithoutExercisesInput
+  chapter?: Prisma.QuestionChapterCreateNestedOneWithoutExercisesInput
+  questions?: Prisma.ExerciseQuestionCreateNestedManyWithoutExerciseInput
+  attempts?: Prisma.AttemptCreateNestedManyWithoutExerciseInput
 }
 
 export type ExerciseUncheckedCreateWithoutLessonInput = {
   id?: string
+  chapterId?: string | null
+  kind?: $Enums.ExerciseKind
   slug: string
   title: string
   instructions?: string | null
   status?: $Enums.ContentStatus
   sortOrder?: number
+  timeLimitSeconds?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   questions?: Prisma.ExerciseQuestionUncheckedCreateNestedManyWithoutExerciseInput
+  attempts?: Prisma.AttemptUncheckedCreateNestedManyWithoutExerciseInput
 }
 
 export type ExerciseCreateOrConnectWithoutLessonInput = {
@@ -573,43 +882,97 @@ export type ExerciseUpdateManyWithWhereWithoutLessonInput = {
   data: Prisma.XOR<Prisma.ExerciseUpdateManyMutationInput, Prisma.ExerciseUncheckedUpdateManyWithoutLessonInput>
 }
 
-export type ExerciseScalarWhereInput = {
-  AND?: Prisma.ExerciseScalarWhereInput | Prisma.ExerciseScalarWhereInput[]
-  OR?: Prisma.ExerciseScalarWhereInput[]
-  NOT?: Prisma.ExerciseScalarWhereInput | Prisma.ExerciseScalarWhereInput[]
-  id?: Prisma.StringFilter<"Exercise"> | string
-  lessonId?: Prisma.StringFilter<"Exercise"> | string
-  slug?: Prisma.StringFilter<"Exercise"> | string
-  title?: Prisma.StringFilter<"Exercise"> | string
-  instructions?: Prisma.StringNullableFilter<"Exercise"> | string | null
-  status?: Prisma.EnumContentStatusFilter<"Exercise"> | $Enums.ContentStatus
-  sortOrder?: Prisma.IntFilter<"Exercise"> | number
-  createdAt?: Prisma.DateTimeFilter<"Exercise"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Exercise"> | Date | string
+export type ExerciseCreateWithoutChapterInput = {
+  id?: string
+  kind?: $Enums.ExerciseKind
+  slug: string
+  title: string
+  instructions?: string | null
+  status?: $Enums.ContentStatus
+  sortOrder?: number
+  timeLimitSeconds?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  program: Prisma.ProgramCreateNestedOneWithoutExercisesInput
+  lesson?: Prisma.LessonCreateNestedOneWithoutExercisesInput
+  questions?: Prisma.ExerciseQuestionCreateNestedManyWithoutExerciseInput
+  attempts?: Prisma.AttemptCreateNestedManyWithoutExerciseInput
+}
+
+export type ExerciseUncheckedCreateWithoutChapterInput = {
+  id?: string
+  lessonId?: string | null
+  kind?: $Enums.ExerciseKind
+  slug: string
+  title: string
+  instructions?: string | null
+  status?: $Enums.ContentStatus
+  sortOrder?: number
+  timeLimitSeconds?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  questions?: Prisma.ExerciseQuestionUncheckedCreateNestedManyWithoutExerciseInput
+  attempts?: Prisma.AttemptUncheckedCreateNestedManyWithoutExerciseInput
+}
+
+export type ExerciseCreateOrConnectWithoutChapterInput = {
+  where: Prisma.ExerciseWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExerciseCreateWithoutChapterInput, Prisma.ExerciseUncheckedCreateWithoutChapterInput>
+}
+
+export type ExerciseCreateManyChapterInputEnvelope = {
+  data: Prisma.ExerciseCreateManyChapterInput | Prisma.ExerciseCreateManyChapterInput[]
+  skipDuplicates?: boolean
+}
+
+export type ExerciseUpsertWithWhereUniqueWithoutChapterInput = {
+  where: Prisma.ExerciseWhereUniqueInput
+  update: Prisma.XOR<Prisma.ExerciseUpdateWithoutChapterInput, Prisma.ExerciseUncheckedUpdateWithoutChapterInput>
+  create: Prisma.XOR<Prisma.ExerciseCreateWithoutChapterInput, Prisma.ExerciseUncheckedCreateWithoutChapterInput>
+}
+
+export type ExerciseUpdateWithWhereUniqueWithoutChapterInput = {
+  where: Prisma.ExerciseWhereUniqueInput
+  data: Prisma.XOR<Prisma.ExerciseUpdateWithoutChapterInput, Prisma.ExerciseUncheckedUpdateWithoutChapterInput>
+}
+
+export type ExerciseUpdateManyWithWhereWithoutChapterInput = {
+  where: Prisma.ExerciseScalarWhereInput
+  data: Prisma.XOR<Prisma.ExerciseUpdateManyMutationInput, Prisma.ExerciseUncheckedUpdateManyWithoutChapterInput>
 }
 
 export type ExerciseCreateWithoutQuestionsInput = {
   id?: string
+  kind?: $Enums.ExerciseKind
   slug: string
   title: string
   instructions?: string | null
   status?: $Enums.ContentStatus
   sortOrder?: number
+  timeLimitSeconds?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  lesson: Prisma.LessonCreateNestedOneWithoutExercisesInput
+  program: Prisma.ProgramCreateNestedOneWithoutExercisesInput
+  lesson?: Prisma.LessonCreateNestedOneWithoutExercisesInput
+  chapter?: Prisma.QuestionChapterCreateNestedOneWithoutExercisesInput
+  attempts?: Prisma.AttemptCreateNestedManyWithoutExerciseInput
 }
 
 export type ExerciseUncheckedCreateWithoutQuestionsInput = {
   id?: string
-  lessonId: string
+  programId: string
+  lessonId?: string | null
+  chapterId?: string | null
+  kind?: $Enums.ExerciseKind
   slug: string
   title: string
   instructions?: string | null
   status?: $Enums.ContentStatus
   sortOrder?: number
+  timeLimitSeconds?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  attempts?: Prisma.AttemptUncheckedCreateNestedManyWithoutExerciseInput
 }
 
 export type ExerciseCreateOrConnectWithoutQuestionsInput = {
@@ -630,70 +993,304 @@ export type ExerciseUpdateToOneWithWhereWithoutQuestionsInput = {
 
 export type ExerciseUpdateWithoutQuestionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumExerciseKindFieldUpdateOperationsInput | $Enums.ExerciseKind
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  timeLimitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  lesson?: Prisma.LessonUpdateOneRequiredWithoutExercisesNestedInput
+  program?: Prisma.ProgramUpdateOneRequiredWithoutExercisesNestedInput
+  lesson?: Prisma.LessonUpdateOneWithoutExercisesNestedInput
+  chapter?: Prisma.QuestionChapterUpdateOneWithoutExercisesNestedInput
+  attempts?: Prisma.AttemptUpdateManyWithoutExerciseNestedInput
 }
 
 export type ExerciseUncheckedUpdateWithoutQuestionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  lessonId?: Prisma.StringFieldUpdateOperationsInput | string
+  programId?: Prisma.StringFieldUpdateOperationsInput | string
+  lessonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumExerciseKindFieldUpdateOperationsInput | $Enums.ExerciseKind
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  timeLimitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  attempts?: Prisma.AttemptUncheckedUpdateManyWithoutExerciseNestedInput
+}
+
+export type ExerciseCreateWithoutAttemptsInput = {
+  id?: string
+  kind?: $Enums.ExerciseKind
+  slug: string
+  title: string
+  instructions?: string | null
+  status?: $Enums.ContentStatus
+  sortOrder?: number
+  timeLimitSeconds?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  program: Prisma.ProgramCreateNestedOneWithoutExercisesInput
+  lesson?: Prisma.LessonCreateNestedOneWithoutExercisesInput
+  chapter?: Prisma.QuestionChapterCreateNestedOneWithoutExercisesInput
+  questions?: Prisma.ExerciseQuestionCreateNestedManyWithoutExerciseInput
+}
+
+export type ExerciseUncheckedCreateWithoutAttemptsInput = {
+  id?: string
+  programId: string
+  lessonId?: string | null
+  chapterId?: string | null
+  kind?: $Enums.ExerciseKind
+  slug: string
+  title: string
+  instructions?: string | null
+  status?: $Enums.ContentStatus
+  sortOrder?: number
+  timeLimitSeconds?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  questions?: Prisma.ExerciseQuestionUncheckedCreateNestedManyWithoutExerciseInput
+}
+
+export type ExerciseCreateOrConnectWithoutAttemptsInput = {
+  where: Prisma.ExerciseWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExerciseCreateWithoutAttemptsInput, Prisma.ExerciseUncheckedCreateWithoutAttemptsInput>
+}
+
+export type ExerciseUpsertWithoutAttemptsInput = {
+  update: Prisma.XOR<Prisma.ExerciseUpdateWithoutAttemptsInput, Prisma.ExerciseUncheckedUpdateWithoutAttemptsInput>
+  create: Prisma.XOR<Prisma.ExerciseCreateWithoutAttemptsInput, Prisma.ExerciseUncheckedCreateWithoutAttemptsInput>
+  where?: Prisma.ExerciseWhereInput
+}
+
+export type ExerciseUpdateToOneWithWhereWithoutAttemptsInput = {
+  where?: Prisma.ExerciseWhereInput
+  data: Prisma.XOR<Prisma.ExerciseUpdateWithoutAttemptsInput, Prisma.ExerciseUncheckedUpdateWithoutAttemptsInput>
+}
+
+export type ExerciseUpdateWithoutAttemptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumExerciseKindFieldUpdateOperationsInput | $Enums.ExerciseKind
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  timeLimitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  program?: Prisma.ProgramUpdateOneRequiredWithoutExercisesNestedInput
+  lesson?: Prisma.LessonUpdateOneWithoutExercisesNestedInput
+  chapter?: Prisma.QuestionChapterUpdateOneWithoutExercisesNestedInput
+  questions?: Prisma.ExerciseQuestionUpdateManyWithoutExerciseNestedInput
+}
+
+export type ExerciseUncheckedUpdateWithoutAttemptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  programId?: Prisma.StringFieldUpdateOperationsInput | string
+  lessonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumExerciseKindFieldUpdateOperationsInput | $Enums.ExerciseKind
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  timeLimitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  questions?: Prisma.ExerciseQuestionUncheckedUpdateManyWithoutExerciseNestedInput
+}
+
+export type ExerciseCreateManyProgramInput = {
+  id?: string
+  lessonId?: string | null
+  chapterId?: string | null
+  kind?: $Enums.ExerciseKind
+  slug: string
+  title: string
+  instructions?: string | null
+  status?: $Enums.ContentStatus
+  sortOrder?: number
+  timeLimitSeconds?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ExerciseUpdateWithoutProgramInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumExerciseKindFieldUpdateOperationsInput | $Enums.ExerciseKind
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  timeLimitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lesson?: Prisma.LessonUpdateOneWithoutExercisesNestedInput
+  chapter?: Prisma.QuestionChapterUpdateOneWithoutExercisesNestedInput
+  questions?: Prisma.ExerciseQuestionUpdateManyWithoutExerciseNestedInput
+  attempts?: Prisma.AttemptUpdateManyWithoutExerciseNestedInput
+}
+
+export type ExerciseUncheckedUpdateWithoutProgramInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  lessonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumExerciseKindFieldUpdateOperationsInput | $Enums.ExerciseKind
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  timeLimitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  questions?: Prisma.ExerciseQuestionUncheckedUpdateManyWithoutExerciseNestedInput
+  attempts?: Prisma.AttemptUncheckedUpdateManyWithoutExerciseNestedInput
+}
+
+export type ExerciseUncheckedUpdateManyWithoutProgramInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  lessonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumExerciseKindFieldUpdateOperationsInput | $Enums.ExerciseKind
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  timeLimitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ExerciseCreateManyLessonInput = {
   id?: string
+  chapterId?: string | null
+  kind?: $Enums.ExerciseKind
   slug: string
   title: string
   instructions?: string | null
   status?: $Enums.ContentStatus
   sortOrder?: number
+  timeLimitSeconds?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type ExerciseUpdateWithoutLessonInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumExerciseKindFieldUpdateOperationsInput | $Enums.ExerciseKind
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  timeLimitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  program?: Prisma.ProgramUpdateOneRequiredWithoutExercisesNestedInput
+  chapter?: Prisma.QuestionChapterUpdateOneWithoutExercisesNestedInput
   questions?: Prisma.ExerciseQuestionUpdateManyWithoutExerciseNestedInput
+  attempts?: Prisma.AttemptUpdateManyWithoutExerciseNestedInput
 }
 
 export type ExerciseUncheckedUpdateWithoutLessonInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumExerciseKindFieldUpdateOperationsInput | $Enums.ExerciseKind
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  timeLimitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   questions?: Prisma.ExerciseQuestionUncheckedUpdateManyWithoutExerciseNestedInput
+  attempts?: Prisma.AttemptUncheckedUpdateManyWithoutExerciseNestedInput
 }
 
 export type ExerciseUncheckedUpdateManyWithoutLessonInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  chapterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumExerciseKindFieldUpdateOperationsInput | $Enums.ExerciseKind
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  timeLimitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ExerciseCreateManyChapterInput = {
+  id?: string
+  lessonId?: string | null
+  kind?: $Enums.ExerciseKind
+  slug: string
+  title: string
+  instructions?: string | null
+  status?: $Enums.ContentStatus
+  sortOrder?: number
+  timeLimitSeconds?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ExerciseUpdateWithoutChapterInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  kind?: Prisma.EnumExerciseKindFieldUpdateOperationsInput | $Enums.ExerciseKind
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  timeLimitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  program?: Prisma.ProgramUpdateOneRequiredWithoutExercisesNestedInput
+  lesson?: Prisma.LessonUpdateOneWithoutExercisesNestedInput
+  questions?: Prisma.ExerciseQuestionUpdateManyWithoutExerciseNestedInput
+  attempts?: Prisma.AttemptUpdateManyWithoutExerciseNestedInput
+}
+
+export type ExerciseUncheckedUpdateWithoutChapterInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  lessonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumExerciseKindFieldUpdateOperationsInput | $Enums.ExerciseKind
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  timeLimitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  questions?: Prisma.ExerciseQuestionUncheckedUpdateManyWithoutExerciseNestedInput
+  attempts?: Prisma.AttemptUncheckedUpdateManyWithoutExerciseNestedInput
+}
+
+export type ExerciseUncheckedUpdateManyWithoutChapterInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  lessonId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kind?: Prisma.EnumExerciseKindFieldUpdateOperationsInput | $Enums.ExerciseKind
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  instructions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumContentStatusFieldUpdateOperationsInput | $Enums.ContentStatus
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  timeLimitSeconds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -705,10 +1302,12 @@ export type ExerciseUncheckedUpdateManyWithoutLessonInput = {
 
 export type ExerciseCountOutputType = {
   questions: number
+  attempts: number
 }
 
 export type ExerciseCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   questions?: boolean | ExerciseCountOutputTypeCountQuestionsArgs
+  attempts?: boolean | ExerciseCountOutputTypeCountAttemptsArgs
 }
 
 /**
@@ -728,87 +1327,131 @@ export type ExerciseCountOutputTypeCountQuestionsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.ExerciseQuestionWhereInput
 }
 
+/**
+ * ExerciseCountOutputType without action
+ */
+export type ExerciseCountOutputTypeCountAttemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AttemptWhereInput
+}
+
 
 export type ExerciseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  programId?: boolean
   lessonId?: boolean
+  chapterId?: boolean
+  kind?: boolean
   slug?: boolean
   title?: boolean
   instructions?: boolean
   status?: boolean
   sortOrder?: boolean
+  timeLimitSeconds?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  lesson?: boolean | Prisma.LessonDefaultArgs<ExtArgs>
+  program?: boolean | Prisma.ProgramDefaultArgs<ExtArgs>
+  lesson?: boolean | Prisma.Exercise$lessonArgs<ExtArgs>
+  chapter?: boolean | Prisma.Exercise$chapterArgs<ExtArgs>
   questions?: boolean | Prisma.Exercise$questionsArgs<ExtArgs>
+  attempts?: boolean | Prisma.Exercise$attemptsArgs<ExtArgs>
   _count?: boolean | Prisma.ExerciseCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["exercise"]>
 
 export type ExerciseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  programId?: boolean
   lessonId?: boolean
+  chapterId?: boolean
+  kind?: boolean
   slug?: boolean
   title?: boolean
   instructions?: boolean
   status?: boolean
   sortOrder?: boolean
+  timeLimitSeconds?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  lesson?: boolean | Prisma.LessonDefaultArgs<ExtArgs>
+  program?: boolean | Prisma.ProgramDefaultArgs<ExtArgs>
+  lesson?: boolean | Prisma.Exercise$lessonArgs<ExtArgs>
+  chapter?: boolean | Prisma.Exercise$chapterArgs<ExtArgs>
 }, ExtArgs["result"]["exercise"]>
 
 export type ExerciseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  programId?: boolean
   lessonId?: boolean
+  chapterId?: boolean
+  kind?: boolean
   slug?: boolean
   title?: boolean
   instructions?: boolean
   status?: boolean
   sortOrder?: boolean
+  timeLimitSeconds?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  lesson?: boolean | Prisma.LessonDefaultArgs<ExtArgs>
+  program?: boolean | Prisma.ProgramDefaultArgs<ExtArgs>
+  lesson?: boolean | Prisma.Exercise$lessonArgs<ExtArgs>
+  chapter?: boolean | Prisma.Exercise$chapterArgs<ExtArgs>
 }, ExtArgs["result"]["exercise"]>
 
 export type ExerciseSelectScalar = {
   id?: boolean
+  programId?: boolean
   lessonId?: boolean
+  chapterId?: boolean
+  kind?: boolean
   slug?: boolean
   title?: boolean
   instructions?: boolean
   status?: boolean
   sortOrder?: boolean
+  timeLimitSeconds?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ExerciseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "lessonId" | "slug" | "title" | "instructions" | "status" | "sortOrder" | "createdAt" | "updatedAt", ExtArgs["result"]["exercise"]>
+export type ExerciseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "programId" | "lessonId" | "chapterId" | "kind" | "slug" | "title" | "instructions" | "status" | "sortOrder" | "timeLimitSeconds" | "createdAt" | "updatedAt", ExtArgs["result"]["exercise"]>
 export type ExerciseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lesson?: boolean | Prisma.LessonDefaultArgs<ExtArgs>
+  program?: boolean | Prisma.ProgramDefaultArgs<ExtArgs>
+  lesson?: boolean | Prisma.Exercise$lessonArgs<ExtArgs>
+  chapter?: boolean | Prisma.Exercise$chapterArgs<ExtArgs>
   questions?: boolean | Prisma.Exercise$questionsArgs<ExtArgs>
+  attempts?: boolean | Prisma.Exercise$attemptsArgs<ExtArgs>
   _count?: boolean | Prisma.ExerciseCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ExerciseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lesson?: boolean | Prisma.LessonDefaultArgs<ExtArgs>
+  program?: boolean | Prisma.ProgramDefaultArgs<ExtArgs>
+  lesson?: boolean | Prisma.Exercise$lessonArgs<ExtArgs>
+  chapter?: boolean | Prisma.Exercise$chapterArgs<ExtArgs>
 }
 export type ExerciseIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  lesson?: boolean | Prisma.LessonDefaultArgs<ExtArgs>
+  program?: boolean | Prisma.ProgramDefaultArgs<ExtArgs>
+  lesson?: boolean | Prisma.Exercise$lessonArgs<ExtArgs>
+  chapter?: boolean | Prisma.Exercise$chapterArgs<ExtArgs>
 }
 
 export type $ExercisePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Exercise"
   objects: {
-    lesson: Prisma.$LessonPayload<ExtArgs>
+    program: Prisma.$ProgramPayload<ExtArgs>
+    lesson: Prisma.$LessonPayload<ExtArgs> | null
+    chapter: Prisma.$QuestionChapterPayload<ExtArgs> | null
     questions: Prisma.$ExerciseQuestionPayload<ExtArgs>[]
+    attempts: Prisma.$AttemptPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    lessonId: string
+    programId: string
+    lessonId: string | null
+    chapterId: string | null
+    kind: $Enums.ExerciseKind
     slug: string
     title: string
     instructions: string | null
     status: $Enums.ContentStatus
     sortOrder: number
+    timeLimitSeconds: number | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["exercise"]>
@@ -1205,8 +1848,11 @@ readonly fields: ExerciseFieldRefs;
  */
 export interface Prisma__ExerciseClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  lesson<T extends Prisma.LessonDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LessonDefaultArgs<ExtArgs>>): Prisma.Prisma__LessonClient<runtime.Types.Result.GetResult<Prisma.$LessonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  program<T extends Prisma.ProgramDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProgramDefaultArgs<ExtArgs>>): Prisma.Prisma__ProgramClient<runtime.Types.Result.GetResult<Prisma.$ProgramPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  lesson<T extends Prisma.Exercise$lessonArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Exercise$lessonArgs<ExtArgs>>): Prisma.Prisma__LessonClient<runtime.Types.Result.GetResult<Prisma.$LessonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  chapter<T extends Prisma.Exercise$chapterArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Exercise$chapterArgs<ExtArgs>>): Prisma.Prisma__QuestionChapterClient<runtime.Types.Result.GetResult<Prisma.$QuestionChapterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   questions<T extends Prisma.Exercise$questionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Exercise$questionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExerciseQuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  attempts<T extends Prisma.Exercise$attemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Exercise$attemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1237,12 +1883,16 @@ export interface Prisma__ExerciseClient<T, Null = never, ExtArgs extends runtime
  */
 export interface ExerciseFieldRefs {
   readonly id: Prisma.FieldRef<"Exercise", 'String'>
+  readonly programId: Prisma.FieldRef<"Exercise", 'String'>
   readonly lessonId: Prisma.FieldRef<"Exercise", 'String'>
+  readonly chapterId: Prisma.FieldRef<"Exercise", 'String'>
+  readonly kind: Prisma.FieldRef<"Exercise", 'ExerciseKind'>
   readonly slug: Prisma.FieldRef<"Exercise", 'String'>
   readonly title: Prisma.FieldRef<"Exercise", 'String'>
   readonly instructions: Prisma.FieldRef<"Exercise", 'String'>
   readonly status: Prisma.FieldRef<"Exercise", 'ContentStatus'>
   readonly sortOrder: Prisma.FieldRef<"Exercise", 'Int'>
+  readonly timeLimitSeconds: Prisma.FieldRef<"Exercise", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Exercise", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Exercise", 'DateTime'>
 }
@@ -1646,6 +2296,44 @@ export type ExerciseDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
+ * Exercise.lesson
+ */
+export type Exercise$lessonArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Lesson
+   */
+  select?: Prisma.LessonSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Lesson
+   */
+  omit?: Prisma.LessonOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LessonInclude<ExtArgs> | null
+  where?: Prisma.LessonWhereInput
+}
+
+/**
+ * Exercise.chapter
+ */
+export type Exercise$chapterArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the QuestionChapter
+   */
+  select?: Prisma.QuestionChapterSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the QuestionChapter
+   */
+  omit?: Prisma.QuestionChapterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.QuestionChapterInclude<ExtArgs> | null
+  where?: Prisma.QuestionChapterWhereInput
+}
+
+/**
  * Exercise.questions
  */
 export type Exercise$questionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1667,6 +2355,30 @@ export type Exercise$questionsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.ExerciseQuestionScalarFieldEnum | Prisma.ExerciseQuestionScalarFieldEnum[]
+}
+
+/**
+ * Exercise.attempts
+ */
+export type Exercise$attemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Attempt
+   */
+  select?: Prisma.AttemptSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Attempt
+   */
+  omit?: Prisma.AttemptOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AttemptInclude<ExtArgs> | null
+  where?: Prisma.AttemptWhereInput
+  orderBy?: Prisma.AttemptOrderByWithRelationInput | Prisma.AttemptOrderByWithRelationInput[]
+  cursor?: Prisma.AttemptWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AttemptScalarFieldEnum | Prisma.AttemptScalarFieldEnum[]
 }
 
 /**

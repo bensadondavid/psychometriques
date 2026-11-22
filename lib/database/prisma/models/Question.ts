@@ -51,6 +51,8 @@ export type QuestionMinAggregateOutputType = {
   explanation: string | null
   language: string | null
   status: $Enums.QuestionStatus | null
+  sourceStatus: $Enums.QuestionStatus | null
+  editorialReviewedAt: Date | null
   imagePath: string | null
   imageAlt: string | null
   sourceCreatedAt: Date | null
@@ -76,6 +78,8 @@ export type QuestionMaxAggregateOutputType = {
   explanation: string | null
   language: string | null
   status: $Enums.QuestionStatus | null
+  sourceStatus: $Enums.QuestionStatus | null
+  editorialReviewedAt: Date | null
   imagePath: string | null
   imageAlt: string | null
   sourceCreatedAt: Date | null
@@ -101,6 +105,8 @@ export type QuestionCountAggregateOutputType = {
   explanation: number
   language: number
   status: number
+  sourceStatus: number
+  editorialReviewedAt: number
   imagePath: number
   imageAlt: number
   sourceCreatedAt: number
@@ -138,6 +144,8 @@ export type QuestionMinAggregateInputType = {
   explanation?: true
   language?: true
   status?: true
+  sourceStatus?: true
+  editorialReviewedAt?: true
   imagePath?: true
   imageAlt?: true
   sourceCreatedAt?: true
@@ -163,6 +171,8 @@ export type QuestionMaxAggregateInputType = {
   explanation?: true
   language?: true
   status?: true
+  sourceStatus?: true
+  editorialReviewedAt?: true
   imagePath?: true
   imageAlt?: true
   sourceCreatedAt?: true
@@ -188,6 +198,8 @@ export type QuestionCountAggregateInputType = {
   explanation?: true
   language?: true
   status?: true
+  sourceStatus?: true
+  editorialReviewedAt?: true
   imagePath?: true
   imageAlt?: true
   sourceCreatedAt?: true
@@ -300,6 +312,8 @@ export type QuestionGroupByOutputType = {
   explanation: string
   language: string
   status: $Enums.QuestionStatus
+  sourceStatus: $Enums.QuestionStatus
+  editorialReviewedAt: Date | null
   imagePath: string | null
   imageAlt: string | null
   sourceCreatedAt: Date
@@ -348,6 +362,8 @@ export type QuestionWhereInput = {
   explanation?: Prisma.StringFilter<"Question"> | string
   language?: Prisma.StringFilter<"Question"> | string
   status?: Prisma.EnumQuestionStatusFilter<"Question"> | $Enums.QuestionStatus
+  sourceStatus?: Prisma.EnumQuestionStatusFilter<"Question"> | $Enums.QuestionStatus
+  editorialReviewedAt?: Prisma.DateTimeNullableFilter<"Question"> | Date | string | null
   imagePath?: Prisma.StringNullableFilter<"Question"> | string | null
   imageAlt?: Prisma.StringNullableFilter<"Question"> | string | null
   sourceCreatedAt?: Prisma.DateTimeFilter<"Question"> | Date | string
@@ -360,6 +376,7 @@ export type QuestionWhereInput = {
   passage?: Prisma.XOR<Prisma.PassageNullableScalarRelationFilter, Prisma.PassageWhereInput> | null
   options?: Prisma.QuestionOptionListRelationFilter
   exercises?: Prisma.ExerciseQuestionListRelationFilter
+  attemptQuestions?: Prisma.AttemptQuestionListRelationFilter
 }
 
 export type QuestionOrderByWithRelationInput = {
@@ -377,6 +394,8 @@ export type QuestionOrderByWithRelationInput = {
   explanation?: Prisma.SortOrder
   language?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  sourceStatus?: Prisma.SortOrder
+  editorialReviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   imagePath?: Prisma.SortOrderInput | Prisma.SortOrder
   imageAlt?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceCreatedAt?: Prisma.SortOrder
@@ -389,11 +408,13 @@ export type QuestionOrderByWithRelationInput = {
   passage?: Prisma.PassageOrderByWithRelationInput
   options?: Prisma.QuestionOptionOrderByRelationAggregateInput
   exercises?: Prisma.ExerciseQuestionOrderByRelationAggregateInput
+  attemptQuestions?: Prisma.AttemptQuestionOrderByRelationAggregateInput
 }
 
 export type QuestionWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   programId_externalId?: Prisma.QuestionProgramIdExternalIdCompoundUniqueInput
+  id_programId?: Prisma.QuestionIdProgramIdCompoundUniqueInput
   AND?: Prisma.QuestionWhereInput | Prisma.QuestionWhereInput[]
   OR?: Prisma.QuestionWhereInput[]
   NOT?: Prisma.QuestionWhereInput | Prisma.QuestionWhereInput[]
@@ -410,6 +431,8 @@ export type QuestionWhereUniqueInput = Prisma.AtLeast<{
   explanation?: Prisma.StringFilter<"Question"> | string
   language?: Prisma.StringFilter<"Question"> | string
   status?: Prisma.EnumQuestionStatusFilter<"Question"> | $Enums.QuestionStatus
+  sourceStatus?: Prisma.EnumQuestionStatusFilter<"Question"> | $Enums.QuestionStatus
+  editorialReviewedAt?: Prisma.DateTimeNullableFilter<"Question"> | Date | string | null
   imagePath?: Prisma.StringNullableFilter<"Question"> | string | null
   imageAlt?: Prisma.StringNullableFilter<"Question"> | string | null
   sourceCreatedAt?: Prisma.DateTimeFilter<"Question"> | Date | string
@@ -422,7 +445,8 @@ export type QuestionWhereUniqueInput = Prisma.AtLeast<{
   passage?: Prisma.XOR<Prisma.PassageNullableScalarRelationFilter, Prisma.PassageWhereInput> | null
   options?: Prisma.QuestionOptionListRelationFilter
   exercises?: Prisma.ExerciseQuestionListRelationFilter
-}, "id" | "programId_externalId">
+  attemptQuestions?: Prisma.AttemptQuestionListRelationFilter
+}, "id" | "programId_externalId" | "id_programId">
 
 export type QuestionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -439,6 +463,8 @@ export type QuestionOrderByWithAggregationInput = {
   explanation?: Prisma.SortOrder
   language?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  sourceStatus?: Prisma.SortOrder
+  editorialReviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   imagePath?: Prisma.SortOrderInput | Prisma.SortOrder
   imageAlt?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceCreatedAt?: Prisma.SortOrder
@@ -472,6 +498,8 @@ export type QuestionScalarWhereWithAggregatesInput = {
   explanation?: Prisma.StringWithAggregatesFilter<"Question"> | string
   language?: Prisma.StringWithAggregatesFilter<"Question"> | string
   status?: Prisma.EnumQuestionStatusWithAggregatesFilter<"Question"> | $Enums.QuestionStatus
+  sourceStatus?: Prisma.EnumQuestionStatusWithAggregatesFilter<"Question"> | $Enums.QuestionStatus
+  editorialReviewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Question"> | Date | string | null
   imagePath?: Prisma.StringNullableWithAggregatesFilter<"Question"> | string | null
   imageAlt?: Prisma.StringNullableWithAggregatesFilter<"Question"> | string | null
   sourceCreatedAt?: Prisma.DateTimeWithAggregatesFilter<"Question"> | Date | string
@@ -493,6 +521,8 @@ export type QuestionCreateInput = {
   explanation: string
   language?: string
   status?: $Enums.QuestionStatus
+  sourceStatus?: $Enums.QuestionStatus
+  editorialReviewedAt?: Date | string | null
   imagePath?: string | null
   imageAlt?: string | null
   sourceCreatedAt: Date | string
@@ -505,6 +535,7 @@ export type QuestionCreateInput = {
   passage?: Prisma.PassageCreateNestedOneWithoutQuestionsInput
   options?: Prisma.QuestionOptionCreateNestedManyWithoutQuestionInput
   exercises?: Prisma.ExerciseQuestionCreateNestedManyWithoutQuestionInput
+  attemptQuestions?: Prisma.AttemptQuestionCreateNestedManyWithoutQuestionInput
 }
 
 export type QuestionUncheckedCreateInput = {
@@ -522,6 +553,8 @@ export type QuestionUncheckedCreateInput = {
   explanation: string
   language?: string
   status?: $Enums.QuestionStatus
+  sourceStatus?: $Enums.QuestionStatus
+  editorialReviewedAt?: Date | string | null
   imagePath?: string | null
   imageAlt?: string | null
   sourceCreatedAt: Date | string
@@ -532,6 +565,7 @@ export type QuestionUncheckedCreateInput = {
   updatedAt?: Date | string
   options?: Prisma.QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
   exercises?: Prisma.ExerciseQuestionUncheckedCreateNestedManyWithoutQuestionInput
+  attemptQuestions?: Prisma.AttemptQuestionUncheckedCreateNestedManyWithoutQuestionInput
 }
 
 export type QuestionUpdateInput = {
@@ -545,6 +579,8 @@ export type QuestionUpdateInput = {
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  sourceStatus?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -557,6 +593,7 @@ export type QuestionUpdateInput = {
   passage?: Prisma.PassageUpdateOneWithoutQuestionsNestedInput
   options?: Prisma.QuestionOptionUpdateManyWithoutQuestionNestedInput
   exercises?: Prisma.ExerciseQuestionUpdateManyWithoutQuestionNestedInput
+  attemptQuestions?: Prisma.AttemptQuestionUpdateManyWithoutQuestionNestedInput
 }
 
 export type QuestionUncheckedUpdateInput = {
@@ -574,6 +611,8 @@ export type QuestionUncheckedUpdateInput = {
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  sourceStatus?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -584,6 +623,7 @@ export type QuestionUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   options?: Prisma.QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
   exercises?: Prisma.ExerciseQuestionUncheckedUpdateManyWithoutQuestionNestedInput
+  attemptQuestions?: Prisma.AttemptQuestionUncheckedUpdateManyWithoutQuestionNestedInput
 }
 
 export type QuestionCreateManyInput = {
@@ -601,6 +641,8 @@ export type QuestionCreateManyInput = {
   explanation: string
   language?: string
   status?: $Enums.QuestionStatus
+  sourceStatus?: $Enums.QuestionStatus
+  editorialReviewedAt?: Date | string | null
   imagePath?: string | null
   imageAlt?: string | null
   sourceCreatedAt: Date | string
@@ -622,6 +664,8 @@ export type QuestionUpdateManyMutationInput = {
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  sourceStatus?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -647,6 +691,8 @@ export type QuestionUncheckedUpdateManyInput = {
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  sourceStatus?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -672,6 +718,11 @@ export type QuestionProgramIdExternalIdCompoundUniqueInput = {
   externalId: string
 }
 
+export type QuestionIdProgramIdCompoundUniqueInput = {
+  id: string
+  programId: string
+}
+
 export type QuestionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   programId?: Prisma.SortOrder
@@ -687,6 +738,8 @@ export type QuestionCountOrderByAggregateInput = {
   explanation?: Prisma.SortOrder
   language?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  sourceStatus?: Prisma.SortOrder
+  editorialReviewedAt?: Prisma.SortOrder
   imagePath?: Prisma.SortOrder
   imageAlt?: Prisma.SortOrder
   sourceCreatedAt?: Prisma.SortOrder
@@ -717,6 +770,8 @@ export type QuestionMaxOrderByAggregateInput = {
   explanation?: Prisma.SortOrder
   language?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  sourceStatus?: Prisma.SortOrder
+  editorialReviewedAt?: Prisma.SortOrder
   imagePath?: Prisma.SortOrder
   imageAlt?: Prisma.SortOrder
   sourceCreatedAt?: Prisma.SortOrder
@@ -742,6 +797,8 @@ export type QuestionMinOrderByAggregateInput = {
   explanation?: Prisma.SortOrder
   language?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  sourceStatus?: Prisma.SortOrder
+  editorialReviewedAt?: Prisma.SortOrder
   imagePath?: Prisma.SortOrder
   imageAlt?: Prisma.SortOrder
   sourceCreatedAt?: Prisma.SortOrder
@@ -882,6 +939,20 @@ export type QuestionUpdateOneRequiredWithoutExercisesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.QuestionUpdateToOneWithWhereWithoutExercisesInput, Prisma.QuestionUpdateWithoutExercisesInput>, Prisma.QuestionUncheckedUpdateWithoutExercisesInput>
 }
 
+export type QuestionCreateNestedOneWithoutAttemptQuestionsInput = {
+  create?: Prisma.XOR<Prisma.QuestionCreateWithoutAttemptQuestionsInput, Prisma.QuestionUncheckedCreateWithoutAttemptQuestionsInput>
+  connectOrCreate?: Prisma.QuestionCreateOrConnectWithoutAttemptQuestionsInput
+  connect?: Prisma.QuestionWhereUniqueInput
+}
+
+export type QuestionUpdateOneRequiredWithoutAttemptQuestionsNestedInput = {
+  create?: Prisma.XOR<Prisma.QuestionCreateWithoutAttemptQuestionsInput, Prisma.QuestionUncheckedCreateWithoutAttemptQuestionsInput>
+  connectOrCreate?: Prisma.QuestionCreateOrConnectWithoutAttemptQuestionsInput
+  upsert?: Prisma.QuestionUpsertWithoutAttemptQuestionsInput
+  connect?: Prisma.QuestionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.QuestionUpdateToOneWithWhereWithoutAttemptQuestionsInput, Prisma.QuestionUpdateWithoutAttemptQuestionsInput>, Prisma.QuestionUncheckedUpdateWithoutAttemptQuestionsInput>
+}
+
 export type QuestionCreateWithoutChapterInput = {
   id?: string
   externalId: string
@@ -893,6 +964,8 @@ export type QuestionCreateWithoutChapterInput = {
   explanation: string
   language?: string
   status?: $Enums.QuestionStatus
+  sourceStatus?: $Enums.QuestionStatus
+  editorialReviewedAt?: Date | string | null
   imagePath?: string | null
   imageAlt?: string | null
   sourceCreatedAt: Date | string
@@ -904,6 +977,7 @@ export type QuestionCreateWithoutChapterInput = {
   passage?: Prisma.PassageCreateNestedOneWithoutQuestionsInput
   options?: Prisma.QuestionOptionCreateNestedManyWithoutQuestionInput
   exercises?: Prisma.ExerciseQuestionCreateNestedManyWithoutQuestionInput
+  attemptQuestions?: Prisma.AttemptQuestionCreateNestedManyWithoutQuestionInput
 }
 
 export type QuestionUncheckedCreateWithoutChapterInput = {
@@ -918,6 +992,8 @@ export type QuestionUncheckedCreateWithoutChapterInput = {
   explanation: string
   language?: string
   status?: $Enums.QuestionStatus
+  sourceStatus?: $Enums.QuestionStatus
+  editorialReviewedAt?: Date | string | null
   imagePath?: string | null
   imageAlt?: string | null
   sourceCreatedAt: Date | string
@@ -928,6 +1004,7 @@ export type QuestionUncheckedCreateWithoutChapterInput = {
   updatedAt?: Date | string
   options?: Prisma.QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
   exercises?: Prisma.ExerciseQuestionUncheckedCreateNestedManyWithoutQuestionInput
+  attemptQuestions?: Prisma.AttemptQuestionUncheckedCreateNestedManyWithoutQuestionInput
 }
 
 export type QuestionCreateOrConnectWithoutChapterInput = {
@@ -974,6 +1051,8 @@ export type QuestionScalarWhereInput = {
   explanation?: Prisma.StringFilter<"Question"> | string
   language?: Prisma.StringFilter<"Question"> | string
   status?: Prisma.EnumQuestionStatusFilter<"Question"> | $Enums.QuestionStatus
+  sourceStatus?: Prisma.EnumQuestionStatusFilter<"Question"> | $Enums.QuestionStatus
+  editorialReviewedAt?: Prisma.DateTimeNullableFilter<"Question"> | Date | string | null
   imagePath?: Prisma.StringNullableFilter<"Question"> | string | null
   imageAlt?: Prisma.StringNullableFilter<"Question"> | string | null
   sourceCreatedAt?: Prisma.DateTimeFilter<"Question"> | Date | string
@@ -995,6 +1074,8 @@ export type QuestionCreateWithoutPassageInput = {
   explanation: string
   language?: string
   status?: $Enums.QuestionStatus
+  sourceStatus?: $Enums.QuestionStatus
+  editorialReviewedAt?: Date | string | null
   imagePath?: string | null
   imageAlt?: string | null
   sourceCreatedAt: Date | string
@@ -1006,6 +1087,7 @@ export type QuestionCreateWithoutPassageInput = {
   chapter: Prisma.QuestionChapterCreateNestedOneWithoutQuestionsInput
   options?: Prisma.QuestionOptionCreateNestedManyWithoutQuestionInput
   exercises?: Prisma.ExerciseQuestionCreateNestedManyWithoutQuestionInput
+  attemptQuestions?: Prisma.AttemptQuestionCreateNestedManyWithoutQuestionInput
 }
 
 export type QuestionUncheckedCreateWithoutPassageInput = {
@@ -1021,6 +1103,8 @@ export type QuestionUncheckedCreateWithoutPassageInput = {
   explanation: string
   language?: string
   status?: $Enums.QuestionStatus
+  sourceStatus?: $Enums.QuestionStatus
+  editorialReviewedAt?: Date | string | null
   imagePath?: string | null
   imageAlt?: string | null
   sourceCreatedAt: Date | string
@@ -1031,6 +1115,7 @@ export type QuestionUncheckedCreateWithoutPassageInput = {
   updatedAt?: Date | string
   options?: Prisma.QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
   exercises?: Prisma.ExerciseQuestionUncheckedCreateNestedManyWithoutQuestionInput
+  attemptQuestions?: Prisma.AttemptQuestionUncheckedCreateNestedManyWithoutQuestionInput
 }
 
 export type QuestionCreateOrConnectWithoutPassageInput = {
@@ -1070,6 +1155,8 @@ export type QuestionCreateWithoutOptionsInput = {
   explanation: string
   language?: string
   status?: $Enums.QuestionStatus
+  sourceStatus?: $Enums.QuestionStatus
+  editorialReviewedAt?: Date | string | null
   imagePath?: string | null
   imageAlt?: string | null
   sourceCreatedAt: Date | string
@@ -1081,6 +1168,7 @@ export type QuestionCreateWithoutOptionsInput = {
   chapter: Prisma.QuestionChapterCreateNestedOneWithoutQuestionsInput
   passage?: Prisma.PassageCreateNestedOneWithoutQuestionsInput
   exercises?: Prisma.ExerciseQuestionCreateNestedManyWithoutQuestionInput
+  attemptQuestions?: Prisma.AttemptQuestionCreateNestedManyWithoutQuestionInput
 }
 
 export type QuestionUncheckedCreateWithoutOptionsInput = {
@@ -1098,6 +1186,8 @@ export type QuestionUncheckedCreateWithoutOptionsInput = {
   explanation: string
   language?: string
   status?: $Enums.QuestionStatus
+  sourceStatus?: $Enums.QuestionStatus
+  editorialReviewedAt?: Date | string | null
   imagePath?: string | null
   imageAlt?: string | null
   sourceCreatedAt: Date | string
@@ -1107,6 +1197,7 @@ export type QuestionUncheckedCreateWithoutOptionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   exercises?: Prisma.ExerciseQuestionUncheckedCreateNestedManyWithoutQuestionInput
+  attemptQuestions?: Prisma.AttemptQuestionUncheckedCreateNestedManyWithoutQuestionInput
 }
 
 export type QuestionCreateOrConnectWithoutOptionsInput = {
@@ -1136,6 +1227,8 @@ export type QuestionUpdateWithoutOptionsInput = {
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  sourceStatus?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1147,6 +1240,7 @@ export type QuestionUpdateWithoutOptionsInput = {
   chapter?: Prisma.QuestionChapterUpdateOneRequiredWithoutQuestionsNestedInput
   passage?: Prisma.PassageUpdateOneWithoutQuestionsNestedInput
   exercises?: Prisma.ExerciseQuestionUpdateManyWithoutQuestionNestedInput
+  attemptQuestions?: Prisma.AttemptQuestionUpdateManyWithoutQuestionNestedInput
 }
 
 export type QuestionUncheckedUpdateWithoutOptionsInput = {
@@ -1164,6 +1258,8 @@ export type QuestionUncheckedUpdateWithoutOptionsInput = {
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  sourceStatus?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1173,6 +1269,7 @@ export type QuestionUncheckedUpdateWithoutOptionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   exercises?: Prisma.ExerciseQuestionUncheckedUpdateManyWithoutQuestionNestedInput
+  attemptQuestions?: Prisma.AttemptQuestionUncheckedUpdateManyWithoutQuestionNestedInput
 }
 
 export type QuestionCreateWithoutExercisesInput = {
@@ -1186,6 +1283,8 @@ export type QuestionCreateWithoutExercisesInput = {
   explanation: string
   language?: string
   status?: $Enums.QuestionStatus
+  sourceStatus?: $Enums.QuestionStatus
+  editorialReviewedAt?: Date | string | null
   imagePath?: string | null
   imageAlt?: string | null
   sourceCreatedAt: Date | string
@@ -1197,6 +1296,7 @@ export type QuestionCreateWithoutExercisesInput = {
   chapter: Prisma.QuestionChapterCreateNestedOneWithoutQuestionsInput
   passage?: Prisma.PassageCreateNestedOneWithoutQuestionsInput
   options?: Prisma.QuestionOptionCreateNestedManyWithoutQuestionInput
+  attemptQuestions?: Prisma.AttemptQuestionCreateNestedManyWithoutQuestionInput
 }
 
 export type QuestionUncheckedCreateWithoutExercisesInput = {
@@ -1214,6 +1314,8 @@ export type QuestionUncheckedCreateWithoutExercisesInput = {
   explanation: string
   language?: string
   status?: $Enums.QuestionStatus
+  sourceStatus?: $Enums.QuestionStatus
+  editorialReviewedAt?: Date | string | null
   imagePath?: string | null
   imageAlt?: string | null
   sourceCreatedAt: Date | string
@@ -1223,6 +1325,7 @@ export type QuestionUncheckedCreateWithoutExercisesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   options?: Prisma.QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
+  attemptQuestions?: Prisma.AttemptQuestionUncheckedCreateNestedManyWithoutQuestionInput
 }
 
 export type QuestionCreateOrConnectWithoutExercisesInput = {
@@ -1252,6 +1355,8 @@ export type QuestionUpdateWithoutExercisesInput = {
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  sourceStatus?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1263,6 +1368,7 @@ export type QuestionUpdateWithoutExercisesInput = {
   chapter?: Prisma.QuestionChapterUpdateOneRequiredWithoutQuestionsNestedInput
   passage?: Prisma.PassageUpdateOneWithoutQuestionsNestedInput
   options?: Prisma.QuestionOptionUpdateManyWithoutQuestionNestedInput
+  attemptQuestions?: Prisma.AttemptQuestionUpdateManyWithoutQuestionNestedInput
 }
 
 export type QuestionUncheckedUpdateWithoutExercisesInput = {
@@ -1280,6 +1386,8 @@ export type QuestionUncheckedUpdateWithoutExercisesInput = {
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  sourceStatus?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1289,6 +1397,135 @@ export type QuestionUncheckedUpdateWithoutExercisesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   options?: Prisma.QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
+  attemptQuestions?: Prisma.AttemptQuestionUncheckedUpdateManyWithoutQuestionNestedInput
+}
+
+export type QuestionCreateWithoutAttemptQuestionsInput = {
+  id?: string
+  externalId: string
+  type: $Enums.QuestionType
+  subTheme: string
+  difficulty: number
+  difficultyLabel: string
+  statement: string
+  explanation: string
+  language?: string
+  status?: $Enums.QuestionStatus
+  sourceStatus?: $Enums.QuestionStatus
+  editorialReviewedAt?: Date | string | null
+  imagePath?: string | null
+  imageAlt?: string | null
+  sourceCreatedAt: Date | string
+  sourceUpdatedAt: Date | string
+  sourceFile?: string | null
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  chapter: Prisma.QuestionChapterCreateNestedOneWithoutQuestionsInput
+  passage?: Prisma.PassageCreateNestedOneWithoutQuestionsInput
+  options?: Prisma.QuestionOptionCreateNestedManyWithoutQuestionInput
+  exercises?: Prisma.ExerciseQuestionCreateNestedManyWithoutQuestionInput
+}
+
+export type QuestionUncheckedCreateWithoutAttemptQuestionsInput = {
+  id?: string
+  programId: string
+  chapterId: string
+  passageId?: string | null
+  externalId: string
+  domain: $Enums.QuestionDomain
+  type: $Enums.QuestionType
+  subTheme: string
+  difficulty: number
+  difficultyLabel: string
+  statement: string
+  explanation: string
+  language?: string
+  status?: $Enums.QuestionStatus
+  sourceStatus?: $Enums.QuestionStatus
+  editorialReviewedAt?: Date | string | null
+  imagePath?: string | null
+  imageAlt?: string | null
+  sourceCreatedAt: Date | string
+  sourceUpdatedAt: Date | string
+  sourceFile?: string | null
+  version?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  options?: Prisma.QuestionOptionUncheckedCreateNestedManyWithoutQuestionInput
+  exercises?: Prisma.ExerciseQuestionUncheckedCreateNestedManyWithoutQuestionInput
+}
+
+export type QuestionCreateOrConnectWithoutAttemptQuestionsInput = {
+  where: Prisma.QuestionWhereUniqueInput
+  create: Prisma.XOR<Prisma.QuestionCreateWithoutAttemptQuestionsInput, Prisma.QuestionUncheckedCreateWithoutAttemptQuestionsInput>
+}
+
+export type QuestionUpsertWithoutAttemptQuestionsInput = {
+  update: Prisma.XOR<Prisma.QuestionUpdateWithoutAttemptQuestionsInput, Prisma.QuestionUncheckedUpdateWithoutAttemptQuestionsInput>
+  create: Prisma.XOR<Prisma.QuestionCreateWithoutAttemptQuestionsInput, Prisma.QuestionUncheckedCreateWithoutAttemptQuestionsInput>
+  where?: Prisma.QuestionWhereInput
+}
+
+export type QuestionUpdateToOneWithWhereWithoutAttemptQuestionsInput = {
+  where?: Prisma.QuestionWhereInput
+  data: Prisma.XOR<Prisma.QuestionUpdateWithoutAttemptQuestionsInput, Prisma.QuestionUncheckedUpdateWithoutAttemptQuestionsInput>
+}
+
+export type QuestionUpdateWithoutAttemptQuestionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  externalId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumQuestionTypeFieldUpdateOperationsInput | $Enums.QuestionType
+  subTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  difficulty?: Prisma.IntFieldUpdateOperationsInput | number
+  difficultyLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  statement?: Prisma.StringFieldUpdateOperationsInput | string
+  explanation?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  sourceStatus?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceUpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  chapter?: Prisma.QuestionChapterUpdateOneRequiredWithoutQuestionsNestedInput
+  passage?: Prisma.PassageUpdateOneWithoutQuestionsNestedInput
+  options?: Prisma.QuestionOptionUpdateManyWithoutQuestionNestedInput
+  exercises?: Prisma.ExerciseQuestionUpdateManyWithoutQuestionNestedInput
+}
+
+export type QuestionUncheckedUpdateWithoutAttemptQuestionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  programId?: Prisma.StringFieldUpdateOperationsInput | string
+  chapterId?: Prisma.StringFieldUpdateOperationsInput | string
+  passageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  externalId?: Prisma.StringFieldUpdateOperationsInput | string
+  domain?: Prisma.EnumQuestionDomainFieldUpdateOperationsInput | $Enums.QuestionDomain
+  type?: Prisma.EnumQuestionTypeFieldUpdateOperationsInput | $Enums.QuestionType
+  subTheme?: Prisma.StringFieldUpdateOperationsInput | string
+  difficulty?: Prisma.IntFieldUpdateOperationsInput | number
+  difficultyLabel?: Prisma.StringFieldUpdateOperationsInput | string
+  statement?: Prisma.StringFieldUpdateOperationsInput | string
+  explanation?: Prisma.StringFieldUpdateOperationsInput | string
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  sourceStatus?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceUpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  options?: Prisma.QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
+  exercises?: Prisma.ExerciseQuestionUncheckedUpdateManyWithoutQuestionNestedInput
 }
 
 export type QuestionCreateManyChapterInput = {
@@ -1303,6 +1540,8 @@ export type QuestionCreateManyChapterInput = {
   explanation: string
   language?: string
   status?: $Enums.QuestionStatus
+  sourceStatus?: $Enums.QuestionStatus
+  editorialReviewedAt?: Date | string | null
   imagePath?: string | null
   imageAlt?: string | null
   sourceCreatedAt: Date | string
@@ -1324,6 +1563,8 @@ export type QuestionUpdateWithoutChapterInput = {
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  sourceStatus?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1335,6 +1576,7 @@ export type QuestionUpdateWithoutChapterInput = {
   passage?: Prisma.PassageUpdateOneWithoutQuestionsNestedInput
   options?: Prisma.QuestionOptionUpdateManyWithoutQuestionNestedInput
   exercises?: Prisma.ExerciseQuestionUpdateManyWithoutQuestionNestedInput
+  attemptQuestions?: Prisma.AttemptQuestionUpdateManyWithoutQuestionNestedInput
 }
 
 export type QuestionUncheckedUpdateWithoutChapterInput = {
@@ -1349,6 +1591,8 @@ export type QuestionUncheckedUpdateWithoutChapterInput = {
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  sourceStatus?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1359,6 +1603,7 @@ export type QuestionUncheckedUpdateWithoutChapterInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   options?: Prisma.QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
   exercises?: Prisma.ExerciseQuestionUncheckedUpdateManyWithoutQuestionNestedInput
+  attemptQuestions?: Prisma.AttemptQuestionUncheckedUpdateManyWithoutQuestionNestedInput
 }
 
 export type QuestionUncheckedUpdateManyWithoutChapterInput = {
@@ -1373,6 +1618,8 @@ export type QuestionUncheckedUpdateManyWithoutChapterInput = {
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  sourceStatus?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1396,6 +1643,8 @@ export type QuestionCreateManyPassageInput = {
   explanation: string
   language?: string
   status?: $Enums.QuestionStatus
+  sourceStatus?: $Enums.QuestionStatus
+  editorialReviewedAt?: Date | string | null
   imagePath?: string | null
   imageAlt?: string | null
   sourceCreatedAt: Date | string
@@ -1417,6 +1666,8 @@ export type QuestionUpdateWithoutPassageInput = {
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  sourceStatus?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1428,6 +1679,7 @@ export type QuestionUpdateWithoutPassageInput = {
   chapter?: Prisma.QuestionChapterUpdateOneRequiredWithoutQuestionsNestedInput
   options?: Prisma.QuestionOptionUpdateManyWithoutQuestionNestedInput
   exercises?: Prisma.ExerciseQuestionUpdateManyWithoutQuestionNestedInput
+  attemptQuestions?: Prisma.AttemptQuestionUpdateManyWithoutQuestionNestedInput
 }
 
 export type QuestionUncheckedUpdateWithoutPassageInput = {
@@ -1443,6 +1695,8 @@ export type QuestionUncheckedUpdateWithoutPassageInput = {
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  sourceStatus?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1453,6 +1707,7 @@ export type QuestionUncheckedUpdateWithoutPassageInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   options?: Prisma.QuestionOptionUncheckedUpdateManyWithoutQuestionNestedInput
   exercises?: Prisma.ExerciseQuestionUncheckedUpdateManyWithoutQuestionNestedInput
+  attemptQuestions?: Prisma.AttemptQuestionUncheckedUpdateManyWithoutQuestionNestedInput
 }
 
 export type QuestionUncheckedUpdateManyWithoutPassageInput = {
@@ -1468,6 +1723,8 @@ export type QuestionUncheckedUpdateManyWithoutPassageInput = {
   explanation?: Prisma.StringFieldUpdateOperationsInput | string
   language?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  sourceStatus?: Prisma.EnumQuestionStatusFieldUpdateOperationsInput | $Enums.QuestionStatus
+  editorialReviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   imagePath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageAlt?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceCreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1486,11 +1743,13 @@ export type QuestionUncheckedUpdateManyWithoutPassageInput = {
 export type QuestionCountOutputType = {
   options: number
   exercises: number
+  attemptQuestions: number
 }
 
 export type QuestionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   options?: boolean | QuestionCountOutputTypeCountOptionsArgs
   exercises?: boolean | QuestionCountOutputTypeCountExercisesArgs
+  attemptQuestions?: boolean | QuestionCountOutputTypeCountAttemptQuestionsArgs
 }
 
 /**
@@ -1517,6 +1776,13 @@ export type QuestionCountOutputTypeCountExercisesArgs<ExtArgs extends runtime.Ty
   where?: Prisma.ExerciseQuestionWhereInput
 }
 
+/**
+ * QuestionCountOutputType without action
+ */
+export type QuestionCountOutputTypeCountAttemptQuestionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AttemptQuestionWhereInput
+}
+
 
 export type QuestionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1533,6 +1799,8 @@ export type QuestionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   explanation?: boolean
   language?: boolean
   status?: boolean
+  sourceStatus?: boolean
+  editorialReviewedAt?: boolean
   imagePath?: boolean
   imageAlt?: boolean
   sourceCreatedAt?: boolean
@@ -1545,6 +1813,7 @@ export type QuestionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   passage?: boolean | Prisma.Question$passageArgs<ExtArgs>
   options?: boolean | Prisma.Question$optionsArgs<ExtArgs>
   exercises?: boolean | Prisma.Question$exercisesArgs<ExtArgs>
+  attemptQuestions?: boolean | Prisma.Question$attemptQuestionsArgs<ExtArgs>
   _count?: boolean | Prisma.QuestionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["question"]>
 
@@ -1563,6 +1832,8 @@ export type QuestionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   explanation?: boolean
   language?: boolean
   status?: boolean
+  sourceStatus?: boolean
+  editorialReviewedAt?: boolean
   imagePath?: boolean
   imageAlt?: boolean
   sourceCreatedAt?: boolean
@@ -1590,6 +1861,8 @@ export type QuestionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   explanation?: boolean
   language?: boolean
   status?: boolean
+  sourceStatus?: boolean
+  editorialReviewedAt?: boolean
   imagePath?: boolean
   imageAlt?: boolean
   sourceCreatedAt?: boolean
@@ -1617,6 +1890,8 @@ export type QuestionSelectScalar = {
   explanation?: boolean
   language?: boolean
   status?: boolean
+  sourceStatus?: boolean
+  editorialReviewedAt?: boolean
   imagePath?: boolean
   imageAlt?: boolean
   sourceCreatedAt?: boolean
@@ -1627,12 +1902,13 @@ export type QuestionSelectScalar = {
   updatedAt?: boolean
 }
 
-export type QuestionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "programId" | "chapterId" | "passageId" | "externalId" | "domain" | "type" | "subTheme" | "difficulty" | "difficultyLabel" | "statement" | "explanation" | "language" | "status" | "imagePath" | "imageAlt" | "sourceCreatedAt" | "sourceUpdatedAt" | "sourceFile" | "version" | "createdAt" | "updatedAt", ExtArgs["result"]["question"]>
+export type QuestionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "programId" | "chapterId" | "passageId" | "externalId" | "domain" | "type" | "subTheme" | "difficulty" | "difficultyLabel" | "statement" | "explanation" | "language" | "status" | "sourceStatus" | "editorialReviewedAt" | "imagePath" | "imageAlt" | "sourceCreatedAt" | "sourceUpdatedAt" | "sourceFile" | "version" | "createdAt" | "updatedAt", ExtArgs["result"]["question"]>
 export type QuestionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   chapter?: boolean | Prisma.QuestionChapterDefaultArgs<ExtArgs>
   passage?: boolean | Prisma.Question$passageArgs<ExtArgs>
   options?: boolean | Prisma.Question$optionsArgs<ExtArgs>
   exercises?: boolean | Prisma.Question$exercisesArgs<ExtArgs>
+  attemptQuestions?: boolean | Prisma.Question$attemptQuestionsArgs<ExtArgs>
   _count?: boolean | Prisma.QuestionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type QuestionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1651,6 +1927,7 @@ export type $QuestionPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     passage: Prisma.$PassagePayload<ExtArgs> | null
     options: Prisma.$QuestionOptionPayload<ExtArgs>[]
     exercises: Prisma.$ExerciseQuestionPayload<ExtArgs>[]
+    attemptQuestions: Prisma.$AttemptQuestionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1667,6 +1944,8 @@ export type $QuestionPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     explanation: string
     language: string
     status: $Enums.QuestionStatus
+    sourceStatus: $Enums.QuestionStatus
+    editorialReviewedAt: Date | null
     imagePath: string | null
     imageAlt: string | null
     sourceCreatedAt: Date
@@ -2073,6 +2352,7 @@ export interface Prisma__QuestionClient<T, Null = never, ExtArgs extends runtime
   passage<T extends Prisma.Question$passageArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Question$passageArgs<ExtArgs>>): Prisma.Prisma__PassageClient<runtime.Types.Result.GetResult<Prisma.$PassagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   options<T extends Prisma.Question$optionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Question$optionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QuestionOptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   exercises<T extends Prisma.Question$exercisesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Question$exercisesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExerciseQuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  attemptQuestions<T extends Prisma.Question$attemptQuestionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Question$attemptQuestionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttemptQuestionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2116,6 +2396,8 @@ export interface QuestionFieldRefs {
   readonly explanation: Prisma.FieldRef<"Question", 'String'>
   readonly language: Prisma.FieldRef<"Question", 'String'>
   readonly status: Prisma.FieldRef<"Question", 'QuestionStatus'>
+  readonly sourceStatus: Prisma.FieldRef<"Question", 'QuestionStatus'>
+  readonly editorialReviewedAt: Prisma.FieldRef<"Question", 'DateTime'>
   readonly imagePath: Prisma.FieldRef<"Question", 'String'>
   readonly imageAlt: Prisma.FieldRef<"Question", 'String'>
   readonly sourceCreatedAt: Prisma.FieldRef<"Question", 'DateTime'>
@@ -2589,6 +2871,30 @@ export type Question$exercisesArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.ExerciseQuestionScalarFieldEnum | Prisma.ExerciseQuestionScalarFieldEnum[]
+}
+
+/**
+ * Question.attemptQuestions
+ */
+export type Question$attemptQuestionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AttemptQuestion
+   */
+  select?: Prisma.AttemptQuestionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AttemptQuestion
+   */
+  omit?: Prisma.AttemptQuestionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AttemptQuestionInclude<ExtArgs> | null
+  where?: Prisma.AttemptQuestionWhereInput
+  orderBy?: Prisma.AttemptQuestionOrderByWithRelationInput | Prisma.AttemptQuestionOrderByWithRelationInput[]
+  cursor?: Prisma.AttemptQuestionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AttemptQuestionScalarFieldEnum | Prisma.AttemptQuestionScalarFieldEnum[]
 }
 
 /**

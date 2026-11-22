@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Préparer les Psychométriques | Psychometriques.fr",
   description:
-    "Préparez l'épreuve psychométrique en français : réflexion quantitative, réflexion verbale et rédaction, avec cours, exercices chronométrés et corrections détaillées.",
+    "Découvrez la préparation aux Psychométriques en français, ses trois volets et la première leçon de réflexion quantitative.",
 };
 
 const modules = [
@@ -19,7 +19,7 @@ const modules = [
   },
   {
     title: "Réflexion verbale",
-    text: "Vocabulaire, logique des phrases, compréhension de textes. Chaque série travaille la précision de lecture et l'élimination des distracteurs.",
+    text: "Vocabulaire, logique des phrases, compréhension de textes. Les séries prévues travailleront la précision de lecture et l'élimination des distracteurs.",
     focus: [
       "Vocabulaire en contexte",
       "Raisonnement verbal",
@@ -28,7 +28,7 @@ const modules = [
   },
   {
     title: "Rédaction",
-    text: "Construire un texte argumenté dans le temps imparti : poser une thèse, l'appuyer, conclure. Les corrections montrent où le raisonnement se perd.",
+    text: "Construire un texte argumenté dans le temps imparti : poser une thèse, l'appuyer, conclure. La correction de la rédaction reste à définir.",
     focus: [
       "Structure de l'argumentation",
       "Gestion du temps",
@@ -44,11 +44,11 @@ const sessionSteps = [
   },
   {
     title: "L'exercice l'applique",
-    text: "Des questions classées par compétence, pour travailler une seule notion à la fois.",
+    text: "Des séries préparées par matière et thème permettront de travailler une notion à la fois.",
   },
   {
     title: "La correction détaille la méthode",
-    text: "Étapes de résolution, raccourci à retenir, et erreurs qui mènent aux mauvaises réponses.",
+    text: "Les corrections prévues détailleront les étapes de résolution et les erreurs fréquentes.",
   },
 ];
 
@@ -89,7 +89,7 @@ export default function PsychometriquesPage() {
           {/* Feuille d'épreuve : une question, sa figure */}
           <figure className="border border-primary-foreground/25 bg-[#f8f3ea] p-6 text-card-foreground md:p-8">
             <figcaption className="text-xs text-muted-foreground">
-              Réflexion quantitative, question 17
+              Illustration de méthode · Réflexion quantitative
             </figcaption>
             <p className="mt-3 font-serif text-xl leading-snug">
               Quelle est la longueur exacte du segment CD ?
@@ -156,7 +156,7 @@ export default function PsychometriquesPage() {
             </svg>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               Reconnaître le triangle rectangle avant de calculer : c&apos;est
-              le réflexe que chaque correction vous fait travailler.
+              un réflexe à travailler dans les futures corrections.
             </p>
           </figure>
         </div>
@@ -193,7 +193,7 @@ export default function PsychometriquesPage() {
       <section className="bg-secondary">
         <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
           <h2 className="max-w-2xl font-serif text-4xl leading-tight tracking-tight md:text-5xl">
-            Une séance de travail, en trois temps
+            La méthode de travail prévue
           </h2>
           <ol className="mt-14 grid gap-10 md:grid-cols-3">
             {sessionSteps.map((s, i) => (
@@ -213,14 +213,14 @@ export default function PsychometriquesPage() {
             <div>
               <h3 className="font-serif text-2xl">Simulations chronométrées</h3>
               <p className="mt-3 max-w-prose leading-relaxed text-secondary-foreground/75">
-                Des séries conçues pour décider sous contrainte de temps sans
-                abandonner votre méthode.
+                Le mode examen proposera des séries chronométrées pour travailler
+                la vitesse de décision sans abandonner la méthode.
               </p>
             </div>
             <div>
               <h3 className="font-serif text-2xl">Diagnostic des lacunes</h3>
               <p className="mt-3 max-w-prose leading-relaxed text-secondary-foreground/75">
-                Vos erreurs sont regroupées par notion pour vous montrer où
+                Le bilan prévu regroupera les erreurs par notion pour montrer où
                 revenir.
               </p>
             </div>
@@ -231,41 +231,43 @@ export default function PsychometriquesPage() {
       {/* Accès */}
       <section id="acces" className="mx-auto max-w-6xl px-6 py-20 md:py-28">
         <h2 className="max-w-2xl font-serif text-4xl leading-tight tracking-tight md:text-5xl">
-          Deux façons de commencer
+          Où commencer aujourd&apos;hui ?
         </h2>
         <div className="mt-14 grid gap-6 md:grid-cols-2">
           <div className="flex flex-col border border-border bg-card p-8">
-            <h3 className="font-serif text-3xl">Pack Psychométriques</h3>
+            <h3 className="font-serif text-3xl">Première leçon</h3>
             <p className="mt-3 leading-relaxed text-muted-foreground">
-              La préparation complète à l&apos;épreuve, sans rien d&apos;autre.
+              La leçon « Les nombres » est réservée aux abonnés Psychométriques,
+              avec ses explications, ateliers et fiche de révision.
             </p>
             <ul className="mt-6 space-y-2 text-sm">
-              <li>Réflexion quantitative</li>
-              <li>Réflexion verbale</li>
-              <li>Rédaction argumentative</li>
+              <li>Lecture libre</li>
+              <li>Indices et corrigés repliables</li>
+              <li>Fiche de révision en PDF</li>
             </ul>
             <Link
-              href="/sign-up?offer=psychometriques"
+              href="/account/lecons/nombres"
               className={`${linkBase} mt-8 self-start bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:outline-primary`}
             >
-              Choisir ce pack
+              Voir la leçon
             </Link>
           </div>
           <div className="flex flex-col bg-primary p-8 text-primary-foreground">
-            <h3 className="font-serif text-3xl">Préparation complète</h3>
+            <h3 className="font-serif text-3xl">Parcours par examen</h3>
             <p className="mt-3 leading-relaxed text-primary-foreground/75">
-              Psychométriques, AMIRNET et YAEL/YAELNET depuis le même espace.
+              Les trois examens auront chacun leur parcours. Les séries de
+              découverte et d&apos;entraînement sont en préparation.
             </p>
             <ul className="mt-6 space-y-2 text-sm">
-              <li>Pack Psychométriques</li>
-              <li>Préparation AMIRNET</li>
-              <li>Préparation YAEL &amp; YAELNET</li>
+              <li>Psychométriques</li>
+              <li>AMIRNET</li>
+              <li>YAELNET</li>
             </ul>
             <Link
-              href="/sign-up?offer=complet"
+              href="/examens"
               className={`${linkBase} mt-8 self-start bg-accent text-accent-foreground hover:bg-accent/85 focus-visible:outline-accent`}
             >
-              Choisir ce pack
+              Voir les examens
             </Link>
           </div>
         </div>
@@ -275,13 +277,13 @@ export default function PsychometriquesPage() {
       <section className="bg-primary text-primary-foreground">
         <div className="mx-auto flex max-w-6xl flex-col items-start gap-8 px-6 py-16 md:flex-row md:items-center md:justify-between">
           <p className="max-w-xl font-serif text-3xl leading-tight md:text-4xl">
-            Commencez par une première série, à votre rythme.
+            Découvrez la première leçon, à votre rythme.
           </p>
           <Link
-            href="/sign-up?offer=psychometriques"
+            href="/account/lecons/nombres"
             className={`${linkBase} bg-accent text-accent-foreground hover:bg-accent/85 focus-visible:outline-accent`}
           >
-            Créer mon compte
+            Lire la leçon
           </Link>
         </div>
       </section>

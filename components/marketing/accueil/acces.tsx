@@ -11,26 +11,26 @@ export function AccueilAcces() {
       <div className="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-[1fr_1fr] lg:items-end lg:gap-24 lg:px-12">
         <div>
           <p className="text-xs font-semibold tracking-[0.14em] uppercase">
-            Les offres
+            Les parcours
           </p>
           <h2
             id="acces-title"
             className="mt-6 max-w-xl font-serif text-[clamp(2.8rem,4.7vw,5rem)] leading-[1.02] tracking-[-0.035em]"
           >
-            Une préparation seule ou plusieurs réunies.
+            Trois examens, trois parcours distincts.
           </h2>
         </div>
         <div className="border-t border-[#bda99b] pt-8">
           <p className="max-w-lg text-lg leading-relaxed text-[#524344]">
-            Psychométriques, AMIRNET et YAELNET existent chacun en formule
-            dédiée. Les packs réunissent plusieurs préparations dans le même
-            espace.
+            Choisissez l&apos;examen que vous préparez. Chaque parcours aura sa
+            propre découverte et ses séries d&apos;entraînement. La première leçon
+            de réflexion quantitative est réservée aux abonnés Psychométriques.
           </p>
           <Link
-            href="/tarifs"
+            href="/examens"
             className="mt-8 inline-flex min-h-12 items-center gap-5 border-b border-[#45121d] pb-2 text-sm font-semibold hover:gap-7 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#45121d]"
           >
-            Comparer les cinq offres{" "}
+            Explorer les examens{" "}
             <ArrowUpRight className="size-5" aria-hidden="true" />
           </Link>
         </div>

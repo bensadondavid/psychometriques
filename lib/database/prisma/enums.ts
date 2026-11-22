@@ -53,3 +53,29 @@ export const QuestionType = {
 } as const
 
 export type QuestionType = (typeof QuestionType)[keyof typeof QuestionType]
+
+
+export const ExerciseKind = {
+  DISCOVERY: 'DISCOVERY',
+  PREPARED: 'PREPARED',
+  LESSON_PRACTICE: 'LESSON_PRACTICE'
+} as const
+
+export type ExerciseKind = (typeof ExerciseKind)[keyof typeof ExerciseKind]
+
+
+export const AttemptMode = {
+  LEARNING: 'LEARNING',
+  EXAM: 'EXAM'
+} as const
+
+export type AttemptMode = (typeof AttemptMode)[keyof typeof AttemptMode]
+
+
+export const AttemptStatus = {
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  ABANDONED: 'ABANDONED'
+} as const
+
+export type AttemptStatus = (typeof AttemptStatus)[keyof typeof AttemptStatus]

@@ -37,6 +37,7 @@ export type ExerciseQuestionSumAggregateOutputType = {
 export type ExerciseQuestionMinAggregateOutputType = {
   id: string | null
   exerciseId: string | null
+  programId: string | null
   questionId: string | null
   position: number | null
   createdAt: Date | null
@@ -46,6 +47,7 @@ export type ExerciseQuestionMinAggregateOutputType = {
 export type ExerciseQuestionMaxAggregateOutputType = {
   id: string | null
   exerciseId: string | null
+  programId: string | null
   questionId: string | null
   position: number | null
   createdAt: Date | null
@@ -55,6 +57,7 @@ export type ExerciseQuestionMaxAggregateOutputType = {
 export type ExerciseQuestionCountAggregateOutputType = {
   id: number
   exerciseId: number
+  programId: number
   questionId: number
   position: number
   createdAt: number
@@ -74,6 +77,7 @@ export type ExerciseQuestionSumAggregateInputType = {
 export type ExerciseQuestionMinAggregateInputType = {
   id?: true
   exerciseId?: true
+  programId?: true
   questionId?: true
   position?: true
   createdAt?: true
@@ -83,6 +87,7 @@ export type ExerciseQuestionMinAggregateInputType = {
 export type ExerciseQuestionMaxAggregateInputType = {
   id?: true
   exerciseId?: true
+  programId?: true
   questionId?: true
   position?: true
   createdAt?: true
@@ -92,6 +97,7 @@ export type ExerciseQuestionMaxAggregateInputType = {
 export type ExerciseQuestionCountAggregateInputType = {
   id?: true
   exerciseId?: true
+  programId?: true
   questionId?: true
   position?: true
   createdAt?: true
@@ -188,6 +194,7 @@ export type ExerciseQuestionGroupByArgs<ExtArgs extends runtime.Types.Extensions
 export type ExerciseQuestionGroupByOutputType = {
   id: string
   exerciseId: string
+  programId: string
   questionId: string
   position: number
   createdAt: Date
@@ -220,6 +227,7 @@ export type ExerciseQuestionWhereInput = {
   NOT?: Prisma.ExerciseQuestionWhereInput | Prisma.ExerciseQuestionWhereInput[]
   id?: Prisma.StringFilter<"ExerciseQuestion"> | string
   exerciseId?: Prisma.StringFilter<"ExerciseQuestion"> | string
+  programId?: Prisma.StringFilter<"ExerciseQuestion"> | string
   questionId?: Prisma.StringFilter<"ExerciseQuestion"> | string
   position?: Prisma.IntFilter<"ExerciseQuestion"> | number
   createdAt?: Prisma.DateTimeFilter<"ExerciseQuestion"> | Date | string
@@ -231,6 +239,7 @@ export type ExerciseQuestionWhereInput = {
 export type ExerciseQuestionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   exerciseId?: Prisma.SortOrder
+  programId?: Prisma.SortOrder
   questionId?: Prisma.SortOrder
   position?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -247,6 +256,7 @@ export type ExerciseQuestionWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ExerciseQuestionWhereInput[]
   NOT?: Prisma.ExerciseQuestionWhereInput | Prisma.ExerciseQuestionWhereInput[]
   exerciseId?: Prisma.StringFilter<"ExerciseQuestion"> | string
+  programId?: Prisma.StringFilter<"ExerciseQuestion"> | string
   questionId?: Prisma.StringFilter<"ExerciseQuestion"> | string
   position?: Prisma.IntFilter<"ExerciseQuestion"> | number
   createdAt?: Prisma.DateTimeFilter<"ExerciseQuestion"> | Date | string
@@ -258,6 +268,7 @@ export type ExerciseQuestionWhereUniqueInput = Prisma.AtLeast<{
 export type ExerciseQuestionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   exerciseId?: Prisma.SortOrder
+  programId?: Prisma.SortOrder
   questionId?: Prisma.SortOrder
   position?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -275,6 +286,7 @@ export type ExerciseQuestionScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ExerciseQuestionScalarWhereWithAggregatesInput | Prisma.ExerciseQuestionScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"ExerciseQuestion"> | string
   exerciseId?: Prisma.StringWithAggregatesFilter<"ExerciseQuestion"> | string
+  programId?: Prisma.StringWithAggregatesFilter<"ExerciseQuestion"> | string
   questionId?: Prisma.StringWithAggregatesFilter<"ExerciseQuestion"> | string
   position?: Prisma.IntWithAggregatesFilter<"ExerciseQuestion"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ExerciseQuestion"> | Date | string
@@ -293,6 +305,7 @@ export type ExerciseQuestionCreateInput = {
 export type ExerciseQuestionUncheckedCreateInput = {
   id?: string
   exerciseId: string
+  programId: string
   questionId: string
   position: number
   createdAt?: Date | string
@@ -311,6 +324,7 @@ export type ExerciseQuestionUpdateInput = {
 export type ExerciseQuestionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   exerciseId?: Prisma.StringFieldUpdateOperationsInput | string
+  programId?: Prisma.StringFieldUpdateOperationsInput | string
   questionId?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -320,6 +334,7 @@ export type ExerciseQuestionUncheckedUpdateInput = {
 export type ExerciseQuestionCreateManyInput = {
   id?: string
   exerciseId: string
+  programId: string
   questionId: string
   position: number
   createdAt?: Date | string
@@ -336,6 +351,7 @@ export type ExerciseQuestionUpdateManyMutationInput = {
 export type ExerciseQuestionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   exerciseId?: Prisma.StringFieldUpdateOperationsInput | string
+  programId?: Prisma.StringFieldUpdateOperationsInput | string
   questionId?: Prisma.StringFieldUpdateOperationsInput | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -365,6 +381,7 @@ export type ExerciseQuestionExerciseIdPositionCompoundUniqueInput = {
 export type ExerciseQuestionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   exerciseId?: Prisma.SortOrder
+  programId?: Prisma.SortOrder
   questionId?: Prisma.SortOrder
   position?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -378,6 +395,7 @@ export type ExerciseQuestionAvgOrderByAggregateInput = {
 export type ExerciseQuestionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   exerciseId?: Prisma.SortOrder
+  programId?: Prisma.SortOrder
   questionId?: Prisma.SortOrder
   position?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -387,6 +405,7 @@ export type ExerciseQuestionMaxOrderByAggregateInput = {
 export type ExerciseQuestionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   exerciseId?: Prisma.SortOrder
+  programId?: Prisma.SortOrder
   questionId?: Prisma.SortOrder
   position?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -529,6 +548,7 @@ export type ExerciseQuestionScalarWhereInput = {
   NOT?: Prisma.ExerciseQuestionScalarWhereInput | Prisma.ExerciseQuestionScalarWhereInput[]
   id?: Prisma.StringFilter<"ExerciseQuestion"> | string
   exerciseId?: Prisma.StringFilter<"ExerciseQuestion"> | string
+  programId?: Prisma.StringFilter<"ExerciseQuestion"> | string
   questionId?: Prisma.StringFilter<"ExerciseQuestion"> | string
   position?: Prisma.IntFilter<"ExerciseQuestion"> | number
   createdAt?: Prisma.DateTimeFilter<"ExerciseQuestion"> | Date | string
@@ -646,6 +666,7 @@ export type ExerciseQuestionUncheckedUpdateManyWithoutQuestionInput = {
 export type ExerciseQuestionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   exerciseId?: boolean
+  programId?: boolean
   questionId?: boolean
   position?: boolean
   createdAt?: boolean
@@ -657,6 +678,7 @@ export type ExerciseQuestionSelect<ExtArgs extends runtime.Types.Extensions.Inte
 export type ExerciseQuestionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   exerciseId?: boolean
+  programId?: boolean
   questionId?: boolean
   position?: boolean
   createdAt?: boolean
@@ -668,6 +690,7 @@ export type ExerciseQuestionSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
 export type ExerciseQuestionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   exerciseId?: boolean
+  programId?: boolean
   questionId?: boolean
   position?: boolean
   createdAt?: boolean
@@ -679,13 +702,14 @@ export type ExerciseQuestionSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
 export type ExerciseQuestionSelectScalar = {
   id?: boolean
   exerciseId?: boolean
+  programId?: boolean
   questionId?: boolean
   position?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ExerciseQuestionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "exerciseId" | "questionId" | "position" | "createdAt" | "updatedAt", ExtArgs["result"]["exerciseQuestion"]>
+export type ExerciseQuestionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "exerciseId" | "programId" | "questionId" | "position" | "createdAt" | "updatedAt", ExtArgs["result"]["exerciseQuestion"]>
 export type ExerciseQuestionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   exercise?: boolean | Prisma.ExerciseDefaultArgs<ExtArgs>
   question?: boolean | Prisma.QuestionDefaultArgs<ExtArgs>
@@ -708,6 +732,7 @@ export type $ExerciseQuestionPayload<ExtArgs extends runtime.Types.Extensions.In
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     exerciseId: string
+    programId: string
     questionId: string
     position: number
     createdAt: Date
@@ -1139,6 +1164,7 @@ export interface Prisma__ExerciseQuestionClient<T, Null = never, ExtArgs extends
 export interface ExerciseQuestionFieldRefs {
   readonly id: Prisma.FieldRef<"ExerciseQuestion", 'String'>
   readonly exerciseId: Prisma.FieldRef<"ExerciseQuestion", 'String'>
+  readonly programId: Prisma.FieldRef<"ExerciseQuestion", 'String'>
   readonly questionId: Prisma.FieldRef<"ExerciseQuestion", 'String'>
   readonly position: Prisma.FieldRef<"ExerciseQuestion", 'Int'>
   readonly createdAt: Prisma.FieldRef<"ExerciseQuestion", 'DateTime'>

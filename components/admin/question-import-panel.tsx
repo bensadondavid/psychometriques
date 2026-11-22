@@ -464,7 +464,7 @@ async function readSvgFiles(files: File[]) {
   );
 }
 
-function FigureImportCard() {
+export function FigureImportCard() {
   const [state, setState] = useState<FigureState>(EMPTY_FIGURE_STATE);
   function selectFiles(files: FileList | null) {
     setState({

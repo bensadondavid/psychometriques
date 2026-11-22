@@ -11,8 +11,8 @@ Ce document décrit le produit à construire, les décisions prises avec le resp
 - L'organisation principale de l'entraînement est examen → matière → thème. Les séries préparées guident l'élève. La composition libre d'une série est différée ; elle n'est pas requise pour la première version.
 - Deux modes sont prévus : apprentissage, sans chronomètre et avec correction après chaque réponse ; conditions d'examen, chronométré et avec correction à la fin.
 - Une série interrompue doit pouvoir être reprise. L'élève peut retrouver les explications, revoir ses erreurs et recevoir un bilan qui indique les compétences à travailler et une suite concrète.
-- Les leçons sont librement accessibles, progressives et fondées sur la pratique. Elles sont aussi proposées lorsqu'une difficulté apparaît, sans être un préalable obligatoire aux exercices. Le responsable du projet crée leur contenu en parallèle de la reconstruction du site.
-- L'abonnement, les limites du compte gratuit, les prix et une éventuelle séparation des offres par examen restent à décider. Aucun texte ou contrôle d'accès ne doit supposer que ces règles sont déjà fixées.
+- Les leçons Psychométriques nécessitent un abonnement Psychométriques actif ; un administrateur non suspendu peut accéder à toutes les leçons, y compris aux brouillons. Elles restent progressives, fondées sur la pratique et peuvent être proposées après une difficulté, sans être un préalable aux exercices. Les droits des leçons AMIRNET et YAELNET restent à décider. Le responsable du projet crée leur contenu en parallèle de la reconstruction du site.
+- La condition d'accès aux leçons Psychométriques est décidée. Le fournisseur de paiement, les limites du compte gratuit, les prix et le regroupement éventuel des offres restent à décider. Aucun texte ne doit présenter un paiement comme actif.
 
 ## Parcours utilisateur cible
 
@@ -51,7 +51,7 @@ La structure fonctionnelle proposée comporte cinq espaces :
 Les URLs et la navigation précise seront arrêtées après validation de cette structure. Il ne faut pas créer de pages de remplissage ou promettre des contenus encore absents.
 
 Une première structure de navigation est maintenant en place : `/examens` et `/examens/{psychometriques,amirnet,yaelnet}`. Ces pages présentent les trois parcours sans annoncer de série déjà disponible. Cette convention d'URL reste à valider avec le responsable du projet avant d'étendre les routes d'entraînement.
-Les anciennes entrées `/psychometriques`, `/langues`, `/tarifs` et `/faq` redirigent provisoirement vers cette nouvelle structure afin de ne plus exposer les anciennes promesses commerciales ou de contenu. Leurs composants restent dans le dépôt pendant la refonte.
+Les pages marketing `/psychometriques`, `/langues`, `/tarifs` et `/faq` sont de nouveau accessibles depuis le menu. L'accueil affiche à nouveau l'exemple illustratif, la méthode, l'accès aux parcours et le lien vers la FAQ. Les textes de ces pages distinguent les éléments disponibles des séries encore en préparation. La page Tarifs conserve son URL mais ne présente plus les anciens prix et packs, car le modèle commercial n'est pas décidé.
 
 ### Structure interne proposée
 
@@ -134,9 +134,28 @@ Conserver les identifiants de la banque existante lors de toute réorganisation 
 
 Le responsable a déjà contrôlé ses banques et ne demande pas un nouvel audit préalable de leurs fichiers. Leur intégration réelle nécessitera néanmoins des contrôles techniques à l'import et une vérification de ce qui est publiable. Les banques psychométriques sont disponibles localement chez lui, mais ne sont pas encore lisibles dans cet environnement ; celles d'AMIRNET et de YAELNET viendront ensuite.
 
-Le dépôt possède actuellement un import administrateur pour cinq formats psychométriques et les figures SVG. Il n'y a aucun fichier de banque CSV, TSV, XLSX ou ZIP dans le dépôt au 19 novembre 2026. L'import existant reprend le statut indiqué par le CSV, y compris `PUBLISHED`, et une réimportation remplace ce statut, les options et incrémente la version. Avant d'utiliser cet outil sur les nouvelles banques, il faut décider comment séparer statut source, validation éditoriale et publication sur le site. Le modèle actuel limite les domaines à verbal et quantitatif, et les types à quatre formes psychométriques ; il ne représente pas encore AMIRNET et YAELNET.
+Le dépôt conserve l'ancien import administrateur des formats psychométriques et des figures SVG ; la nouvelle page unifiée et son API acceptent les formats CSV définis pour Psychométriques, AMIRNET et YAELNET. Les banques réelles des deux examens de langues n'ont pas été vérifiées dans ce dépôt : les formats devront être confrontés à ces fichiers avant un import de production. Les deux pipelines gardent le statut source séparé de la publication éditoriale ; les nouveaux contenus restent en brouillon. Les types des questions de langues sont provisoirement représentés par les enums existants et distingués par chapitre.
 
 ### Leçons et supports en préparation
+
+La première leçon, « Les nombres », utilise `content/lessons/01-nombres.md` comme source éditoriale. `pnpm lesson:sync:nombres` valide cette source sans écrire ; l'import explicite dans Prisma associe la leçon au programme et au cours de réflexion quantitative avec son identifiant stable `quant-nombres`. La page `/account/lecons/nombres` lit uniquement la leçon publiée en base après vérification côté serveur d'un droit Psychométriques actif. L'annexe éditoriale du document d'origine n'est pas importée. Les réponses et la progression ne sont pas encore enregistrées.
+
+La liste `/account/lecons` affiche seulement les leçons Psychométriques disponibles lorsque le compte possède un accès actif à ce programme, ou lorsque le compte est administrateur non suspendu. Elle ne montre pas de carte de leçon bloquée ; sans leçon accessible, elle affiche un état vide. Les pages de détail répondent 404 sans droit actif ; les PDF conservent leur vérification d'accès côté serveur.
+
+`/account/programmes` liste seulement les programmes dont le compte possède un `ProgramAccess` actif, non révoqué et sur un programme publié ; un administrateur non suspendu voit les programmes créés en base parmi les trois examens du site. Chaque carte ouvre `/account/programmes/[slug]`, protégé par la même vérification côté serveur, avec les leçons en ligne et le nombre de tentatives enregistrées. L'accueil du compte utilise aussi le premier programme réellement accessible. La barre latérale contient « Exercices » et « Tests » sous « Leçons » ; leurs pages sont volontairement vides tant que le lecteur et les séries utilisables ne sont pas prêts. Un lien depuis un programme transmet son slug et la page refuse tout slug inaccessible. Au 22 novembre 2026, seul le programme Psychométriques existe en base et `ProgramAccess` ne contient encore aucun droit.
+La fiche de révision détaillée est conservée hors de `public/`, dans `content/lessons/assets/fiche-revision-nombres.pdf`, et n'est téléchargée que par une route qui refait les contrôles de session, d'accès et de publication. Elle comporte trois pages de rappels et une page de synthèse. Le générateur est `scripts/generate-nombres-revision-pdf.py` (ReportLab) ; régénérer le PDF après toute modification de ses rappels ou de la fiche source.
+
+La deuxième leçon, « La divisibilité », provient de `content/lessons/02-divisibilite.md` ; le front matter et l'annexe éditoriale du fichier remis par le responsable sont exclus du contenu élève. L'identifiant source stable est `quant-divisibilite`, version 1, dans le même programme et la même matière que « Les nombres ». `pnpm lesson:sync:divisibilite` vérifie la source en lecture seule ; `--apply --publish --expect-host=... --use-configured-database` est requis pour l'import explicite. Elle a été importée et publiée dans la base Neon configurée le 22 novembre 2026, après vérification des migrations. La route `/account/lecons/divisibilite` lit la leçon depuis Prisma après contrôle du droit Psychométriques. Sa fiche de révision détaillée de quatre pages est générée par `scripts/generate-divisibilite-revision-pdf.py`, conservée hors de `public/` et distribuée par une route qui revérifie l'accès.
+
+La migration `20261122130000_add_program_access_and_lesson_source` a été appliquée à la branche Neon `production` le 22 novembre 2026. Elle ajoute `ProgramAccess` (un droit par utilisateur et programme, avec période de validité et référence d'abonnement vérifiée) et l'identifiant/version de source sur `Lesson`. La leçon `quant-nombres` (version 1) y a été importée et publiée. `User.role = admin` donne désormais accès aux leçons, après vérification du rôle actuel et de la suspension en base ; les autres comptes nécessitent `ProgramAccess`. Aucun flux de paiement ni attribution automatique de droit n'existe encore : la table `ProgramAccess` est vide, donc seuls les administrateurs non suspendus peuvent ouvrir la page et le PDF. Pour les prochaines synchronisations, l'import requiert `--apply`, `--publish`, `--expect-host` et soit `LESSON_IMPORT_DATABASE_URL`, soit l'option explicite `--use-configured-database` pour la cible du projet ; la commande sans `--apply` reste une vérification en lecture seule.
+
+### Fondation Prisma pour les séries — état de la migration du 22 novembre 2026
+
+La migration `20261122170000_add_training_foundation` a été appliquée sur Neon `production` le 22 novembre 2026, après un essai sur PostgreSQL isolé. Elle réutilise `QuestionChapter` comme thème, sous `Course` (matière), au lieu de créer une seconde taxonomie. Le rattachement du chapitre à la matière reste facultatif pendant la transition ; 21 chapitres quantitatifs existants sont reliés à « Réflexion quantitative ». `Exercise` représente une série découverte, préparée ou liée à une leçon ; son lien à une leçon devient facultatif. Les clés étrangères composites empêchent de mélanger une série, ses questions, son chapitre et sa leçon entre programmes. `LessonChapter` relie les leçons aux chapitres de leur matière. Les 10 540 questions ont été conservées après migration.
+
+`Attempt`, `AttemptQuestion` et `AttemptAnswer` préparent la découverte anonyme, la reprise, les deux modes, les réponses et un instantané de chaque question au début de la tentative. L'application et ses routes restent à construire : ces tables seules ne créent pas le lecteur ni le bilan. Le jeton de réclamation anonyme devra être aléatoire, stocké uniquement sous forme d'empreinte, expiré puis supprimé lors du rattachement au compte. Une seule série découverte publiée est permise par programme.
+
+L'import CSV conserve désormais le statut du fichier dans `sourceStatus`, séparé du statut de publication éditoriale. Les nouvelles questions et passages arrivent en brouillon ; une réimportation inchangée conserve le statut éditorial et la version, tandis qu'un contenu modifié revient en brouillon. Une publication exige `editorialReviewedAt`, mais il reste à créer une action de relecture et de publication authentifiée. Les 375 chemins d'image sans figure correspondante relevés en production empêchent pour l'instant d'ajouter une clé étrangère sur `Question.imagePath` ; les figures manquantes doivent être rapprochées avant cette contrainte.
 
 Le responsable du projet crée les leçons en parallèle. La structure ci-dessous vient de son résumé : elle sert de base de discussion et ne décrit pas des leçons déjà disponibles ou approuvées.
 
@@ -238,7 +257,7 @@ Le fichier .env.example ne documente pas encore toutes les variables requises po
 - [x] Fixer les trois examens du site et exclure l'Oulpan.
 - [x] Définir le chemin accueil → examen → découverte → bilan → compte.
 - [x] Choisir une série découverte fixe par examen et afficher le bilan avant inscription.
-- [x] Définir les deux modes et le principe des leçons libres.
+- [x] Définir les deux modes et le principe des leçons facultatives ; l'accès aux leçons Psychométriques est ensuite réservé aux abonnés.
 - [x] Consigner l'inventaire déclaré des banques sans le présenter comme audité.
 - [ ] Rendre les banques de questions accessibles à l'import, après construction du parcours.
 - [ ] Établir la matrice compétence officielle → thème → leçon → support → questions validées.
@@ -267,11 +286,12 @@ Le fichier .env.example ne documente pas encore toutes les variables requises po
 - [ ] Implémenter les modes apprentissage et conditions d'examen.
 - [ ] Enregistrer les tentatives, la reprise, les réponses et les bilans.
 - [ ] Ajouter le suivi des erreurs et des suites concrètes.
-- [ ] Intégrer les leçons libres et leurs liens vers les thèmes difficiles.
+- [ ] Intégrer les leçons avec contrôle d'accès et leurs liens vers les thèmes difficiles.
 
 ### 4. Importer le contenu puis vérifier les parcours
 
-- [ ] Construire la page d'import CSV adaptée aux trois examens et son pipeline de validation.
+- [x] Construire une page administrateur d'import CSV pour les trois examens et son pipeline de validation structurelle.
+- [ ] Vérifier les formats du nouvel importeur sur les banques réelles et son écriture de bout en bout sur une base isolée contenant des données représentatives.
 - [ ] Importer les banques et publier les questions relues.
 - [ ] Composer et relire une série découverte fixe pour chacun des trois examens.
 - [ ] Vérifier les parcours complets des trois examens sur navigateur et base isolée.
@@ -280,8 +300,21 @@ Le fichier .env.example ne documente pas encore toutes les variables requises po
 
 - [ ] Définir ce qui est gratuit sans compte et avec compte.
 - [ ] Valider ou abandonner l'abonnement, les offres et les prix antérieurs.
-- [ ] Implémenter les droits d'accès et les paiements uniquement après ces décisions.
+- [ ] Appliquer et vérifier les droits d'accès Psychométriques préparés dans Prisma ; définir puis implémenter séparément le paiement.
 
 ## Critère de lancement
 
 Un visiteur doit pouvoir découvrir chacun des trois examens sans compte, recevoir un bilan honnête, créer un compte et poursuivre un entraînement complet dans les deux modes. Les contenus publiés doivent avoir été relus, les séries doivent être reprenables, les erreurs consultables et les leçons disponibles selon le périmètre validé. Le paiement n'est un critère de lancement que si le modèle commercial est explicitement retenu.
+
+
+### Import CSV unifié — ajout préparé le 22 novembre 2026
+
+La page administrateur existante utilise désormais un panneau commun aux Psychométriques, AMIRNET et YAELNET. La nouvelle API `/api/admin/question-import/unified` détecte le format par colonnes et revalide les CSV bruts à chaque import. Le statut CSV reconnu est conservé dans `sourceStatus`, séparément du statut éditorial ; les nouveaux contenus restent en brouillon. Les passages, questions, options et sections source sont écrits transactionnellement, sans nouvelle migration. Les doublons identiques sont fusionnés ; les conflits bloquent le lot. Les types de langues restent distingués par chapitre dans les enums existants. Les sections de langues sont conservées comme exercices PREPARED en brouillon, identifiés par fichier et section.
+
+Cette note décrit le code ajouté et remplace les indications précédentes sur l’absence de support AMIRNET/YAELNET dans l’importeur. Elle ne prouve aucun import ni état de publication en base. Vérifier l’écriture sur une base de test avant la production. La nouvelle API limite les lots à 200 fichiers et 4 Mo de CSV UTF-8, avec une limite supplémentaire de 8 Mo pour le corps JSON. Relancer les tests `tests/unified-*.test.mjs` avec `node --import tsx --test` ; définir QUESTION_BANK_ROOT pour inclure les banques locales. Les fichiers historiques et leurs figures ne sont pas modifiés.
+
+### Catalogue pédagogique administrateur
+
+`/account/admin/catalogue` lit la base par pages de 25 entrées et affiche les programmes Psychométriques, AMIRNET et YAELNET, les questions et textes avec filtres, les matières, chapitres, leçons et séries. Les chapitres sans matière restent visibles pour préparer leur rattachement. Les fiches de question et de texte montrent le contenu et sa provenance avant toute action de relecture.
+
+Un administrateur non suspendu peut marquer une version comme relue, puis la publier ou la retirer. Une question exige quatre choix distincts, une seule bonne réponse, une explication, sa figure si elle est référencée et la publication de son texte lié. Retirer un texte retire aussi ses questions déjà publiées. Les actions revérifient le rôle administrateur et l'état du contenu côté serveur ; le statut source ne vaut jamais approbation éditoriale. Le catalogue n'édite pas encore le contenu, ne compose pas les séries et ne publie rien automatiquement. La lecture réelle dans une session administrateur et les actions d'écriture sur une base isolée restent à vérifier avant déploiement.

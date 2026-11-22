@@ -1,6 +1,6 @@
 <!-- BEGIN:nextjs-agent-rules -->
 
-# This is NOT the Next.js you know
+## This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
 
@@ -26,9 +26,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Discovery is available without an account. Show the result and explanations before asking the visitor to register.
 - Organize training by exam, subject and theme. Start with prepared series; free composition of a series is deferred.
 - Provide learning mode with immediate explanations and exam mode with a timer and explanations at the end. Preserve interrupted attempts and make errors reviewable.
-- Lessons are freely accessible and can be suggested after difficulties. They are not required before exercises. The owner is creating lesson content in parallel; do not invent it.
+- Psychométriques lessons require an active Psychométriques subscription, except for a current, unbanned admin, who may access all lessons including drafts. They can be suggested after difficulties and are not required before exercises. Access rules for lessons in the other exams remain undecided. The owner is creating lesson content in parallel; do not invent it.
 - The question banks currently live in another ChatGPT project and have not yet been audited in this repository. Do not infer their counts, quality, completeness or publication state.
-- Payment model, free limits, prices and packaging are undecided. Do not revive old prices or imply checkout is active.
+- The Psychométriques lesson access condition is decided; payment provider, free limits, prices and packaging remain undecided. Do not revive old prices or imply checkout is active.
 
 ## Content and data
 
