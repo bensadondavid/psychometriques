@@ -11,11 +11,11 @@ import { notFound, redirect } from "next/navigation";
 import { getCurrentSession } from "@/lib/auth/get-current-session";
 import { getAccessiblePrograms } from "@/lib/auth/has-program-access";
 import { prisma } from "@/lib/database/prisma";
+import { quantitativeLessons } from "@/lib/content/quantitative-lessons";
 
-const lessonRoutes: Record<string, string> = {
-  "quant-nombres": "/account/lecons/nombres",
-  "quant-divisibilite": "/account/lecons/divisibilite",
-};
+const lessonRoutes = Object.fromEntries(
+  quantitativeLessons.map((lesson) => [lesson.sourceId, `/account/lecons/${lesson.slug}`]),
+);
 
 export default async function AccountProgramPage({
   params,

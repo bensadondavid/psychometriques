@@ -4,10 +4,7 @@ import { redirect } from "next/navigation";
 
 import { getCurrentSession } from "@/lib/auth/get-current-session";
 import { getProgramAuthorization } from "@/lib/auth/has-program-access";
-import {
-  getDivisibiliteLesson,
-  getNombresLesson,
-} from "@/lib/content/nombres-lesson";
+import { getQuantitativeLessons, quantitativeLessons } from "@/lib/content/quantitative-lessons";
 
 export const metadata = { title: "Leçons | Psychométriques" };
 
@@ -18,26 +15,15 @@ export default async function LessonsPage() {
     session.user.id,
     "psychometriques",
   );
-  const [nombresLesson, divisibiliteLesson] = authorization.allowed
-    ? await Promise.all([
-        getNombresLesson(authorization.isAdmin),
-        getDivisibiliteLesson(authorization.isAdmin),
-      ])
-    : [null, null];
-  const lessons = [
-    {
-      lesson: nombresLesson,
-      href: "/account/lecons/nombres",
-      description:
-        "Une leçon progressive sur les familles de nombres, les signes, la parité, les bornes, les valeurs absolues et les méthodes de résolution.",
-    },
-    {
-      lesson: divisibiliteLesson,
-      href: "/account/lecons/divisibilite",
-      description:
-        "Décomposer un nombre, choisir entre PGCD et PPCM, raisonner sur les restes et reconnaître les cycles.",
-    },
-  ].filter((entry) => Boolean(entry.lesson?.content));
+  const available = authorization.allowed
+    ? await getQuantitativeLessons(authorization.isAdmin)
+    : [];
+  const lessons = quantitativeLessons.flatMap((source) => {
+    const lesson = available.find((item) => item.sourceId === source.sourceId);
+    return lesson?.content
+      ? [{ lesson, href: `/account/lecons/${source.slug}`, description: source.description }]
+      : [];
+  });
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">

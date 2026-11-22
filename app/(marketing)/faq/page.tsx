@@ -24,7 +24,7 @@ const groups: Group[] = [
       },
       {
         q: "Une leçon est-elle déjà disponible ?",
-        a: "La première leçon de réflexion quantitative, « Les nombres », est réservée aux comptes disposant d'un accès Psychométriques actif. Ses ateliers proposent des indices et des corrigés ; les réponses ne sont pas encore enregistrées.",
+        a: "Dix leçons de réflexion quantitative sont disponibles, des nombres aux problèmes algébriques, pour les comptes disposant d'un accès Psychométriques actif. Les ateliers proposent des indices et des corrigés ; les réponses ne sont pas encore enregistrées.",
       },
     ],
   },
@@ -38,7 +38,7 @@ const groups: Group[] = [
       },
       {
         q: "Puis-je avancer à mon propre rythme ?",
-        a: "La leçon disponible peut être lue librement. La reprise des séries interrompues et le suivi des erreurs font partie du parcours à construire.",
+        a: "Les leçons disponibles peuvent être lues librement par les comptes autorisés. La reprise des séries interrompues et le suivi des erreurs font partie du parcours à construire.",
       },
       {
         q: "Que contient une correction détaillée ?",
@@ -74,7 +74,7 @@ const groups: Group[] = [
       },
       {
         q: "Faut-il un compte pour consulter une leçon ?",
-        a: "La leçon se trouve dans l'espace compte, mais une simple connexion ne suffit pas : un accès Psychométriques actif est requis.",
+        a: "Les leçons se trouvent dans l'espace compte, mais une simple connexion ne suffit pas : un accès Psychométriques actif est requis.",
       },
     ],
   },

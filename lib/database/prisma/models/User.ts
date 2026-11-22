@@ -235,6 +235,7 @@ export type UserWhereInput = {
   passkeys?: Prisma.PasskeyListRelationFilter
   programAccesses?: Prisma.ProgramAccessListRelationFilter
   attempts?: Prisma.AttemptListRelationFilter
+  studyGoal?: Prisma.XOR<Prisma.StudyGoalNullableScalarRelationFilter, Prisma.StudyGoalWhereInput> | null
 }
 
 export type UserOrderByWithRelationInput = {
@@ -254,6 +255,7 @@ export type UserOrderByWithRelationInput = {
   passkeys?: Prisma.PasskeyOrderByRelationAggregateInput
   programAccesses?: Prisma.ProgramAccessOrderByRelationAggregateInput
   attempts?: Prisma.AttemptOrderByRelationAggregateInput
+  studyGoal?: Prisma.StudyGoalOrderByWithRelationInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -276,6 +278,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   passkeys?: Prisma.PasskeyListRelationFilter
   programAccesses?: Prisma.ProgramAccessListRelationFilter
   attempts?: Prisma.AttemptListRelationFilter
+  studyGoal?: Prisma.XOR<Prisma.StudyGoalNullableScalarRelationFilter, Prisma.StudyGoalWhereInput> | null
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -329,6 +332,7 @@ export type UserCreateInput = {
   passkeys?: Prisma.PasskeyCreateNestedManyWithoutUserInput
   programAccesses?: Prisma.ProgramAccessCreateNestedManyWithoutUserInput
   attempts?: Prisma.AttemptCreateNestedManyWithoutUserInput
+  studyGoal?: Prisma.StudyGoalCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -348,6 +352,7 @@ export type UserUncheckedCreateInput = {
   passkeys?: Prisma.PasskeyUncheckedCreateNestedManyWithoutUserInput
   programAccesses?: Prisma.ProgramAccessUncheckedCreateNestedManyWithoutUserInput
   attempts?: Prisma.AttemptUncheckedCreateNestedManyWithoutUserInput
+  studyGoal?: Prisma.StudyGoalUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -367,6 +372,7 @@ export type UserUpdateInput = {
   passkeys?: Prisma.PasskeyUpdateManyWithoutUserNestedInput
   programAccesses?: Prisma.ProgramAccessUpdateManyWithoutUserNestedInput
   attempts?: Prisma.AttemptUpdateManyWithoutUserNestedInput
+  studyGoal?: Prisma.StudyGoalUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -386,6 +392,7 @@ export type UserUncheckedUpdateInput = {
   passkeys?: Prisma.PasskeyUncheckedUpdateManyWithoutUserNestedInput
   programAccesses?: Prisma.ProgramAccessUncheckedUpdateManyWithoutUserNestedInput
   attempts?: Prisma.AttemptUncheckedUpdateManyWithoutUserNestedInput
+  studyGoal?: Prisma.StudyGoalUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -506,6 +513,20 @@ export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
 
+export type UserCreateNestedOneWithoutStudyGoalInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStudyGoalInput, Prisma.UserUncheckedCreateWithoutStudyGoalInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStudyGoalInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutStudyGoalNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStudyGoalInput, Prisma.UserUncheckedCreateWithoutStudyGoalInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStudyGoalInput
+  upsert?: Prisma.UserUpsertWithoutStudyGoalInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutStudyGoalInput, Prisma.UserUpdateWithoutStudyGoalInput>, Prisma.UserUncheckedUpdateWithoutStudyGoalInput>
+}
+
 export type UserCreateNestedOneWithoutSessionsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutSessionsInput, Prisma.UserUncheckedCreateWithoutSessionsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutSessionsInput
@@ -578,6 +599,98 @@ export type UserUpdateOneWithoutAttemptsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAttemptsInput, Prisma.UserUpdateWithoutAttemptsInput>, Prisma.UserUncheckedUpdateWithoutAttemptsInput>
 }
 
+export type UserCreateWithoutStudyGoalInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  role?: $Enums.Role
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  passkeys?: Prisma.PasskeyCreateNestedManyWithoutUserInput
+  programAccesses?: Prisma.ProgramAccessCreateNestedManyWithoutUserInput
+  attempts?: Prisma.AttemptCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutStudyGoalInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  role?: $Enums.Role
+  banned?: boolean
+  banReason?: string | null
+  banExpires?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  passkeys?: Prisma.PasskeyUncheckedCreateNestedManyWithoutUserInput
+  programAccesses?: Prisma.ProgramAccessUncheckedCreateNestedManyWithoutUserInput
+  attempts?: Prisma.AttemptUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutStudyGoalInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutStudyGoalInput, Prisma.UserUncheckedCreateWithoutStudyGoalInput>
+}
+
+export type UserUpsertWithoutStudyGoalInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutStudyGoalInput, Prisma.UserUncheckedUpdateWithoutStudyGoalInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutStudyGoalInput, Prisma.UserUncheckedCreateWithoutStudyGoalInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutStudyGoalInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutStudyGoalInput, Prisma.UserUncheckedUpdateWithoutStudyGoalInput>
+}
+
+export type UserUpdateWithoutStudyGoalInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  passkeys?: Prisma.PasskeyUpdateManyWithoutUserNestedInput
+  programAccesses?: Prisma.ProgramAccessUpdateManyWithoutUserNestedInput
+  attempts?: Prisma.AttemptUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutStudyGoalInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  banned?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  passkeys?: Prisma.PasskeyUncheckedUpdateManyWithoutUserNestedInput
+  programAccesses?: Prisma.ProgramAccessUncheckedUpdateManyWithoutUserNestedInput
+  attempts?: Prisma.AttemptUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutSessionsInput = {
   id: string
   name: string
@@ -594,6 +707,7 @@ export type UserCreateWithoutSessionsInput = {
   passkeys?: Prisma.PasskeyCreateNestedManyWithoutUserInput
   programAccesses?: Prisma.ProgramAccessCreateNestedManyWithoutUserInput
   attempts?: Prisma.AttemptCreateNestedManyWithoutUserInput
+  studyGoal?: Prisma.StudyGoalCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -612,6 +726,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   passkeys?: Prisma.PasskeyUncheckedCreateNestedManyWithoutUserInput
   programAccesses?: Prisma.ProgramAccessUncheckedCreateNestedManyWithoutUserInput
   attempts?: Prisma.AttemptUncheckedCreateNestedManyWithoutUserInput
+  studyGoal?: Prisma.StudyGoalUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -646,6 +761,7 @@ export type UserUpdateWithoutSessionsInput = {
   passkeys?: Prisma.PasskeyUpdateManyWithoutUserNestedInput
   programAccesses?: Prisma.ProgramAccessUpdateManyWithoutUserNestedInput
   attempts?: Prisma.AttemptUpdateManyWithoutUserNestedInput
+  studyGoal?: Prisma.StudyGoalUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -664,6 +780,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   passkeys?: Prisma.PasskeyUncheckedUpdateManyWithoutUserNestedInput
   programAccesses?: Prisma.ProgramAccessUncheckedUpdateManyWithoutUserNestedInput
   attempts?: Prisma.AttemptUncheckedUpdateManyWithoutUserNestedInput
+  studyGoal?: Prisma.StudyGoalUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -682,6 +799,7 @@ export type UserCreateWithoutAccountsInput = {
   passkeys?: Prisma.PasskeyCreateNestedManyWithoutUserInput
   programAccesses?: Prisma.ProgramAccessCreateNestedManyWithoutUserInput
   attempts?: Prisma.AttemptCreateNestedManyWithoutUserInput
+  studyGoal?: Prisma.StudyGoalCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -700,6 +818,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   passkeys?: Prisma.PasskeyUncheckedCreateNestedManyWithoutUserInput
   programAccesses?: Prisma.ProgramAccessUncheckedCreateNestedManyWithoutUserInput
   attempts?: Prisma.AttemptUncheckedCreateNestedManyWithoutUserInput
+  studyGoal?: Prisma.StudyGoalUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -734,6 +853,7 @@ export type UserUpdateWithoutAccountsInput = {
   passkeys?: Prisma.PasskeyUpdateManyWithoutUserNestedInput
   programAccesses?: Prisma.ProgramAccessUpdateManyWithoutUserNestedInput
   attempts?: Prisma.AttemptUpdateManyWithoutUserNestedInput
+  studyGoal?: Prisma.StudyGoalUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -752,6 +872,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   passkeys?: Prisma.PasskeyUncheckedUpdateManyWithoutUserNestedInput
   programAccesses?: Prisma.ProgramAccessUncheckedUpdateManyWithoutUserNestedInput
   attempts?: Prisma.AttemptUncheckedUpdateManyWithoutUserNestedInput
+  studyGoal?: Prisma.StudyGoalUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPasskeysInput = {
@@ -770,6 +891,7 @@ export type UserCreateWithoutPasskeysInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   programAccesses?: Prisma.ProgramAccessCreateNestedManyWithoutUserInput
   attempts?: Prisma.AttemptCreateNestedManyWithoutUserInput
+  studyGoal?: Prisma.StudyGoalCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPasskeysInput = {
@@ -788,6 +910,7 @@ export type UserUncheckedCreateWithoutPasskeysInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   programAccesses?: Prisma.ProgramAccessUncheckedCreateNestedManyWithoutUserInput
   attempts?: Prisma.AttemptUncheckedCreateNestedManyWithoutUserInput
+  studyGoal?: Prisma.StudyGoalUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPasskeysInput = {
@@ -822,6 +945,7 @@ export type UserUpdateWithoutPasskeysInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   programAccesses?: Prisma.ProgramAccessUpdateManyWithoutUserNestedInput
   attempts?: Prisma.AttemptUpdateManyWithoutUserNestedInput
+  studyGoal?: Prisma.StudyGoalUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPasskeysInput = {
@@ -840,6 +964,7 @@ export type UserUncheckedUpdateWithoutPasskeysInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   programAccesses?: Prisma.ProgramAccessUncheckedUpdateManyWithoutUserNestedInput
   attempts?: Prisma.AttemptUncheckedUpdateManyWithoutUserNestedInput
+  studyGoal?: Prisma.StudyGoalUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProgramAccessesInput = {
@@ -858,6 +983,7 @@ export type UserCreateWithoutProgramAccessesInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   passkeys?: Prisma.PasskeyCreateNestedManyWithoutUserInput
   attempts?: Prisma.AttemptCreateNestedManyWithoutUserInput
+  studyGoal?: Prisma.StudyGoalCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProgramAccessesInput = {
@@ -876,6 +1002,7 @@ export type UserUncheckedCreateWithoutProgramAccessesInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   passkeys?: Prisma.PasskeyUncheckedCreateNestedManyWithoutUserInput
   attempts?: Prisma.AttemptUncheckedCreateNestedManyWithoutUserInput
+  studyGoal?: Prisma.StudyGoalUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProgramAccessesInput = {
@@ -910,6 +1037,7 @@ export type UserUpdateWithoutProgramAccessesInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   passkeys?: Prisma.PasskeyUpdateManyWithoutUserNestedInput
   attempts?: Prisma.AttemptUpdateManyWithoutUserNestedInput
+  studyGoal?: Prisma.StudyGoalUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProgramAccessesInput = {
@@ -928,6 +1056,7 @@ export type UserUncheckedUpdateWithoutProgramAccessesInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   passkeys?: Prisma.PasskeyUncheckedUpdateManyWithoutUserNestedInput
   attempts?: Prisma.AttemptUncheckedUpdateManyWithoutUserNestedInput
+  studyGoal?: Prisma.StudyGoalUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAttemptsInput = {
@@ -946,6 +1075,7 @@ export type UserCreateWithoutAttemptsInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   passkeys?: Prisma.PasskeyCreateNestedManyWithoutUserInput
   programAccesses?: Prisma.ProgramAccessCreateNestedManyWithoutUserInput
+  studyGoal?: Prisma.StudyGoalCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAttemptsInput = {
@@ -964,6 +1094,7 @@ export type UserUncheckedCreateWithoutAttemptsInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   passkeys?: Prisma.PasskeyUncheckedCreateNestedManyWithoutUserInput
   programAccesses?: Prisma.ProgramAccessUncheckedCreateNestedManyWithoutUserInput
+  studyGoal?: Prisma.StudyGoalUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAttemptsInput = {
@@ -998,6 +1129,7 @@ export type UserUpdateWithoutAttemptsInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   passkeys?: Prisma.PasskeyUpdateManyWithoutUserNestedInput
   programAccesses?: Prisma.ProgramAccessUpdateManyWithoutUserNestedInput
+  studyGoal?: Prisma.StudyGoalUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAttemptsInput = {
@@ -1016,6 +1148,7 @@ export type UserUncheckedUpdateWithoutAttemptsInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   passkeys?: Prisma.PasskeyUncheckedUpdateManyWithoutUserNestedInput
   programAccesses?: Prisma.ProgramAccessUncheckedUpdateManyWithoutUserNestedInput
+  studyGoal?: Prisma.StudyGoalUncheckedUpdateOneWithoutUserNestedInput
 }
 
 
@@ -1102,6 +1235,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   passkeys?: boolean | Prisma.User$passkeysArgs<ExtArgs>
   programAccesses?: boolean | Prisma.User$programAccessesArgs<ExtArgs>
   attempts?: boolean | Prisma.User$attemptsArgs<ExtArgs>
+  studyGoal?: boolean | Prisma.User$studyGoalArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1154,6 +1288,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   passkeys?: boolean | Prisma.User$passkeysArgs<ExtArgs>
   programAccesses?: boolean | Prisma.User$programAccessesArgs<ExtArgs>
   attempts?: boolean | Prisma.User$attemptsArgs<ExtArgs>
+  studyGoal?: boolean | Prisma.User$studyGoalArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1167,6 +1302,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     passkeys: Prisma.$PasskeyPayload<ExtArgs>[]
     programAccesses: Prisma.$ProgramAccessPayload<ExtArgs>[]
     attempts: Prisma.$AttemptPayload<ExtArgs>[]
+    studyGoal: Prisma.$StudyGoalPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1579,6 +1715,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   passkeys<T extends Prisma.User$passkeysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$passkeysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PasskeyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   programAccesses<T extends Prisma.User$programAccessesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$programAccessesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProgramAccessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   attempts<T extends Prisma.User$attemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$attemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  studyGoal<T extends Prisma.User$studyGoalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$studyGoalArgs<ExtArgs>>): Prisma.Prisma__StudyGoalClient<runtime.Types.Result.GetResult<Prisma.$StudyGoalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2129,6 +2266,25 @@ export type User$attemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.AttemptScalarFieldEnum | Prisma.AttemptScalarFieldEnum[]
+}
+
+/**
+ * User.studyGoal
+ */
+export type User$studyGoalArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StudyGoal
+   */
+  select?: Prisma.StudyGoalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StudyGoal
+   */
+  omit?: Prisma.StudyGoalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudyGoalInclude<ExtArgs> | null
+  where?: Prisma.StudyGoalWhereInput
 }
 
 /**

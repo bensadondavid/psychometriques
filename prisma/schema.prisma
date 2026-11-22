@@ -72,9 +72,40 @@ model User {
   passkeys      Passkey[]
   programAccesses ProgramAccess[]
   attempts      Attempt[]
+  studyGoal     StudyGoal?
 
   @@unique([email])
   @@map("user")
+}
+
+model StudyGoal {
+  id                 String         @id @default(cuid())
+  userId             String         @unique
+  user               User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  examSlug           String
+  examDate           String?
+  objective          String?
+  sessionsPerWeek    Int            @default(3)
+  sessionMinutes     Int            @default(30)
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  sessions           StudySession[]
+
+  @@map("study_goal")
+}
+
+model StudySession {
+  id          String     @id @default(cuid())
+  goalId      String
+  goal        StudyGoal  @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  scheduledOn String
+  title       String
+  completedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([goalId, scheduledOn])
+  @@map("study_session")
 }
 
 model Session {
