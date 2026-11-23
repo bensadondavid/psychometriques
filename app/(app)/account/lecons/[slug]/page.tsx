@@ -13,6 +13,7 @@ import {
   getQuantitativeLesson,
   quantitativeLessons,
 } from "@/lib/content/quantitative-lessons";
+import { getVerbalLesson, verbalLessons } from "@/lib/content/verbal-lessons";
 
 export default async function QuantitativeLessonPage({
   params,
@@ -20,9 +21,11 @@ export default async function QuantitativeLessonPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const source = quantitativeLessons.find(
+  const quantitativeSource = quantitativeLessons.find(
     (item) => item.slug === slug && Number(item.number) >= 3,
   );
+  const verbalSource = verbalLessons.find((item) => item.slug === slug);
+  const source = quantitativeSource ?? verbalSource;
   if (!source) notFound();
 
   const session = await getCurrentSession();
@@ -33,30 +36,34 @@ export default async function QuantitativeLessonPage({
   );
   if (!authorization.allowed) notFound();
 
-  const lesson = await getQuantitativeLesson(
-    source.sourceId,
-    authorization.isAdmin,
-  );
+  const lesson = quantitativeSource
+    ? await getQuantitativeLesson(source.sourceId, authorization.isAdmin)
+    : await getVerbalLesson(source.sourceId, authorization.isAdmin);
   if (!lesson?.content) notFound();
   const { introduction, sections } = parseLessonMarkdown(lesson.content);
   const assetBasePath =
-    Number(source.number) >= 16
+    quantitativeSource && Number(source.number) >= 16
       ? `/account/lecons/${source.slug}/schema`
       : undefined;
+  const moduleHref = verbalSource
+    ? "/account/lecons/verbal"
+    : "/account/lecons/quantitatif";
 
   return (
     <div className="lesson-page mx-auto w-full max-w-[96rem] px-4 pb-20 pt-7 sm:px-6 lg:px-8">
       <Link
-        href="/account/lecons"
+        href={moduleHref}
         className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary"
       >
-        <ArrowLeft className="size-4" aria-hidden="true" /> Toutes les leçons
+        <ArrowLeft className="size-4" aria-hidden="true" /> Retour au module
       </Link>
       <header className="lesson-hero mt-6 overflow-hidden border border-primary px-6 py-9 text-primary-foreground sm:px-10 sm:py-12">
         <div className="flex items-center gap-3 text-[#d6b476]">
           <BookOpen className="size-5" aria-hidden="true" />
           <p className="text-xs font-semibold uppercase tracking-[0.2em]">
-            Psychométriques · Quantitatif · Leçon {source.number}
+            Psychométriques ·{" "}
+            {verbalSource ? "Réflexion verbale" : "Quantitatif"} · Leçon{" "}
+            {source.number}
           </p>
         </div>
         <h1 className="mt-7 max-w-4xl font-serif text-4xl leading-tight tracking-tight sm:text-5xl lg:text-6xl">
@@ -126,7 +133,7 @@ export default async function QuantitativeLessonPage({
                     className="mb-6 inline-flex items-center gap-2 border border-primary bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                   >
                     <Download className="size-4" aria-hidden="true" />{" "}
-                    Enregistrer la fiche en PDF
+                    Enregistrer la fiche de synthèse en PDF
                   </a>
                 )}
               </div>
@@ -137,11 +144,11 @@ export default async function QuantitativeLessonPage({
             </section>
           ))}
           <Link
-            href="/account/lecons"
+            href={moduleHref}
             className="inline-flex items-center gap-2 pt-5 text-sm font-semibold text-primary hover:underline"
           >
-            <ArrowLeft className="size-4" aria-hidden="true" /> Revenir aux
-            leçons
+            <ArrowLeft className="size-4" aria-hidden="true" /> Revenir au
+            module
           </Link>
         </main>
       </div>

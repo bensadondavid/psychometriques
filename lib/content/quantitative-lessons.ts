@@ -63,6 +63,36 @@ export const quantitativeLessons = [
     description: "Traduire un énoncé en modèle puis vérifier la réponse.",
   },
   {
+    sourceId: "quant-vitesse-distance-temps",
+    slug: "vitesse-distance-temps",
+    number: "11",
+    description: "Unités, vitesses moyennes, rencontres et trajets par phases.",
+  },
+  {
+    sourceId: "quant-travail-debits",
+    slug: "travail-debits",
+    number: "12",
+    description: "Cadences, travail simultané, remplissage et changements de rythme.",
+  },
+  {
+    sourceId: "quant-suites-regularites",
+    slug: "suites-regularites",
+    number: "13",
+    description: "Rangs, suites arithmétiques et géométriques, récurrences.",
+  },
+  {
+    sourceId: "quant-combinatoire",
+    slug: "combinatoire",
+    number: "14",
+    description: "Choix, ordre, répétition et méthodes de dénombrement.",
+  },
+  {
+    sourceId: "quant-probabilites",
+    slug: "probabilites",
+    number: "15",
+    description: "Univers, événements, tirages et probabilités conditionnelles.",
+  },
+  {
     sourceId: "quant-tableaux-donnees",
     slug: "tableaux-donnees",
     number: "16",

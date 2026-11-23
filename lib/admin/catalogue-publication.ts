@@ -29,3 +29,32 @@ export function canPublishQuestion(question: QuestionForReview, figureExists: bo
 export function canReviewPassage(passage: { title: string; text: string }) {
   return Boolean(passage.title.trim() && passage.text.trim());
 }
+
+export type BulkPublicationOperation = "review" | "publish" | "review_publish" | "withdraw";
+export type BulkBlockReason = "already" | "incomplete" | "notReviewed" | "passageDraft";
+
+export function questionBulkBlockReason(
+  question: QuestionForReview & { status: string },
+  figureExists: boolean,
+  operation: BulkPublicationOperation,
+): BulkBlockReason | null {
+  if (operation === "withdraw") return question.status === "PUBLISHED" ? null : "already";
+  if (operation === "review" && question.editorialReviewedAt) return "already";
+  if (operation !== "review" && question.status === "PUBLISHED") return "already";
+  if (!canReviewQuestion(question, figureExists)) return "incomplete";
+  if (operation === "publish" && !question.editorialReviewedAt) return "notReviewed";
+  if (operation !== "review" && question.passageId && question.passage?.status !== "PUBLISHED") return "passageDraft";
+  return null;
+}
+
+export function passageBulkBlockReason(
+  passage: { title: string; text: string; status: string; editorialReviewedAt: Date | null },
+  operation: BulkPublicationOperation,
+): BulkBlockReason | null {
+  if (operation === "withdraw") return passage.status === "PUBLISHED" ? null : "already";
+  if (operation === "review" && passage.editorialReviewedAt) return "already";
+  if (operation !== "review" && passage.status === "PUBLISHED") return "already";
+  if (!canReviewPassage(passage)) return "incomplete";
+  if (operation === "publish" && !passage.editorialReviewedAt) return "notReviewed";
+  return null;
+}

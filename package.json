@@ -10,7 +10,8 @@
     "test": "node --import tsx --test tests/*.test.mjs",
     "lesson:sync:nombres": "node --import tsx scripts/sync-nombres-lesson.ts",
     "lesson:sync:divisibilite": "node --import tsx scripts/sync-divisibilite-lesson.ts",
-    "lesson:sync:quantitative": "node --import tsx scripts/sync-quantitative-lessons.ts"
+    "lesson:sync:quantitative": "node --import tsx scripts/sync-quantitative-lessons.ts",
+    "lesson:sync:verbal": "node --import tsx scripts/sync-verbal-lessons.ts"
   },
   "dependencies": {
     "@better-auth/i18n": "^1.7.26",

@@ -3,6 +3,7 @@ import { test } from "node:test";
 
 import {
   canPublishQuestion, canReviewPassage, canReviewQuestion,
+  questionBulkBlockReason, passageBulkBlockReason,
 } from "../lib/admin/catalogue-publication.ts";
 
 const ready = {
@@ -32,4 +33,18 @@ test("une figure et un passage liés doivent être disponibles avant publication
   assert.equal(canPublishQuestion({ ...ready, passageId: "passage-1", passage: { status: "PUBLISHED" } }, true), true);
   assert.equal(canReviewPassage({ title: "Texte", text: "Contenu" }), true);
   assert.equal(canReviewPassage({ title: "Texte", text: "  " }), false);
+});
+
+test("le lot explique pourquoi une question complète n'est pas publiée", () => {
+  const draft = { ...ready, status: "DRAFT", editorialReviewedAt: null };
+  assert.equal(questionBulkBlockReason(draft, true, "publish"), "notReviewed");
+  assert.equal(questionBulkBlockReason(draft, true, "review_publish"), null);
+  assert.equal(questionBulkBlockReason({ ...draft, passageId: "p1", passage: { status: "DRAFT" } }, true, "review_publish"), "passageDraft");
+  assert.equal(questionBulkBlockReason({ ...draft, options: [] }, true, "review_publish"), "incomplete");
+});
+
+test("un texte complet peut être validé et publié en une action", () => {
+  const passage = { title: "Texte", text: "Contenu", status: "DRAFT", editorialReviewedAt: null };
+  assert.equal(passageBulkBlockReason(passage, "publish"), "notReviewed");
+  assert.equal(passageBulkBlockReason(passage, "review_publish"), null);
 });

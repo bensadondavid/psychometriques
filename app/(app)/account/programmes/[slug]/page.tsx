@@ -9,12 +9,16 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 import { getCurrentSession } from "@/lib/auth/get-current-session";
-import { getAccessiblePrograms } from "@/lib/auth/has-program-access";
+import {
+  getAccessiblePrograms,
+  getProgramAuthorization,
+} from "@/lib/auth/has-program-access";
 import { prisma } from "@/lib/database/prisma";
 import { quantitativeLessons } from "@/lib/content/quantitative-lessons";
+import { verbalLessons } from "@/lib/content/verbal-lessons";
 
-const lessonRoutes = Object.fromEntries(
-  quantitativeLessons.map((lesson) => [lesson.sourceId, `/account/lecons/${lesson.slug}`]),
+const lessonSourceIds = [...quantitativeLessons, ...verbalLessons].map(
+  (lesson) => lesson.sourceId,
 );
 
 export default async function AccountProgramPage({
@@ -30,28 +34,54 @@ export default async function AccountProgramPage({
     (item) => item.slug === slug,
   );
   if (!program) notFound();
+  const authorization = await getProgramAuthorization(session.user.id, slug);
+  if (!authorization.allowed) notFound();
 
   const [lessons, attemptCount] = await Promise.all([
     prisma.lesson.findMany({
       where: {
         programId: program.id,
-        sourceId: { in: Object.keys(lessonRoutes) },
-        status: "PUBLISHED",
+        sourceId: { in: lessonSourceIds },
+        ...(!authorization.isAdmin ? { status: "PUBLISHED" as const } : {}),
         content: { not: null },
-        course: { status: "PUBLISHED" },
+        ...(!authorization.isAdmin
+          ? { course: { status: "PUBLISHED" as const } }
+          : {}),
       },
       select: {
         id: true,
-        sourceId: true,
-        title: true,
-        course: { select: { name: true } },
+        course: { select: { slug: true } },
       },
-      orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
+      orderBy: [
+        { course: { sortOrder: "asc" } },
+        { sortOrder: "asc" },
+        { createdAt: "asc" },
+      ],
     }),
     prisma.attempt.count({
       where: { userId: session.user.id, exercise: { programId: program.id } },
     }),
   ]);
+  const modules = [
+    {
+      slug: "reflexion-quantitative",
+      name: "Réflexion quantitative",
+      href: "/account/lecons/quantitatif",
+      description: "Calcul, problèmes, données et géométrie.",
+    },
+    {
+      slug: "reflexion-verbale",
+      name: "Réflexion verbale",
+      href: "/account/lecons/verbal",
+      description: "Analogies, compréhension et déduction.",
+    },
+  ]
+    .map((module) => ({
+      ...module,
+      count: lessons.filter((lesson) => lesson.course.slug === module.slug)
+        .length,
+    }))
+    .filter((module) => module.count > 0);
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
@@ -92,24 +122,30 @@ export default async function AccountProgramPage({
         <div className="flex items-center gap-3">
           <BookOpen className="size-5 text-[#9b7a48]" aria-hidden="true" />
           <h2 id="program-lessons" className="font-serif text-3xl text-primary">
-            Leçons
+            Modules de leçons
           </h2>
         </div>
-        {lessons.length ? (
-          <div className="mt-5 grid gap-3">
-            {lessons.map((lesson) => (
+        {modules.length ? (
+          <div className="mt-5 grid gap-4 sm:grid-cols-2">
+            {modules.map((module) => (
               <Link
-                href={lessonRoutes[lesson.sourceId!]}
-                key={lesson.id}
-                className="group flex items-center justify-between gap-4 border border-border bg-card p-5 hover:border-primary/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                href={module.href}
+                key={module.slug}
+                className="group flex items-start justify-between gap-4 border border-border bg-card p-6 hover:border-primary/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               >
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9b7a48]">
-                    {lesson.course.name}
+                    Psychométriques · Module
                   </p>
-                  <h3 className="mt-2 font-serif text-xl text-primary">
-                    {lesson.title}
+                  <h3 className="mt-3 font-serif text-2xl text-primary">
+                    {module.name}
                   </h3>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                    {module.description}
+                  </p>
+                  <p className="mt-4 text-sm font-semibold text-primary">
+                    {module.count} leçons
+                  </p>
                 </div>
                 <ArrowRight
                   className="size-5 shrink-0 text-primary transition-transform group-hover:translate-x-1"
@@ -120,7 +156,7 @@ export default async function AccountProgramPage({
           </div>
         ) : (
           <p className="mt-5 border border-border bg-card p-5 text-sm text-muted-foreground">
-            Aucune leçon en ligne pour ce programme actuellement.
+            Aucun module de leçons en ligne pour ce programme actuellement.
           </p>
         )}
       </section>

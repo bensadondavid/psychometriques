@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { BulkCatalogList } from "@/components/admin/bulk-catalog-list";
+import { parseQuestionContentFilter, questionContentWhere } from "@/lib/admin/question-content-filter";
 import { prisma } from "@/lib/database/prisma";
 
 export const metadata: Metadata = { title: "Catalogue pédagogique | Administration" };
@@ -12,17 +14,18 @@ const EXAMS = [
 ] as const;
 const TABS = ["questions", "passages", "parcours", "series"] as const;
 type Tab = (typeof TABS)[number];
-type Search = { examen?: string; onglet?: string; statut?: string; q?: string; page?: string };
+type Search = { examen?: string; onglet?: string; statut?: string; q?: string; contenu?: string; page?: string; bulk?: string; updated?: string; already?: string; incomplete?: string; notReviewed?: string; passageDraft?: string; stale?: string };
 
 function param(value: string | string[] | undefined) {
   return typeof value === "string" ? value : "";
 }
 
-function url(exam: string, tab: Tab, status = "", q = "", page = 1) {
+function url(exam: string, tab: Tab, status = "", q = "", page = 1, content = "all") {
   const params = new URLSearchParams({ onglet: tab });
   if (exam) params.set("examen", exam);
   if (status) params.set("statut", status);
   if (q) params.set("q", q);
+  if (tab === "questions" && content !== "all") params.set("contenu", content);
   if (page > 1) params.set("page", String(page));
   return `/account/admin/catalogue?${params}`;
 }
@@ -42,11 +45,19 @@ export default async function AdminCatalogPage({ searchParams }: { searchParams:
   const q = param(raw.q).trim().slice(0, 80);
   const pageNumber = Number(param(raw.page));
   const page = Number.isSafeInteger(pageNumber) && pageNumber > 0 ? Math.min(pageNumber, 1000) : 1;
-  const take = 25;
+  const take = 100;
   const questionStatuses = ["DRAFT", "VALIDATED", "PUBLISHED", "ARCHIVED"] as const;
   const contentStatuses = ["DRAFT", "PUBLISHED", "ARCHIVED", "COMING_SOON"] as const;
   const availableStatuses: readonly string[] = tab === "questions" ? questionStatuses : contentStatuses;
   const status = availableStatuses.includes(param(raw.statut)) ? param(raw.statut) : "";
+  const contentFilter = parseQuestionContentFilter(param(raw.contenu));
+  const bulkCounts = {
+    already: Number(param(raw.already)) || 0,
+    incomplete: Number(param(raw.incomplete)) || 0,
+    notReviewed: Number(param(raw.notReviewed)) || 0,
+    passageDraft: Number(param(raw.passageDraft)) || 0,
+    stale: Number(param(raw.stale)) || 0,
+  };
 
   const [programs, questionCounts, lessonCounts] = await Promise.all([
     prisma.program.findMany({
@@ -69,10 +80,13 @@ export default async function AdminCatalogPage({ searchParams }: { searchParams:
     const where = {
       ...(programId ? { programId } : {}),
       ...(status ? { status: status as (typeof questionStatuses)[number] } : {}),
-      ...(q ? { OR: [
-        { externalId: { contains: q, mode: "insensitive" as const } },
-        { statement: { contains: q, mode: "insensitive" as const } },
-      ] } : {}),
+      AND: [
+        questionContentWhere(contentFilter),
+        ...(q ? [{ OR: [
+          { externalId: { contains: q, mode: "insensitive" as const } },
+          { statement: { contains: q, mode: "insensitive" as const } },
+        ] }] : []),
+      ],
     };
     const [count, questions] = await Promise.all([
       prisma.question.count({ where }),
@@ -80,17 +94,19 @@ export default async function AdminCatalogPage({ searchParams }: { searchParams:
         where, orderBy: [{ updatedAt: "desc" }, { id: "asc" }], skip: (page - 1) * take, take,
         select: { id: true, programId: true, externalId: true, statement: true, status: true,
           sourceStatus: true, editorialReviewedAt: true, difficulty: true,
+          passageId: true, imagePath: true,
           chapter: { select: { name: true } } },
       }),
     ]);
     total = count;
-    content = <div className="space-y-2">{questions.map((question) =>
-      <Link key={question.id} href={`/account/admin/catalogue/questions/${question.id}`} className="block border border-border bg-card p-4 hover:border-primary">
-        <div className="flex flex-wrap items-center gap-2"><span className="font-mono text-xs text-muted-foreground">{question.externalId}</span><Badge status={question.status} />{question.editorialReviewedAt && <span className="text-xs text-emerald-700">Relue</span>}</div>
-        <p className="mt-2 line-clamp-2 font-medium">{question.statement}</p>
-        <p className="mt-2 text-xs text-muted-foreground">{programName(question.programId)} · {question.chapter.name} · difficulté {question.difficulty} · source {question.sourceStatus}</p>
-      </Link>,
-    )}</div>;
+    content = <BulkCatalogList key={`${exam}:${status}:${q}:${contentFilter}:${page}:questions`} tab="questions" exam={exam} status={status} q={q} content={contentFilter} total={count}
+      items={questions.map((question) => ({
+        id: question.id, href: `/account/admin/catalogue/questions/${question.id}`,
+        externalId: question.externalId, title: question.statement, status: question.status,
+        reviewed: !!question.editorialReviewedAt,
+        hasText: !!question.passageId, hasFigure: !!question.imagePath,
+        detail: `${programName(question.programId)} · ${question.chapter.name} · difficulté ${question.difficulty} · source ${question.sourceStatus}`,
+      }))} />;
   } else if (tab === "passages") {
     const where = {
       ...(programId ? { programId } : {}),
@@ -109,13 +125,14 @@ export default async function AdminCatalogPage({ searchParams }: { searchParams:
       }),
     ]);
     total = count;
-    content = <div className="space-y-2">{passages.map((passage) =>
-      <Link key={passage.id} href={`/account/admin/catalogue/passages/${passage.id}`} className="block border border-border bg-card p-4 hover:border-primary">
-        <div className="flex flex-wrap items-center gap-2"><span className="font-mono text-xs text-muted-foreground">{passage.externalId}</span><Badge status={passage.status} />{passage.editorialReviewedAt && <span className="text-xs text-emerald-700">Relu</span>}</div>
-        <p className="mt-2 font-medium">{passage.title}</p>
-        <p className="mt-2 text-xs text-muted-foreground">{programName(passage.programId)} · {passage._count.questions} questions liées · source {passage.sourceStatus}</p>
-      </Link>,
-    )}</div>;
+    content = <BulkCatalogList key={`${exam}:${status}:${q}:${page}:passages`} tab="passages" exam={exam} status={status} q={q} content="all" total={count}
+      items={passages.map((passage) => ({
+        id: passage.id, href: `/account/admin/catalogue/passages/${passage.id}`,
+        externalId: passage.externalId, title: passage.title, status: passage.status,
+        reviewed: !!passage.editorialReviewedAt,
+        hasText: false, hasFigure: false,
+        detail: `${programName(passage.programId)} · ${passage._count.questions} questions liées · source ${passage.sourceStatus}`,
+      }))} />;
   } else if (tab === "parcours") {
     const where = programId ? { programId } : {};
     const [count, courses, unassignedChapters] = await Promise.all([
@@ -170,7 +187,7 @@ export default async function AdminCatalogPage({ searchParams }: { searchParams:
     </div>
     <section aria-label="Examens du catalogue" className="mt-8 grid gap-3 md:grid-cols-3">{EXAMS.map((entry) => {
       const program = programs.find((item) => item.slug === entry.slug);
-      return <Link key={entry.slug} href={url(entry.slug, tab)} className={`border p-5 hover:border-primary ${exam === entry.slug ? "border-primary bg-primary/5" : "border-border bg-card"}`}>
+      return <Link key={entry.slug} href={url(entry.slug, tab, status, q, 1, contentFilter)} className={`border p-5 hover:border-primary ${exam === entry.slug ? "border-primary bg-primary/5" : "border-border bg-card"}`}>
         <div className="flex items-center justify-between gap-2"><h2 className="font-serif text-xl text-primary">{entry.name}</h2>{program ? <Badge status={program.status} /> : <span className="text-xs text-muted-foreground">Absent en base</span>}</div>
         <p className="mt-3 text-sm text-muted-foreground">{program ? `${questionCount.get(program.id) ?? 0} questions · ${program._count.passages} textes · ${lessonCount.get(program.id) ?? 0} leçons` : "Import à venir"}</p>
       </Link>;
@@ -180,12 +197,27 @@ export default async function AdminCatalogPage({ searchParams }: { searchParams:
       <input type="hidden" name="onglet" value={tab} />
       <label className="grid gap-1 text-xs font-semibold text-muted-foreground">Examen<select name="examen" defaultValue={exam} className="border border-border bg-card px-3 py-2 text-sm text-foreground"><option value="">Tous</option>{EXAMS.map((entry) => <option key={entry.slug} value={entry.slug}>{entry.name}</option>)}</select></label>
       <label className="grid gap-1 text-xs font-semibold text-muted-foreground">Statut éditorial<select name="statut" defaultValue={status} className="border border-border bg-card px-3 py-2 text-sm text-foreground"><option value="">Tous</option>{availableStatuses.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+      {tab === "questions" && <label className="grid gap-1 text-xs font-semibold text-muted-foreground">Contenu lié<select name="contenu" defaultValue={contentFilter} className="border border-border bg-card px-3 py-2 text-sm text-foreground">
+        <option value="all">Tous</option><option value="text">Avec texte</option><option value="figure">Avec figure</option><option value="text_or_figure">Avec texte ou figure</option><option value="text_and_figure">Avec texte et figure</option><option value="none">Sans texte ni figure</option>
+      </select></label>}
       <label className="grid min-w-56 flex-1 gap-1 text-xs font-semibold text-muted-foreground">Identifiant ou texte<input name="q" defaultValue={q} maxLength={80} placeholder="Rechercher" className="border border-border bg-card px-3 py-2 text-sm text-foreground" /></label>
       <button type="submit" className="border border-primary px-4 py-2 text-sm font-semibold text-primary">Filtrer</button>
     </form>}
+    {param(raw.bulk) === "invalid" && <p role="alert" className="mt-5 border border-destructive/40 bg-destructive/5 p-4 text-sm text-destructive">Sélection invalide. Recommencez depuis le catalogue.</p>}
+    {["review", "publish", "review_publish", "withdraw"].includes(param(raw.bulk)) && <div role="status" className="mt-5 border border-primary/30 bg-primary/5 p-4 text-sm">
+      <p className="font-semibold">Action en lot terminée : {Number(param(raw.updated)) || 0} contenu(s) modifié(s).</p>
+      {(bulkCounts.already + bulkCounts.incomplete + bulkCounts.notReviewed + bulkCounts.passageDraft + bulkCounts.stale) > 0 &&
+        <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
+          {bulkCounts.already > 0 && <li>{bulkCounts.already} déjà dans l’état demandé.</li>}
+          {bulkCounts.incomplete > 0 && <li>{bulkCounts.incomplete} incomplets : vérifiez l’énoncé, les quatre choix, la correction et la figure.</li>}
+          {bulkCounts.notReviewed > 0 && <li>{bulkCounts.notReviewed} non relus : utilisez « Marquer comme relus » ou « Valider et publier ».</li>}
+          {bulkCounts.passageDraft > 0 && <li>{bulkCounts.passageDraft} liés à un texte encore en brouillon : publiez d’abord les textes.</li>}
+          {bulkCounts.stale > 0 && <li>{bulkCounts.stale} modifiés entre la sélection et l’action : actualisez la page.</li>}
+        </ul>}
+    </div>}
     <div className="mt-5 flex items-center justify-between text-sm text-muted-foreground"><p>{total} {tab === "questions" ? "question(s)" : tab === "passages" ? "texte(s)" : tab === "parcours" ? "matière(s)" : "série(s)"}</p><p>Page {page} / {Math.max(1, Math.ceil(total / take))}</p></div>
     <div className="mt-3">{content}</div>
     {total === 0 && !hasUnassignedChapters && <p className="mt-3 border border-dashed border-border bg-card px-5 py-8 text-sm text-muted-foreground">Aucun contenu pour ces filtres.</p>}
-    {total > take && <nav aria-label="Pagination du catalogue" className="mt-7 flex items-center justify-between text-sm font-semibold">{page > 1 ? <Link href={url(exam, tab, status, q, page - 1)} className="text-primary underline">Page précédente</Link> : <span />}{page * take < total && <Link href={url(exam, tab, status, q, page + 1)} className="text-primary underline">Page suivante</Link>}</nav>}
+    {total > take && <nav aria-label="Pagination du catalogue" className="mt-7 flex items-center justify-between text-sm font-semibold">{page > 1 ? <Link href={url(exam, tab, status, q, page - 1, contentFilter)} className="text-primary underline">Page précédente</Link> : <span />}{page * take < total && <Link href={url(exam, tab, status, q, page + 1, contentFilter)} className="text-primary underline">Page suivante</Link>}</nav>}
   </main>;
 }

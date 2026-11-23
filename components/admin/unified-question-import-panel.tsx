@@ -121,10 +121,11 @@ export function UnifiedQuestionImportPanel() {
           <option value="yaelnet">YAELNET</option>
         </select>
       </label>
-      <label className="block">
-        Fichiers CSV — 200 fichiers et 4 Mo maximum par lot
+      <div>
+        <p className="text-sm font-semibold">Fichiers CSV — 200 fichiers et 4 Mo maximum par lot</p>
+        <label className="mt-3 inline-block cursor-pointer">
         <input
-          className="mt-2 block"
+          className="peer sr-only"
           type="file"
           accept=".csv,text/csv"
           multiple
@@ -134,8 +135,12 @@ export function UnifiedQuestionImportPanel() {
             reset();
           }}
         />
-      </label>
-      <p>{files.length} fichier(s) sélectionné(s).</p>
+          <span className="inline-flex min-h-11 items-center rounded-md border border-primary bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary peer-disabled:cursor-not-allowed peer-disabled:opacity-50">
+            Choisir des fichiers CSV
+          </span>
+        </label>
+        <p className="mt-2 text-sm text-muted-foreground" role="status">{files.length} fichier(s) sélectionné(s).</p>
+      </div>
       <div className="flex gap-3">
         <button
           type="button"

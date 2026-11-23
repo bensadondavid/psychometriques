@@ -549,21 +549,20 @@ export function FigureImportCard() {
       </p>
       <div className="mt-5 border border-dashed border-[#cbbd9f] bg-[#fcfaf5] p-4">
         <label
-          htmlFor="figure-folder-import"
-          className="flex cursor-pointer items-center gap-2 text-sm font-semibold text-primary"
+          className="inline-flex min-h-11 cursor-pointer items-center gap-2 border border-primary bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary"
         >
           <Upload aria-hidden="true" className="size-4" />
           Choisir le dossier de figures
+          <input
+            {...DIRECTORY_INPUT_PROPS}
+            id="figure-folder-import"
+            type="file"
+            accept=".svg,image/svg+xml"
+            multiple
+            onChange={(event) => selectFiles(event.target.files)}
+            className="sr-only"
+          />
         </label>
-        <input
-          {...DIRECTORY_INPUT_PROPS}
-          id="figure-folder-import"
-          type="file"
-          accept=".svg,image/svg+xml"
-          multiple
-          onChange={(event) => selectFiles(event.target.files)}
-          className="mt-4 block w-full text-xs text-muted-foreground file:mr-3 file:border-0 file:bg-primary file:px-3 file:py-2 file:text-xs file:font-semibold file:text-primary-foreground hover:file:bg-primary/90"
-        />
         <p className="mt-3 text-xs leading-5 text-muted-foreground">
           Les fichiers SVG sont enregistrés séparément des questions.
         </p>

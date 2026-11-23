@@ -32,7 +32,7 @@ export default async function DivisibiliteLessonPage() {
   return (
     <div className="lesson-page mx-auto w-full max-w-[96rem] px-4 pb-20 pt-7 sm:px-6 lg:px-8">
       <Link
-        href="/account/lecons"
+        href="/account/lecons/quantitatif"
         className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary"
       >
         <ArrowLeft className="size-4" aria-hidden="true" /> Toutes les leçons
@@ -120,7 +120,7 @@ export default async function DivisibiliteLessonPage() {
           ))}
           <div className="pt-5">
             <Link
-              href="/account/lecons"
+              href="/account/lecons/quantitatif"
               className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
             >
               <ArrowLeft className="size-4" aria-hidden="true" /> Revenir aux
