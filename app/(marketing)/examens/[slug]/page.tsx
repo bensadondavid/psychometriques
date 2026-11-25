@@ -3,8 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { getPublicProgram, publicPrograms } from "@/lib/content/catalog";
+import { getDiscoverySeries, isReadyDiscoverySeries } from "@/lib/discovery/attempt";
 
 type PageProps = { params: Promise<{ slug: string }> };
+export const dynamic = "force-dynamic";
 
 export function generateStaticParams() {
   return publicPrograms.map((program) => ({ slug: program.slug }));
@@ -26,6 +28,8 @@ export default async function ExamPage({ params }: PageProps) {
   const { slug } = await params;
   const program = getPublicProgram(slug);
   if (!program) notFound();
+  const discovery = await getDiscoverySeries(slug);
+  const ready = discovery && isReadyDiscoverySeries(discovery);
 
   return (
     <main>
@@ -78,10 +82,8 @@ export default async function ExamPage({ params }: PageProps) {
             </p>
           </li>
         </ol>
-        <p className="mt-10 rounded-sm border border-border bg-card p-5 text-muted-foreground">
-          La série découverte de {program.name} sera accessible ici après sa
-          composition avec les questions publiées.
-        </p>
+        {ready ? <Link href={`/examens/${slug}/decouverte`} className="mt-10 inline-block rounded-sm bg-primary px-6 py-3 font-medium text-primary-foreground">Faire la série découverte</Link> :
+          <p className="mt-10 rounded-sm border border-border bg-card p-5 text-muted-foreground">La série découverte de {program.name} sera accessible ici après sa composition avec les questions publiées.</p>}
       </section>
     </main>
   );

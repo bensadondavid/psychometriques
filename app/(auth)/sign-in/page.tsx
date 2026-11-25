@@ -10,6 +10,7 @@ import { captureAnalyticsEvent } from "@/lib/analytics/posthog-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth/auth-client";
+import { discoveryAuthUrl, discoveryReturnUrl, parseDiscoveryReturn } from "@/lib/discovery/return-url";
 import {
   getAuthUrl,
   getPostAuthDestination,
@@ -61,8 +62,9 @@ function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const offerKey = parseSelectableOffer(searchParams.get("offer"));
-  const postAuthDestination = getPostAuthDestination(offerKey);
-  const signUpUrl = getAuthUrl("/sign-up", offerKey);
+  const discoverySlug = offerKey ? null : parseDiscoveryReturn(searchParams.get("decouverte"));
+  const postAuthDestination = discoverySlug ? discoveryReturnUrl(discoverySlug) : getPostAuthDestination(offerKey);
+  const signUpUrl = discoverySlug ? discoveryAuthUrl("/sign-up", discoverySlug) : getAuthUrl("/sign-up", offerKey);
   const selectedOffer = offerKey ? selectableOffers[offerKey] : null;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

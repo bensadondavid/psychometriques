@@ -1,6 +1,9 @@
 import {
   BookOpen,
+  BookOpenCheck,
   ClipboardList,
+  ClipboardCheck,
+  FileUp,
   GraduationCap,
   House,
   Settings,
@@ -10,8 +13,11 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { getUserInitials } from "@/lib/user-initials";
 import { Avatar, AvatarFallback } from "../ui/avatar";
@@ -24,9 +30,16 @@ type AppSidebarProps = {
     email: string;
     image?: string | null;
   };
+  isAdmin: boolean;
 };
 
-export function AppSidebar({ user }: AppSidebarProps) {
+const adminPages = [
+  { href: "/account/admin/catalogue", label: "Catalogue pédagogique", icon: BookOpenCheck },
+  { href: "/account/admin/decouvertes", label: "Séries découvertes", icon: ClipboardCheck },
+  { href: "/account/admin/questions/import", label: "Import CSV et figures", icon: FileUp },
+] as const;
+
+export function AppSidebar({ user, isAdmin }: AppSidebarProps) {
   return (
     <Sidebar>
       <SidebarHeader className="border-b border-sidebar-border p-4">
@@ -74,6 +87,22 @@ export function AppSidebar({ user }: AppSidebarProps) {
             <span>Paramètres</span>
           </NavLink>
         </SidebarMenu>
+        {isAdmin && (
+          <>
+            <SidebarSeparator className="my-3" />
+            <SidebarGroup className="px-1 pt-0">
+              <SidebarGroupLabel>Administration</SidebarGroupLabel>
+              <SidebarMenu className="px-2">
+                {adminPages.map(({ href, label, icon: Icon }) => (
+                  <NavLink key={href} href={href}>
+                    <Icon aria-hidden="true" />
+                    <span>{label}</span>
+                  </NavLink>
+                ))}
+              </SidebarMenu>
+            </SidebarGroup>
+          </>
+        )}
       </SidebarContent>
       <SidebarFooter className="border-t border-sidebar-border p-3">
         <LogOutBtn />

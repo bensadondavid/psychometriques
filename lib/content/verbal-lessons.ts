@@ -131,6 +131,38 @@ export const verbalLessons = [
     chapter: 2,
     description: "Comparer des structures de raisonnement et appliquer un principe.",
   },
+  {
+    sourceId: "verbal-textes-lecture-structure",
+    slug: "lire-structure-texte",
+    number: "17",
+    file: "17-lire-structure-texte.md",
+    chapter: 3,
+    description: "Lire la structure d'un texte et retrouver le rôle de chaque passage.",
+  },
+  {
+    sourceId: "verbal-textes-these-intention",
+    slug: "idee-principale-these-intention",
+    number: "18",
+    file: "18-idee-principale-these-intention.md",
+    chapter: 3,
+    description: "Distinguer l'idée principale, la thèse et l'intention de l'auteur.",
+  },
+  {
+    sourceId: "verbal-textes-informations-referents",
+    slug: "informations-vocabulaire-referents",
+    number: "19",
+    file: "19-informations-vocabulaire-referents.md",
+    chapter: 3,
+    description: "Retrouver les informations exactes, le sens des mots et leurs référents.",
+  },
+  {
+    sourceId: "verbal-textes-deductions-bilan",
+    slug: "deductions-pieges-bilan-textes",
+    number: "20",
+    file: "20-deductions-pieges-bilan-textes.md",
+    chapter: 3,
+    description: "Déduire sans extrapoler et éviter les pièges de lecture.",
+  },
 ] as const;
 
 export async function getVerbalLesson(

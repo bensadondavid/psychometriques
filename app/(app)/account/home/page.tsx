@@ -44,9 +44,15 @@ export default async function HomePage({
   const day = new Date(`${today}T12:00:00Z`).getUTCDay();
   const weekStart = dayOffset(today, -(day === 0 ? 6 : day - 1));
   const weekEnd = dayOffset(weekStart, 6);
-  const goal = await prisma.studyGoal.findUnique({
-    where: { userId: session.user.id },
-  });
+  const [goal, savedDiscoveries] = await Promise.all([
+    prisma.studyGoal.findUnique({ where: { userId: session.user.id } }),
+    prisma.attempt.findMany({
+      where: { userId: session.user.id, status: "COMPLETED", exercise: { kind: "DISCOVERY" } },
+      orderBy: { completedAt: "desc" }, take: 20,
+      select: { exercise: { select: { program: { select: { slug: true, name: true } } } } },
+    }),
+  ]);
+  const savedExams = [...new Map(savedDiscoveries.map((item) => [item.exercise.program.slug, item.exercise.program.name])).entries()];
   const [weekSessions, nextSession] = goal
     ? await Promise.all([
         prisma.studySession.findMany({
@@ -88,6 +94,13 @@ export default async function HomePage({
           Votre cap, votre rythme et la prochaine séance à faire.
         </p>
       </header>
+
+      {savedExams.length > 0 && <section className="mt-8 border border-border bg-card p-6">
+        <h2 className="font-serif text-2xl text-primary">Mes découvertes enregistrées</h2>
+        <div className="mt-4 flex flex-wrap gap-4">{savedExams.map(([slug, name]) =>
+          <Link key={slug} href={`/account/decouverte?examen=${slug}`} className="text-primary underline underline-offset-4">Résultat {name}</Link>,
+        )}</div>
+      </section>}
 
       {erreur && (
         <p

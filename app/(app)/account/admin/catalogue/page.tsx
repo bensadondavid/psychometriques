@@ -193,6 +193,7 @@ export default async function AdminCatalogPage({ searchParams }: { searchParams:
       </Link>;
     })}</section>
     <nav aria-label="Sections du catalogue" className="mt-8 flex flex-wrap gap-2 border-b border-border pb-3">{TABS.map((item) => <Link key={item} href={url(exam, item)} aria-current={tab === item ? "page" : undefined} className={`px-4 py-2 text-sm font-semibold ${tab === item ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}>{item === "questions" ? "Questions" : item === "passages" ? "Textes" : item === "parcours" ? "Matières et leçons" : "Séries"}</Link>)}</nav>
+    {tab === "series" && <Link href="/account/admin/decouvertes" className="mt-5 inline-block border border-primary px-4 py-2 text-sm font-semibold text-primary">Composer les découvertes</Link>}
     {(tab === "questions" || tab === "passages") && <form method="get" className="mt-5 flex flex-wrap items-end gap-3">
       <input type="hidden" name="onglet" value={tab} />
       <label className="grid gap-1 text-xs font-semibold text-muted-foreground">Examen<select name="examen" defaultValue={exam} className="border border-border bg-card px-3 py-2 text-sm text-foreground"><option value="">Tous</option>{EXAMS.map((entry) => <option key={entry.slug} value={entry.slug}>{entry.name}</option>)}</select></label>
