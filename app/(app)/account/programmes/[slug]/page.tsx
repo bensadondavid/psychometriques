@@ -14,12 +14,15 @@ import {
   getProgramAuthorization,
 } from "@/lib/auth/has-program-access";
 import { prisma } from "@/lib/database/prisma";
+import { amirnetLessons } from "@/lib/content/amirnet-lessons";
 import { quantitativeLessons } from "@/lib/content/quantitative-lessons";
 import { verbalLessons } from "@/lib/content/verbal-lessons";
 
-const lessonSourceIds = [...quantitativeLessons, ...verbalLessons].map(
-  (lesson) => lesson.sourceId,
-);
+const lessonSourceIds = [
+  ...quantitativeLessons,
+  ...verbalLessons,
+  ...amirnetLessons,
+].map((lesson) => lesson.sourceId);
 
 export default async function AccountProgramPage({
   params,
@@ -74,6 +77,12 @@ export default async function AccountProgramPage({
       name: "Réflexion verbale",
       href: "/account/lecons/verbal",
       description: "Analogies, compréhension et déduction.",
+    },
+    {
+      slug: "anglais",
+      name: "Anglais AMIRNET",
+      href: "/account/lecons/amirnet",
+      description: "Structure des phrases, temps, modaux et compréhension.",
     },
   ]
     .map((module) => ({
@@ -135,7 +144,7 @@ export default async function AccountProgramPage({
               >
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9b7a48]">
-                    Psychométriques · Module
+                    {program.name} · Module
                   </p>
                   <h3 className="mt-3 font-serif text-2xl text-primary">
                     {module.name}

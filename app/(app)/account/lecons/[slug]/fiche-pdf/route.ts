@@ -4,6 +4,10 @@ import path from "node:path";
 import { auth } from "@/lib/auth/auth";
 import { getProgramAuthorization } from "@/lib/auth/has-program-access";
 import {
+  amirnetLessons,
+  getAmirnetLesson,
+} from "@/lib/content/amirnet-lessons";
+import {
   getQuantitativeLesson,
   quantitativeLessons,
 } from "@/lib/content/quantitative-lessons";
@@ -18,7 +22,8 @@ export async function GET(
     (item) => item.slug === slug && Number(item.number) >= 3,
   );
   const verbalSource = verbalLessons.find((item) => item.slug === slug);
-  const source = quantitativeSource ?? verbalSource;
+  const amirnetSource = amirnetLessons.find((item) => item.slug === slug);
+  const source = quantitativeSource ?? verbalSource ?? amirnetSource;
   if (!source) return new Response("Fiche indisponible.", { status: 404 });
 
   const session = await auth.api.getSession({ headers: request.headers });
@@ -26,15 +31,17 @@ export async function GET(
 
   const authorization = await getProgramAuthorization(
     session.user.id,
-    "psychometriques",
+    amirnetSource ? "amirnet" : "psychometriques",
   );
   if (!authorization.allowed) {
-    return new Response("Abonnement Psychométriques requis.", { status: 403 });
+    return new Response("Accès au programme requis.", { status: 403 });
   }
 
   const lesson = quantitativeSource
     ? await getQuantitativeLesson(source.sourceId, authorization.isAdmin)
-    : await getVerbalLesson(source.sourceId, authorization.isAdmin);
+    : verbalSource
+      ? await getVerbalLesson(source.sourceId, authorization.isAdmin)
+      : await getAmirnetLesson(source.sourceId, authorization.isAdmin);
   if (!lesson?.content)
     return new Response("Fiche indisponible.", { status: 404 });
 
@@ -48,7 +55,7 @@ export async function GET(
   return new Response(new Uint8Array(file), {
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="fiche-revision-${slug}-psychometriques.pdf"`,
+      "Content-Disposition": `attachment; filename="fiche-revision-${slug}.pdf"`,
       "Cache-Control": "private, no-store, max-age=0",
       "X-Content-Type-Options": "nosniff",
     },

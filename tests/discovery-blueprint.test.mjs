@@ -1,7 +1,63 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { discoveryDraftSlug, drawDiscoveryQuestions, isDiscoveryBlueprintForExam, parseDiscoveryBlueprint } from "../lib/admin/discovery-blueprint.ts";
+import {
+  discoveryDraftSlug,
+  drawDiscoveryQuestions,
+  isDiscoveryBlueprintForExam,
+  parseDiscoveryBlueprint,
+  parseDiscoveryBlueprintForm,
+} from "../lib/admin/discovery-blueprint.ts";
+
+test("la soumission prend les nombres visibles des deux groupes AMIRNET", () => {
+  const form = new FormData();
+  for (const [difficulty, count] of [
+    ["2", "10"],
+    ["3", "10"],
+  ]) {
+    form.append("domain", "VERBAL");
+    form.append("difficulty", difficulty);
+    form.append("chapterId", "");
+    form.append("count", count);
+  }
+  form.append(
+    "blueprint",
+    JSON.stringify([
+      { domain: "VERBAL", difficulty: 2, chapterId: null, count: 10 },
+      { domain: "VERBAL", difficulty: 3, chapterId: null, count: 1 },
+    ]),
+  );
+  assert.deepEqual(parseDiscoveryBlueprintForm(form), [
+    { domain: "VERBAL", difficulty: 2, chapterId: null, count: 10 },
+    { domain: "VERBAL", difficulty: 3, chapterId: null, count: 10 },
+  ]);
+});
+
+test("le tirage AMIRNET conserve dix questions dans chaque niveau", () => {
+  const rows = [
+    { domain: "VERBAL", difficulty: 2, chapterId: null, count: 10 },
+    { domain: "VERBAL", difficulty: 3, chapterId: null, count: 10 },
+  ];
+  const pool = [
+    ...Array.from({ length: 12 }, (_, index) => ({
+      id: `n2-${index}`,
+      domain: "VERBAL",
+      difficulty: 2,
+      chapterId: "a",
+    })),
+    ...Array.from({ length: 12 }, (_, index) => ({
+      id: `n3-${index}`,
+      domain: "VERBAL",
+      difficulty: 3,
+      chapterId: "b",
+    })),
+  ];
+  const result = drawDiscoveryQuestions(rows, pool, () => 0);
+  assert.equal(result.shortageRow, null);
+  assert.equal(result.ids.length, 20);
+  assert.equal(result.ids.filter((id) => id.startsWith("n2-")).length, 10);
+  assert.equal(result.ids.filter((id) => id.startsWith("n3-")).length, 10);
+});
 
 test("la structure refuse les quotas invalides et les critères en double", () => {
   const row = { domain: "VERBAL", difficulty: 2, chapterId: null, count: 2 };
@@ -22,17 +78,34 @@ test("le tirage respecte chaque quota et ne reprend jamais la même question", (
     { id: "c", domain: "QUANTITATIVE", difficulty: 3, chapterId: "math" },
     { id: "d", domain: "QUANTITATIVE", difficulty: 3, chapterId: "other" },
   ];
-  assert.deepEqual(drawDiscoveryQuestions(rows, pool, () => 0), { ids: ["a", "b", "c"], shortageRow: null });
-  assert.deepEqual(drawDiscoveryQuestions([{ ...rows[0], count: 3 }], pool, () => 0), { ids: [], shortageRow: 1 });
+  assert.deepEqual(
+    drawDiscoveryQuestions(rows, pool, () => 0),
+    { ids: ["a", "b", "c"], shortageRow: null },
+  );
+  assert.deepEqual(
+    drawDiscoveryQuestions([{ ...rows[0], count: 3 }], pool, () => 0),
+    { ids: [], shortageRow: 1 },
+  );
 });
 
 test("la découverte couvre les domaines attendus de chaque examen", () => {
   const verbal = { domain: "VERBAL", difficulty: 2, chapterId: null, count: 2 };
-  const quantitative = { domain: "QUANTITATIVE", difficulty: 2, chapterId: null, count: 2 };
+  const quantitative = {
+    domain: "QUANTITATIVE",
+    difficulty: 2,
+    chapterId: null,
+    count: 2,
+  };
   assert.equal(isDiscoveryBlueprintForExam("psychometriques", [verbal]), false);
-  assert.equal(isDiscoveryBlueprintForExam("psychometriques", [verbal, quantitative]), true);
+  assert.equal(
+    isDiscoveryBlueprintForExam("psychometriques", [verbal, quantitative]),
+    true,
+  );
   assert.equal(isDiscoveryBlueprintForExam("amirnet", [verbal]), true);
-  assert.equal(isDiscoveryBlueprintForExam("yaelnet", [verbal, quantitative]), false);
+  assert.equal(
+    isDiscoveryBlueprintForExam("yaelnet", [verbal, quantitative]),
+    false,
+  );
 });
 
 test("un groupe large ne consomme pas les questions réservées à un thème", () => {
@@ -42,11 +115,20 @@ test("un groupe large ne consomme pas les questions réservées à un thème", (
   ];
   const pool = [
     { id: "rare-question", domain: "VERBAL", difficulty: 2, chapterId: "rare" },
-    { id: "common-question", domain: "VERBAL", difficulty: 2, chapterId: "common" },
+    {
+      id: "common-question",
+      domain: "VERBAL",
+      difficulty: 2,
+      chapterId: "common",
+    },
   ];
-  assert.deepEqual(drawDiscoveryQuestions(rows, pool, () => 0), {
-    ids: ["common-question", "rare-question"], shortageRow: null,
-  });
+  assert.deepEqual(
+    drawDiscoveryQuestions(rows, pool, () => 0),
+    {
+      ids: ["common-question", "rare-question"],
+      shortageRow: null,
+    },
+  );
 });
 
 test("la même soumission conserve le même slug de brouillon", () => {

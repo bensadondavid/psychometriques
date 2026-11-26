@@ -7,6 +7,10 @@ import { notFound, redirect } from "next/navigation";
 
 import { LessonMarkdown } from "@/components/account/lesson-markdown";
 import { getCurrentSession } from "@/lib/auth/get-current-session";
+import {
+  amirnetLessons,
+  getAmirnetLesson,
+} from "@/lib/content/amirnet-lessons";
 import { getProgramAuthorization } from "@/lib/auth/has-program-access";
 import { parseLessonMarkdown } from "@/lib/content/nombres-lesson";
 import {
@@ -15,7 +19,7 @@ import {
 } from "@/lib/content/quantitative-lessons";
 import { getVerbalLesson, verbalLessons } from "@/lib/content/verbal-lessons";
 
-export default async function QuantitativeLessonPage({
+export default async function LessonPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -25,20 +29,23 @@ export default async function QuantitativeLessonPage({
     (item) => item.slug === slug && Number(item.number) >= 3,
   );
   const verbalSource = verbalLessons.find((item) => item.slug === slug);
-  const source = quantitativeSource ?? verbalSource;
+  const amirnetSource = amirnetLessons.find((item) => item.slug === slug);
+  const source = quantitativeSource ?? verbalSource ?? amirnetSource;
   if (!source) notFound();
 
   const session = await getCurrentSession();
   if (!session) redirect("/sign-in");
   const authorization = await getProgramAuthorization(
     session.user.id,
-    "psychometriques",
+    amirnetSource ? "amirnet" : "psychometriques",
   );
   if (!authorization.allowed) notFound();
 
   const lesson = quantitativeSource
     ? await getQuantitativeLesson(source.sourceId, authorization.isAdmin)
-    : await getVerbalLesson(source.sourceId, authorization.isAdmin);
+    : verbalSource
+      ? await getVerbalLesson(source.sourceId, authorization.isAdmin)
+      : await getAmirnetLesson(source.sourceId, authorization.isAdmin);
   if (!lesson?.content) notFound();
   const { introduction, sections } = parseLessonMarkdown(lesson.content);
   const assetBasePath =
@@ -47,7 +54,9 @@ export default async function QuantitativeLessonPage({
       : undefined;
   const moduleHref = verbalSource
     ? "/account/lecons/verbal"
-    : "/account/lecons/quantitatif";
+    : amirnetSource
+      ? "/account/lecons/amirnet"
+      : "/account/lecons/quantitatif";
 
   return (
     <div className="lesson-page mx-auto w-full max-w-[96rem] px-4 pb-20 pt-7 sm:px-6 lg:px-8">
@@ -61,9 +70,13 @@ export default async function QuantitativeLessonPage({
         <div className="flex items-center gap-3 text-[#d6b476]">
           <BookOpen className="size-5" aria-hidden="true" />
           <p className="text-xs font-semibold uppercase tracking-[0.2em]">
-            Psychométriques ·{" "}
-            {verbalSource ? "Réflexion verbale" : "Quantitatif"} · Leçon{" "}
-            {source.number}
+            {amirnetSource ? "AMIRNET" : "Psychométriques"} ·{" "}
+            {amirnetSource
+              ? "Anglais"
+              : verbalSource
+                ? "Réflexion verbale"
+                : "Quantitatif"}{" "}
+            · Leçon {source.number}
           </p>
         </div>
         <h1 className="mt-7 max-w-4xl font-serif text-4xl leading-tight tracking-tight sm:text-5xl lg:text-6xl">
@@ -128,7 +141,7 @@ export default async function QuantitativeLessonPage({
                 {section.title === "Votre fiche de révision" && (
                   <a
                     href={`/account/lecons/${source.slug}/fiche-pdf`}
-                    download={`fiche-revision-${source.slug}-psychometriques.pdf`}
+                    download={`fiche-revision-${source.slug}.pdf`}
                     type="application/pdf"
                     className="mb-6 inline-flex items-center gap-2 border border-primary bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                   >

@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 
 import { getCurrentSession } from "@/lib/auth/get-current-session";
 import { getProgramAuthorization } from "@/lib/auth/has-program-access";
+import { getAmirnetLessons } from "@/lib/content/amirnet-lessons";
 import { getQuantitativeLessons } from "@/lib/content/quantitative-lessons";
 import { getVerbalLessons } from "@/lib/content/verbal-lessons";
 
@@ -15,6 +16,10 @@ export default async function LessonsPage() {
   const authorization = await getProgramAuthorization(
     session.user.id,
     "psychometriques",
+  );
+  const amirnetAuthorization = await getProgramAuthorization(
+    session.user.id,
+    "amirnet",
   );
   const [quantitative, verbal] = authorization.allowed
     ? await Promise.all([
@@ -34,6 +39,18 @@ export default async function LessonsPage() {
       description: "Analogies, compréhension et déduction.",
       href: "/account/lecons/verbal",
       count: verbal.filter((lesson) => lesson.content).length,
+    },
+    {
+      title: "Anglais AMIRNET",
+      description:
+        "Structure des phrases, temps, modaux et phrases à compléter.",
+      href: "/account/lecons/amirnet",
+      count: amirnetAuthorization.allowed
+        ? (await getAmirnetLessons(amirnetAuthorization.isAdmin)).filter(
+            (lesson) => lesson.content,
+          ).length
+        : 0,
+      exam: "AMIRNET",
     },
   ];
 
@@ -68,7 +85,7 @@ export default async function LessonsPage() {
                   aria-hidden="true"
                 />
                 <p className="mt-6 text-xs font-semibold uppercase tracking-[0.18em] text-[#9b7a48]">
-                  Psychométriques · Module
+                  {"exam" in module ? module.exam : "Psychométriques"} · Module
                 </p>
                 <h2 className="mt-3 font-serif text-3xl text-primary">
                   {module.title}
